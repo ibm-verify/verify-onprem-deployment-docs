@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM Verify On-Premises Configuration Documentation</title>
+    <link rel="stylesheet" href="https://unpkg.com/carbon-components@10.58.0/css/carbon-components.min.css">
+    <style>
+        /*
+        IBM Confidential
+        PID 5725-X36
+        Copyright IBM Corp. 2026
+        */
+        
+        :root {
+            --cds-ui-background: #ffffff;
+            --cds-ui-01: #f4f4f4;
+            --cds-ui-02: #ffffff;
+            --cds-text-01: #161616;
+            --cds-text-02: #525252;
+            --cds-link-01: #0f62fe;
+            --cds-field-01: #f4f4f4;
+            --cds-border-subtle-01: #e0e0e0;
+            --cds-interactive-01: #0f62fe;
+            --cds-hover-ui: #e8e8e8;
+        }
+        
+        body {
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cds-ui-background);
+            color: var(--cds-text-01);
+            line-height: 1.5;
+        }
+        
+        .header {
+            background-color: #161616;
+            color: #ffffff;
+            padding: 2rem 3rem;
+            border-bottom: 1px solid #393939;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+        
+        .header .description {
+            margin-top: 1rem;
+            color: #c6c6c6;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1584px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+        }
+        
+        .intro-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background-color: #e8f4fd;
+            border-left: 4px solid #0f62fe;
+            border-radius: 4px;
+        }
+        
+        .intro-section h2 {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--cds-text-01);
+        }
+        
+        .intro-section p {
+            margin: 0;
+            color: var(--cds-text-02);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .page-card {
+            background-color: var(--cds-ui-02);
+            border: 1px solid var(--cds-border-subtle-01);
+            border-radius: 4px;
+            transition: all 0.11s;
+            overflow: hidden;
+        }
+        
+        .page-card:hover {
+            border-color: var(--cds-interactive-01);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+        }
+        
+        .page-card-header {
+            padding: 1.5rem;
+            background-color: var(--cds-ui-01);
+            border-bottom: 1px solid var(--cds-border-subtle-01);
+        }
+        
+        .page-card-title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--cds-interactive-01);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-card-title::before {
+            content: "📄";
+            font-size: 1.25rem;
+        }
+        
+        .page-card-body {
+            padding: 1.5rem;
+        }
+        
+        .page-card-description {
+            margin: 0;
+            color: var(--cds-text-02);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .page-card:hover .page-card-title {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem 3rem;
+            background-color: #f4f4f4;
+            border-top: 1px solid var(--cds-border-subtle-01);
+            text-align: center;
+            color: var(--cds-text-02);
+            font-size: 0.75rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--cds-text-02);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .page-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>IBM Verify On-Premises Configuration Documentation</h1>
+        <div class="description">
+            Comprehensive configuration reference for IBM Verify on-premises components
+        </div>
+    </div>
+    <div class="container">
+        <div class="intro-section">
+            <h2>📚 Configuration Documentation</h2>
+            <p>
+                This documentation provides detailed configuration information for IBM Verify on-premises components.
+                Each page contains comprehensive parameter specifications, descriptions, and examples to help you
+                configure and deploy your IBM Verify infrastructure.
+            </p>
+        </div>
+        <div class="page-grid">
+
+            <div class="page-card">
+                <a href="example-showcase.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">Example Schema Showcase</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">Comprehensive example demonstrating all JSON Schema features and documentation capabilities</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="iag.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Application Gateway Configuration Specification (OpenAPI)</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Application Gateway configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="verify-directory-proxy.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Verify Directory: Proxy</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Security Verify Directory Proxy configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="verify-directory-seed.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Verify Directory: Seed</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Security Verify Directory Seed configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="verify-directory-server.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Verify Directory: Server</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Security Verify Directory Server configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="verify-directory-virtualdir.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Verify Directory: Virtual Directory</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Security Verify Directory Virtual Directory configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="page-card">
+                <a href="verify-directory-webadmin.html" class="page-card-link">
+                    <div class="page-card-header">
+                        <h3 class="page-card-title">IBM Verify Directory: Web Administration Tool</h3>
+                    </div>
+                    <div class="page-card-body">
+                        <p class="page-card-description">IBM Security Verify Directory Web Administration Tool configuration parameters and settings</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="footer">
+        Copyright IBM Corp. 2026
+    </div>
+</body>
+</html>

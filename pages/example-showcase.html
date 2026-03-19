@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Schema Showcase</title>
+    <link rel="stylesheet" href="https://unpkg.com/carbon-components@10.58.0/css/carbon-components.min.css">
+    <style>
+        /*
+        IBM Confidential
+        PID 5725-X36
+        Copyright IBM Corp. 2026
+        */
+        
+        :root {
+            --cds-ui-background: #ffffff;
+            --cds-ui-01: #f4f4f4;
+            --cds-ui-02: #ffffff;
+            --cds-text-01: #161616;
+            --cds-text-02: #525252;
+            --cds-link-01: #0f62fe;
+            --cds-field-01: #f4f4f4;
+            --cds-border-subtle-01: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cds-ui-background);
+            color: var(--cds-text-01);
+            line-height: 1.5;
+        }
+        
+        .header {
+            background-color: #161616;
+            color: #ffffff;
+            padding: 2rem 3rem;
+            border-bottom: 1px solid #393939;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+        
+        .header .description {
+            margin-top: 1rem;
+            color: #c6c6c6;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .header .description p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .header .description p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .search-container {
+            margin-top: 1.5rem;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            font-size: 0.875rem;
+            border: 1px solid #393939;
+            background-color: #262626;
+            color: #ffffff;
+            border-radius: 4px;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            transition: border-color 0.11s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #0f62fe;
+        }
+        
+        .search-input::placeholder {
+            color: #8d8d8d;
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: calc(100% - 600px + 0.75rem);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8d8d8d;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            display: none;
+        }
+        
+        .search-clear:hover {
+            color: #ffffff;
+        }
+        
+        .search-clear.visible {
+            display: block;
+        }
+        
+        .search-results-info {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #8d8d8d;
+        }
+        
+        .container {
+            max-width: 1584px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+            background-color: var(--cds-ui-02);
+            border: 1px solid var(--cds-border-subtle-01);
+        }
+        
+        .section-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--cds-ui-01);
+            border-bottom: 1px solid var(--cds-border-subtle-01);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.11s;
+        }
+        
+        .section-header:hover {
+            background-color: #e8e8e8;
+        }
+        
+        .section-header h2,
+        .section-header h3,
+        .section-header h4 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .section-header h3 {
+            font-size: 1.25rem;
+        }
+        
+        .section-header h4 {
+            font-size: 1rem;
+        }
+        
+        .section-content {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .section-content.expanded {
+            display: block;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.2s;
+            font-size: 1.25rem;
+        }
+        
+        .section-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .property {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--cds-border-subtle-01);
+        }
+        
+        .property:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .property-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--cds-text-01);
+            margin-bottom: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        .property-type {
+            display: inline-block;
+            background-color: #0f62fe;
+            color: #ffffff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        .property-required {
+            display: inline-block;
+            background-color: #da1e28;
+            color: #ffffff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .property-description {
+            color: var(--cds-text-02);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .property-default {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .property-default strong {
+            color: var(--cds-text-01);
+        }
+        
+        .property-enum {
+            margin-top: 0.5rem;
+        }
+        
+        .property-enum-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .property-enum-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .enum-value {
+            background-color: var(--cds-field-01);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-family: 'IBM Plex Mono', monospace;
+            border: 1px solid var(--cds-border-subtle-01);
+        }
+        
+        .nested-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #fafafa;
+            border-left: 3px solid #8d8d8d;
+            border-radius: 4px;
+        }
+        
+        .properties-header {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #525252;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .example-section {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .example-code {
+            background-color: #262626;
+            color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem 3rem;
+            background-color: #f4f4f4;
+            border-top: 1px solid var(--cds-border-subtle-01);
+            text-align: center;
+            color: var(--cds-text-02);
+            font-size: 0.75rem;
+        }
+        
+        code {
+            background-color: var(--cds-field-01);
+            padding: 0.125rem 0.375rem;
+            border-radius: 2px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .array-items-container {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: #e8f4fd;
+            border-left: 4px solid #0f62fe;
+            border-radius: 4px;
+        }
+        
+        .array-items-header {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0f62fe;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .array-items-content {
+            padding-left: 0.5rem;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12px 0;
+        }
+        
+        th {
+            font-weight: bold;
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background-color: #f4f4f4;
+        }
+        
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .level-0 { margin-left: 0; }
+        .level-1 { margin-left: 1rem; }
+        .level-2 { margin-left: 2rem; }
+        .level-3 { margin-left: 3rem; }
+        
+        .search-highlight {
+            background-color: #fff1c2;
+            padding: 0.125rem 0.25rem;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+        
+        .section.search-hidden {
+            display: none;
+        }
+        
+        .property.search-hidden {
+            display: none;
+        }
+        
+        .expand-collapse-btn {
+            background-color: #393939;
+            color: #ffffff;
+            border: 1px solid #525252;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.11s;
+        }
+        
+        .expand-collapse-btn:hover {
+            background-color: #525252;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Example Schema Showcase</h1>
+        <div class="description"><p># Comprehensive Schema Example</p><p>This schema demonstrates all the capabilities supported by the <code>generate_schema_docs.py</code> script.<br>
+It includes examples of:</p><p>- Multiple JSON Schema versions (Draft-04 through 2020-12)<br>
+- Complex nested objects and arrays<br>
+- All validation constraints<br>
+- References ($ref) to definitions<br>
+- Modern features like prefixItems, dependentSchemas, unevaluatedProperties<br>
+- Markdown formatting in descriptions<br>
+- Examples and default values<br>
+- Enum and const values</p><p>## Usage</p><p>This schema can be used to validate configuration files for a fictional **Cloud Application Platform**.<br></p></div>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search properties, descriptions, and types..." oninput="performSearch()" />
+            <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">✕</button>
+            <div class="search-results-info" id="searchResults"></div>
+        </div>
+    </div>
+    <div class="container">
+
+        <div style="padding: 1rem 0; color: #525252; font-size: 0.875rem; font-style: italic; display: flex; justify-content: space-between; align-items: center;">
+            <span>ℹ️ Click on section headers below to expand and view configuration details.</span>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="expand-collapse-btn" onclick="expandAll()" title="Expand all sections">
+                    <span style="font-size: 1rem;">⊞</span> Expand All
+                </button>
+                <button class="expand-collapse-btn" onclick="collapseAll()" title="Collapse all sections">
+                    <span style="font-size: 1rem;">⊟</span> Collapse All
+                </button>
+            </div>
+        </div>
+        <div class="section" id="configuration">
+            <div class="section-header expanded" onclick="toggleSection('configuration')">
+                <h2>Configuration</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content expanded">
+
+        <div class="section" id="application-1">
+            <div class="section-header" onclick="toggleSection('application-1')">
+                <h4>
+                    application
+                    <span class="property-type">object</span>
+                    <span class="property-required">required</span>
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>The main application configuration section.</p><p>This section defines core application settings including:<br>
+- Application metadata (name, version)<br>
+- Runtime environment settings<br>
+- Feature flags<br></p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                name
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>The unique name of the application</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Min length: 3</div>
+<div>• Max length: 63</div>
+<div>• Pattern: <code>^[a-z][a-z0-9-]*$</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                version
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Semantic version of the application.</p><p>Must follow [SemVer 2.0.0](https://semver.org/) format.<br></p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                environment
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>The deployment environment</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>development</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">development</span>
+                    <span class="enum-value">staging</span>
+                    <span class="enum-value">production</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                debug
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-description"><p>Enable debug mode with verbose logging</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="section" id="features-2">
+            <div class="section-header" onclick="toggleSection('features-2')">
+                <h5>
+                    features
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Feature flags to enable/disable functionality</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                analytics
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                darkMode
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                experimentalUI
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="server-1">
+            <div class="section-header" onclick="toggleSection('server-1')">
+                <h4>
+                    server
+                    <span class="property-type">object</span>
+                    <span class="property-required">required</span>
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Server configuration settings.</p><p>| Setting | Description |<br>
+|---------|-------------|<br>
+| host | Server hostname or IP |<br>
+| port | Server port number |<br>
+| protocol | HTTP or HTTPS |<br></p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                host
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Server hostname or IP address</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>0.0.0.0</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                port
+                <span class="property-type">integer</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Server port number</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>8080</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Maximum: 65535</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                protocol
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Server protocol</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>http</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">http</span>
+                    <span class="enum-value">https</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="ssl">
+            <div class="section-header" onclick="toggleSection('ssl')">
+                <h4>
+                    ssl
+                    <span class="property-type">object</span>
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+<div class="property-description"><p>SSL/TLS configuration</p></div>
+<div class="nested-section">
+<div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Enable SSL/TLS</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                certificate
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Path to SSL certificate file</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                privateKey
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Path to private key file</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                ca
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Path to CA certificate file</p></div>
+        </div>
+
+        <div class="section" id="protocols-3">
+            <div class="section-header" onclick="toggleSection('protocols-3')">
+                <h6>
+                    protocols
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Enabled TLS protocols</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>[&#39;TLSv1.2&#39;, &#39;TLSv1.3&#39;]</code></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="ciphers-3">
+            <div class="section-header" onclick="toggleSection('ciphers-3')">
+                <h6>
+                    ciphers
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Allowed cipher suites</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+</div>
+
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                timeout
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Request timeout in milliseconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>30000</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 100</div>
+<div>• Maximum: 300000</div>
+<div>• Multiple of: 100</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                maxConnections
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Maximum number of concurrent connections</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>1000</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Exclusive maximum: 10000</div>
+</div>
+</div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="database-1">
+            <div class="section-header" onclick="toggleSection('database-1')">
+                <h4>
+                    database
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Database connection configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Database type</p></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">postgresql</span>
+                    <span class="enum-value">mysql</span>
+                    <span class="enum-value">mongodb</span>
+                    <span class="enum-value">redis</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="connection-2">
+            <div class="section-header" onclick="toggleSection('connection-2')">
+                <h5>
+                    connection
+                    <span class="property-type">object</span>
+                    <span class="property-required">required</span>
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Database connection details</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                host
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Database host</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                port
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Database port</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Maximum: 65535</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                database
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Database name</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                username
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Database username</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                password
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Database password (should be encrypted)</p></div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="pool-2">
+            <div class="section-header" onclick="toggleSection('pool-2')">
+                <h5>
+                    pool
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Connection pool settings</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                min
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>2</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 0</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                max
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>10</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                idleTimeout
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Idle timeout in milliseconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>10000</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1000</div>
+</div>
+</div>
+        </div>
+            </div>
+<div class="nested-section">
+<div class="properties-header">🔗 Dependent Schemas</div>
+<div class="property-description">Additional schema constraints that apply when specific properties are present:</div>
+<div style="margin-top: 1rem;">
+<div class="property-name">When <code>max</code> is present:</div>
+
+        <div class="property">
+            <div class="property-name">
+                min
+                <span class="property-type">integer</span>
+                
+            </div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Maximum: 10</div>
+</div>
+</div>
+        </div>
+</div>
+</div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="services-1">
+            <div class="section-header" onclick="toggleSection('services-1')">
+                <h4>
+                    services
+                    <span class="property-type">array</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>External services configuration.</p><p>Each service can be configured with:<br>
+- Unique identifier<br>
+- Endpoint URL<br>
+- Authentication credentials<br>
+- Retry policies<br></p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+
+        <div class="property">
+            <div class="property-name">
+                name
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Service identifier</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^[a-z][a-z0-9-]*$</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                url
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-description"><p>Service endpoint URL</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Format: <code>uri</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-description"><p>Enable this service</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                timeout
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Request timeout in milliseconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>5000</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 100</div>
+<div>• Maximum: 60000</div>
+</div>
+</div>
+        </div>
+
+        <div class="section" id="retrypolicy-2">
+            <div class="section-header" onclick="toggleSection('retrypolicy-2')">
+                <h5>
+                    retryPolicy
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Retry policy configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                maxAttempts
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>3</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Maximum: 10</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                backoff
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>exponential</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">linear</span>
+                    <span class="enum-value">exponential</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                initialDelay
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Initial delay in milliseconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>1000</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 100</div>
+</div>
+</div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="authentication-2">
+            <div class="section-header" onclick="toggleSection('authentication-2')">
+                <h5>
+                    authentication
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Service authentication</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>none</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">none</span>
+                    <span class="enum-value">basic</span>
+                    <span class="enum-value">bearer</span>
+                    <span class="enum-value">apikey</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="credentials-3">
+            <div class="section-header" onclick="toggleSection('credentials-3')">
+                <h6>
+                    credentials
+                    <span class="property-type">object</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                username
+                <span class="property-type">string</span>
+                
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                password
+                <span class="property-type">string</span>
+                
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                token
+                <span class="property-type">string</span>
+                
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                apiKey
+                <span class="property-type">string</span>
+                
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+<div class="nested-section">
+<div class="properties-header">🔗 Dependent Schemas</div>
+<div class="property-description">Additional schema constraints that apply when specific properties are present:</div>
+<div style="margin-top: 1rem;">
+<div class="property-name">When <code>type</code> is present:</div>
+</div>
+</div>
+
+            </div>
+        </div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="logging-1">
+            <div class="section-header" onclick="toggleSection('logging-1')">
+                <h4>
+                    logging
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Logging configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                level
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Log level</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>info</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">trace</span>
+                    <span class="enum-value">debug</span>
+                    <span class="enum-value">info</span>
+                    <span class="enum-value">warn</span>
+                    <span class="enum-value">error</span>
+                    <span class="enum-value">fatal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                format
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Log output format</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>json</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">json</span>
+                    <span class="enum-value">text</span>
+                    <span class="enum-value">pretty</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="outputs-2">
+            <div class="section-header" onclick="toggleSection('outputs-2')">
+                <h5>
+                    outputs
+                    <span class="property-type">array</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Log output destinations</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">console</span>
+                    <span class="enum-value">file</span>
+                    <span class="enum-value">syslog</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                path
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>File path (required when type is 'file')</p></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                maxSize
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Maximum log file size (e.g., "100MB")</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+[KMG]B$</code></div>
+</div>
+</div>
+        </div>
+</div>
+</div>
+            </div>
+<div class="property-enum" style="margin-top: 1rem;">
+<div class="property-enum-title">🔒 Unevaluated Properties:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+No additional properties/items are allowed beyond those explicitly defined.
+</div>
+</div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="security-1">
+            <div class="section-header" onclick="toggleSection('security-1')">
+                <h4>
+                    security
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Security configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="section" id="authentication-2">
+            <div class="section-header" onclick="toggleSection('authentication-2')">
+                <h5>
+                    authentication
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="section" id="providers-3">
+            <div class="section-header" onclick="toggleSection('providers-3')">
+                <h6>
+                    providers
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="cors-2">
+            <div class="section-header" onclick="toggleSection('cors-2')">
+                <h5>
+                    cors
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>CORS (Cross-Origin Resource Sharing) settings</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="section" id="origins-3">
+            <div class="section-header" onclick="toggleSection('origins-3')">
+                <h6>
+                    origins
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Allowed origins</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="methods-3">
+            <div class="section-header" onclick="toggleSection('methods-3')">
+                <h6>
+                    methods
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Allowed HTTP methods</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>[&#39;GET&#39;, &#39;POST&#39;]</code></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                credentials
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="ratelimit">
+            <div class="section-header" onclick="toggleSection('ratelimit')">
+                <h4>
+                    rateLimit
+                    <span class="property-type">object</span>
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+<div class="property-description"><p>Rate limiting configuration</p></div>
+<div class="nested-section">
+<div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                requests
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Maximum requests per window</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>100</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                window
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Time window in seconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>60</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                strategy
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Rate limiting strategy</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>sliding-window</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">fixed-window</span>
+                    <span class="enum-value">sliding-window</span>
+                    <span class="enum-value">token-bucket</span>
+                </div>
+            </div>
+        </div>
+</div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="monitoring-1">
+            <div class="section-header" onclick="toggleSection('monitoring-1')">
+                <h4>
+                    monitoring
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Monitoring and observability configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="section" id="metrics-2">
+            <div class="section-header" onclick="toggleSection('metrics-2')">
+                <h5>
+                    metrics
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                endpoint
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>/metrics</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Format: <code>uri</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                interval
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Metrics collection interval in seconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>60</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Maximum: 3600</div>
+</div>
+</div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="healthcheck-2">
+            <div class="section-header" onclick="toggleSection('healthcheck-2')">
+                <h5>
+                    healthCheck
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                endpoint
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>/health</code></div>
+        </div>
+
+        <div class="section" id="checks-3">
+            <div class="section-header" onclick="toggleSection('checks-3')">
+                <h6>
+                    checks
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Health check components</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="tracing-2">
+            <div class="section-header" onclick="toggleSection('tracing-2')">
+                <h5>
+                    tracing
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                provider
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">jaeger</span>
+                    <span class="enum-value">zipkin</span>
+                    <span class="enum-value">datadog</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                samplingRate
+                <span class="property-type">number</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>0.1</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 0</div>
+<div>• Maximum: 1</div>
+</div>
+</div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="deployment-1">
+            <div class="section-header" onclick="toggleSection('deployment-1')">
+                <h4>
+                    deployment
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Deployment configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                replicas
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Number of application replicas</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>1</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 1</div>
+<div>• Maximum: 100</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                strategy
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Deployment strategy</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>rolling</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">rolling</span>
+                    <span class="enum-value">blue-green</span>
+                    <span class="enum-value">canary</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="resources-2">
+            <div class="section-header" onclick="toggleSection('resources-2')">
+                <h5>
+                    resources
+                    <span class="property-type">object</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Resource limits and requests</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="section" id="limits">
+            <div class="section-header" onclick="toggleSection('limits')">
+                <h5>
+                    limits
+                    <span class="property-type">object</span>
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+<div class="property-description"><p>Resource specification (CPU and memory)</p></div>
+<div class="nested-section">
+<div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                cpu
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>CPU allocation (e.g., "100m", "1", "2.5")</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+(\.\d+)?m?$</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                memory
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Memory allocation (e.g., "128Mi", "1Gi")</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+[KMG]i$</code></div>
+</div>
+</div>
+        </div>
+</div>
+
+            </div>
+        </div>
+
+        <div class="section" id="requests">
+            <div class="section-header" onclick="toggleSection('requests')">
+                <h5>
+                    requests
+                    <span class="property-type">object</span>
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+<div class="property-description"><p>Resource specification (CPU and memory)</p></div>
+<div class="nested-section">
+<div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                cpu
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>CPU allocation (e.g., "100m", "1", "2.5")</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+(\.\d+)?m?$</code></div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                memory
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Memory allocation (e.g., "128Mi", "1Gi")</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+[KMG]i$</code></div>
+</div>
+</div>
+        </div>
+</div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="volumes-2">
+            <div class="section-header" onclick="toggleSection('volumes-2')">
+                <h5>
+                    volumes
+                    <span class="property-type">array</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Volume mounts</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+
+        <div class="property">
+            <div class="property-name">
+                name
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                mountPath
+                <span class="property-type">string</span>
+                <span class="property-required">required</span>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                readOnly
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>False</code></div>
+        </div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="notifications-1">
+            <div class="section-header" onclick="toggleSection('notifications-1')">
+                <h4>
+                    notifications
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Notification configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="section" id="channels-2">
+            <div class="section-header" onclick="toggleSection('channels-2')">
+                <h5>
+                    channels
+                    <span class="property-type">array</span>
+                    
+                </h5>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Notification channels</p></div>
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">string</span>
+                
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+        </div>
+</div>
+</div>
+<div class="array-items-container">
+<div class="array-items-header">📋 Prefix Items (Tuple Validation)</div>
+<div class="array-items-content">
+<div class="property-description">Array items at specific positions must match these schemas:</div>
+<div class="nested-section">
+<div class="properties-header">Position 0</div>
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">any</span>
+                <span class="property-required">required</span>
+            </div>
+            <div class="property-default"><strong>Constant Value:</strong> <code>email</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                <span class="property-required">required</span>
+            </div>
+        </div>
+
+        <div class="section" id="recipients-3">
+            <div class="section-header" onclick="toggleSection('recipients-3')">
+                <h6>
+                    recipients
+                    <span class="property-type">array</span>
+                    
+                </h6>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="nested-section">
+<div class="array-items-container">
+<div class="array-items-header">📋 Array Items</div>
+<div class="array-items-content">
+<div class="property-description"><strong>Type:</strong> <code>string</code></div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+</div>
+<div class="nested-section">
+<div class="properties-header">Position 1</div>
+
+        <div class="property">
+            <div class="property-name">
+                type
+                <span class="property-type">any</span>
+                
+            </div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">slack</span>
+                    <span class="enum-value">webhook</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                url
+                <span class="property-type">string</span>
+                
+            </div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Format: <code>uri</code></div>
+</div>
+</div>
+        </div>
+</div>
+</div>
+</div>
+            </div>
+
+            </div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="cache-1">
+            <div class="section-header" onclick="toggleSection('cache-1')">
+                <h4>
+                    cache
+                    <span class="property-type">object</span>
+                    
+                </h4>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="property-description"><p>Caching configuration</p></div>
+            <div class="nested-section">
+            <div class="properties-header">⚙️ Properties</div>
+
+        <div class="property">
+            <div class="property-name">
+                enabled
+                <span class="property-type">boolean</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>True</code></div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                provider
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-default"><strong>Default:</strong> <code>memory</code></div>
+            <div class="property-enum">
+                <div class="property-enum-title">Allowed values:</div>
+                <div class="property-enum-values">
+                    <span class="enum-value">memory</span>
+                    <span class="enum-value">redis</span>
+                    <span class="enum-value">memcached</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                ttl
+                <span class="property-type">integer</span>
+                
+            </div>
+            <div class="property-description"><p>Default time-to-live in seconds</p></div>
+            <div class="property-default"><strong>Default:</strong> <code>3600</code></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Minimum: 0</div>
+</div>
+</div>
+        </div>
+
+        <div class="property">
+            <div class="property-name">
+                maxSize
+                <span class="property-type">string</span>
+                
+            </div>
+            <div class="property-description"><p>Maximum cache size</p></div>
+<div class="property-enum" style="margin-top: 0.5rem;">
+<div class="property-enum-title">Validation Constraints:</div>
+<div class="property-description" style="margin-top: 0.5rem;">
+<div>• Pattern: <code>^\d+[KMG]B$</code></div>
+</div>
+</div>
+        </div>
+            </div>
+
+            </div>
+        </div>
+
+            </div>
+        </div>
+
+        <div class="section" id="examples">
+            <div class="section-header" onclick="toggleSection('examples')">
+                <h2>Examples</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+
+                <div class="example-section">
+                    <div class="example-title">Example 1</div>
+                    <pre class="example-code">application:
+  name: my-cloud-app
+  version: 1.0.0
+  environment: production
+  debug: false
+  features:
+    analytics: true
+    darkMode: true
+    experimentalUI: false
+server:
+  host: 0.0.0.0
+  port: 8080
+  protocol: https
+  ssl:
+    enabled: true
+    certificate: /etc/ssl/certs/server.crt
+    privateKey: /etc/ssl/private/server.key
+    protocols:
+    - TLSv1.3
+  timeout: 30000
+  maxConnections: 1000
+database:
+  type: postgresql
+  connection:
+    host: db.example.com
+    port: 5432
+    database: myapp
+    username: dbuser
+    password: encrypted_password
+  pool:
+    min: 2
+    max: 10
+    idleTimeout: 10000
+logging:
+  level: info
+  format: json
+  outputs:
+  - type: console
+  - type: file
+    path: /var/log/app.log
+    maxSize: 100MB
+security:
+  authentication:
+    enabled: true
+    providers:
+    - oauth2
+    - local
+  cors:
+    enabled: true
+    origins:
+    - https://example.com
+    methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    credentials: true
+  rateLimit:
+    enabled: true
+    requests: 1000
+    window: 60
+    strategy: sliding-window
+monitoring:
+  metrics:
+    enabled: true
+    endpoint: /metrics
+    interval: 60
+  healthCheck:
+    enabled: true
+    endpoint: /health
+    checks:
+    - database
+    - cache
+  tracing:
+    enabled: true
+    provider: jaeger
+    samplingRate: 0.1
+deployment:
+  replicas: 3
+  strategy: rolling
+  resources:
+    limits:
+      cpu: &#39;2&#39;
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+cache:
+  enabled: true
+  provider: redis
+  ttl: 3600
+  maxSize: 1GB
+</pre>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="footer">
+        Copyright IBM Corp. 2026
+    </div>
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const header = section.querySelector('.section-header');
+            const content = section.querySelector('.section-content');
+            
+            header.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+        }
+        
+        function expandAll() {
+            const allSections = document.querySelectorAll('.section');
+            allSections.forEach(section => {
+                const header = section.querySelector('.section-header');
+                const content = section.querySelector('.section-content');
+                if (header && content) {
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                }
+            });
+        }
+        
+        function collapseAll() {
+            const allSections = document.querySelectorAll('.section');
+            allSections.forEach(section => {
+                const header = section.querySelector('.section-header');
+                const content = section.querySelector('.section-content');
+                if (header && content) {
+                    header.classList.remove('expanded');
+                    content.classList.remove('expanded');
+                }
+            });
+        }
+        
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+            const searchResults = document.getElementById('searchResults');
+            const query = searchInput.value.toLowerCase().trim();
+            
+            // Show/hide clear button
+            if (query) {
+                searchClear.classList.add('visible');
+            } else {
+                searchClear.classList.remove('visible');
+            }
+            
+            // Remove previous highlights
+            document.querySelectorAll('.search-highlight').forEach(el => {
+                const parent = el.parentNode;
+                parent.replaceChild(document.createTextNode(el.textContent), el);
+                parent.normalize();
+            });
+            
+            if (!query) {
+                // Clear search - show all sections and properties
+                document.querySelectorAll('.section, .property').forEach(el => {
+                    el.classList.remove('search-hidden');
+                });
+                searchResults.textContent = '';
+                return;
+            }
+            
+            let matchCount = 0;
+            const allSections = document.querySelectorAll('.section');
+            const allProperties = document.querySelectorAll('.property');
+            
+            // First, hide everything
+            allSections.forEach(section => section.classList.add('search-hidden'));
+            allProperties.forEach(prop => prop.classList.add('search-hidden'));
+            
+            // Search in sections
+            allSections.forEach(section => {
+                let sectionMatches = false;
+                const header = section.querySelector('.section-header');
+                const content = section.querySelector('.section-content');
+                
+                if (header) {
+                    const headerText = header.textContent.toLowerCase();
+                    if (headerText.includes(query)) {
+                        sectionMatches = true;
+                        highlightText(header, query);
+                    }
+                }
+                
+                if (content) {
+                    const descriptions = content.querySelectorAll('.property-description, .property-name, .property-type, .enum-value');
+                    descriptions.forEach(desc => {
+                        const text = desc.textContent.toLowerCase();
+                        if (text.includes(query)) {
+                            sectionMatches = true;
+                            highlightText(desc, query);
+                        }
+                    });
+                }
+                
+                if (sectionMatches) {
+                    section.classList.remove('search-hidden');
+                    // Auto-expand matching sections
+                    if (header && content) {
+                        header.classList.add('expanded');
+                        content.classList.add('expanded');
+                    }
+                    matchCount++;
+                }
+            });
+            
+            // Search in properties
+            allProperties.forEach(prop => {
+                let propMatches = false;
+                const propName = prop.querySelector('.property-name');
+                const propDesc = prop.querySelector('.property-description');
+                const propType = prop.querySelector('.property-type');
+                const enumValues = prop.querySelectorAll('.enum-value');
+                
+                if (propName && propName.textContent.toLowerCase().includes(query)) {
+                    propMatches = true;
+                    highlightText(propName, query);
+                }
+                
+                if (propDesc && propDesc.textContent.toLowerCase().includes(query)) {
+                    propMatches = true;
+                    highlightText(propDesc, query);
+                }
+                
+                if (propType && propType.textContent.toLowerCase().includes(query)) {
+                    propMatches = true;
+                    highlightText(propType, query);
+                }
+                
+                enumValues.forEach(enumVal => {
+                    if (enumVal.textContent.toLowerCase().includes(query)) {
+                        propMatches = true;
+                        highlightText(enumVal, query);
+                    }
+                });
+                
+                if (propMatches) {
+                    prop.classList.remove('search-hidden');
+                    // Show parent section
+                    let parentSection = prop.closest('.section');
+                    while (parentSection) {
+                        parentSection.classList.remove('search-hidden');
+                        const header = parentSection.querySelector('.section-header');
+                        const content = parentSection.querySelector('.section-content');
+                        if (header && content) {
+                            header.classList.add('expanded');
+                            content.classList.add('expanded');
+                        }
+                        parentSection = parentSection.parentElement.closest('.section');
+                    }
+                    matchCount++;
+                }
+            });
+            
+            // Update results info
+            if (matchCount === 0) {
+                searchResults.textContent = 'No results found';
+            } else if (matchCount === 1) {
+                searchResults.textContent = '1 result found';
+            } else {
+                searchResults.textContent = `${matchCount} results found`;
+            }
+        }
+        
+        function highlightText(element, query) {
+            // Don't highlight section headers directly - only their heading elements
+            if (element.classList.contains('section-header')) {
+                // Find the h2, h3, or h4 element within the header
+                const heading = element.querySelector('h2, h3, h4');
+                if (heading) {
+                    highlightInTextNodes(heading, query);
+                }
+                return;
+            }
+            
+            // For other elements, highlight in text nodes
+            highlightInTextNodes(element, query);
+        }
+        
+        function highlightInTextNodes(element, query) {
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode: function(node) {
+                        // Skip if parent is already a highlight or is a toggle icon
+                        if (node.parentElement.classList.contains('search-highlight') ||
+                            node.parentElement.classList.contains('toggle-icon') ||
+                            node.parentElement.classList.contains('property-type') ||
+                            node.parentElement.classList.contains('property-required')) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                }
+            );
+            
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+            
+            textNodes.forEach(textNode => {
+                const text = textNode.textContent;
+                const lowerText = text.toLowerCase();
+                const index = lowerText.indexOf(query);
+                
+                if (index === -1) return;
+                
+                const before = text.substring(0, index);
+                const match = text.substring(index, index + query.length);
+                const after = text.substring(index + query.length);
+                
+                const fragment = document.createDocumentFragment();
+                
+                if (before) {
+                    fragment.appendChild(document.createTextNode(before));
+                }
+                
+                const highlight = document.createElement('span');
+                highlight.className = 'search-highlight';
+                highlight.textContent = match;
+                fragment.appendChild(highlight);
+                
+                if (after) {
+                    fragment.appendChild(document.createTextNode(after));
+                }
+                
+                textNode.parentNode.replaceChild(fragment, textNode);
+            });
+        }
+        
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = '';
+            performSearch();
+            searchInput.focus();
+        }
+        
+        // Add keyboard shortcut (Ctrl/Cmd + K) to focus search
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>
