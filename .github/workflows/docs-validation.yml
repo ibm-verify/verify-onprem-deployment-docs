@@ -38,7 +38,7 @@ jobs:
       - name: Run documentation regeneration
         run: |
           echo "Running regenerate_docs.py..."
-          python regenerate_docs.py
+          python regenerate_docs.py -p docs
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
@@ -50,19 +50,19 @@ jobs:
       
       - name: Check for generated files
         run: |
-          if [ ! -d "pages" ]; then
-            echo "❌ Error: pages directory was not created"
+          if [ ! -d "docs" ]; then
+            echo "❌ Error: docs directory was not created"
             exit 1
           fi
           
-          if [ ! -f "pages/index.html" ]; then
+          if [ ! -f "docs/index.html" ]; then
             echo "❌ Error: index.html was not generated"
             exit 1
           fi
           
           echo "✅ Documentation validation successful!"
           echo "Generated files:"
-          ls -la pages/
+          ls -la docs/
 
   deploy-docs:
     name: Deploy Documentation to Pages Branch
@@ -88,7 +88,7 @@ jobs:
       - name: Run documentation regeneration
         run: |
           echo "Running regenerate_docs.py..."
-          python regenerate_docs.py
+          python regenerate_docs.py -p docs
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
@@ -101,19 +101,19 @@ jobs:
       
       - name: Verify generated files
         run: |
-          if [ ! -d "pages" ]; then
-            echo "❌ Error: pages directory was not created"
+          if [ ! -d "docs" ]; then
+            echo "❌ Error: docs directory was not created"
             exit 1
           fi
           
-          if [ ! -f "pages/index.html" ]; then
+          if [ ! -f "docs/index.html" ]; then
             echo "❌ Error: index.html was not generated"
             exit 1
           fi
           
           echo "✅ Documentation generated successfully!"
           echo "Generated files:"
-          ls -la pages/
+          ls -la docs/
       
       - name: Configure Git
         run: |
@@ -126,8 +126,8 @@ jobs:
           TAG_NAME=${GITHUB_REF#refs/tags/}
           echo "Deploying documentation for tag: $TAG_NAME"
           
-          # Save the generated pages directory
-          cp -r pages /tmp/generated-pages
+          # Save the generated docs directory
+          cp -r docs /tmp/generated-docs
           
           # Check if pages branch exists
           if git ls-remote --heads origin pages | grep -q pages; then
@@ -144,7 +144,7 @@ jobs:
           fi
           
           # Copy generated files to the pages branch root
-          cp -r /tmp/generated-pages/* .
+          cp -r /tmp/generated-docs/* .
           
           # Add all files to git
           git add -A
