@@ -43,7 +43,13 @@ jobs:
         if: steps.check_regen.outputs.regen_requested == 'true'
         uses: actions/checkout@v4
       
-      - name: Generate release tag
+      - name: Configure Git
+        if: steps.check_regen.outputs.regen_requested == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Generate and push release tag
         if: steps.check_regen.outputs.regen_requested == 'true'
         id: generate_tag
         run: |
@@ -51,6 +57,11 @@ jobs:
           TAG_NAME="v$(date -u +%Y%m%d-%H-%M)"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Generated tag: $TAG_NAME"
+          
+          # Create and push the tag (this will trigger the deploy-docs workflow)
+          git tag -a "$TAG_NAME" -m "Documentation release for PR #${{ github.event.pull_request.number }}"
+          git push origin "$TAG_NAME"
+          echo "✅ Tag pushed successfully"
       
       - name: Create GitHub Release
         if: steps.check_regen.outputs.regen_requested == 'true'
@@ -58,6 +69,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_NAME: ${{ steps.generate_tag.outputs.tag_name }}
         run: |
+          # Wait a moment for the tag to be available
+          sleep 2
+          
           gh release create "$TAG_NAME" \
             --repo="${GITHUB_REPOSITORY}" \
             --title="Documentation Release $TAG_NAME" \
@@ -74,7 +88,7 @@ jobs:
           ${{ github.event.pull_request.body }}
 
           ### Next Steps
-          Documentation should be regenerated and published using the existing deployment workflow."
+          The deploy-docs workflow has been triggered and will regenerate and publish the documentation to the pages branch."
       
       - name: Summary
         if: steps.check_regen.outputs.regen_requested == 'true'
