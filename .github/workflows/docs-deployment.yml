@@ -98,8 +98,12 @@ jobs:
           TAG_NAME="${{ steps.version.outputs.tag }}"
           echo "Deploying documentation for tag: $TAG_NAME"
           
-          # Save the generated docs directory
+          # Save the generated docs directory to temp location
+          echo "Saving generated docs to temporary location..."
           cp -r docs /tmp/generated-docs
+          
+          # Remove the docs directory from working tree to avoid conflicts
+          rm -rf docs
           
           # Check if pages branch exists
           if git ls-remote --heads origin pages | grep -q pages; then
