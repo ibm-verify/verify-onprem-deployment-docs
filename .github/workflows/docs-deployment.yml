@@ -1,0 +1,138 @@
+# IBM Confidential
+# PID 5725-X36
+# Copyright IBM Corp. 2026
+#
+# GitHub Actions Workflow for Documentation Deployment
+
+name: Documentation Deployment
+
+on:
+  push:
+    tags:
+      - '*'
+  release:
+    types: [published, created]
+
+jobs:
+  deploy-docs:
+    name: Deploy Documentation to Pages Branch
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      
+      - name: Run documentation regeneration
+        run: |
+          echo "Running regenerate_docs.py..."
+          python3 regenerate_docs.py -p docs
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "❌ Error: regenerate_docs.py failed with exit code $EXIT_CODE"
+            echo "Documentation generation failed. Aborting deployment."
+            exit $EXIT_CODE
+          fi
+          
+          echo "✅ regenerate_docs.py completed successfully"
+      
+      - name: Verify generated files
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "❌ Error: docs directory was not created"
+            exit 1
+          fi
+          
+          if [ ! -f "docs/index.html" ]; then
+            echo "❌ Error: index.html was not generated"
+            exit 1
+          fi
+          
+          echo "✅ Documentation generated successfully!"
+          echo "Generated files:"
+          ls -la docs/
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Determine version tag
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            # For release events, use the release tag
+            TAG_NAME="${{ github.event.release.tag_name }}"
+          else
+            # For push events, extract from ref
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+          fi
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Deploying documentation for tag: $TAG_NAME"
+      
+      - name: Deploy to pages branch
+        run: |
+          TAG_NAME="${{ steps.version.outputs.tag }}"
+          echo "Deploying documentation for tag: $TAG_NAME"
+          
+          # Save the generated docs directory
+          cp -r docs /tmp/generated-docs
+          
+          # Check if pages branch exists
+          if git ls-remote --heads origin pages | grep -q pages; then
+            echo "Pages branch exists, checking it out..."
+            git fetch origin pages
+            git checkout pages
+            # Remove all existing files except .git
+            git rm -rf .
+          else
+            echo "Pages branch does not exist, creating it..."
+            git checkout --orphan pages
+            # Remove all files from the orphan branch
+            git rm -rf . 2>/dev/null || true
+          fi
+          
+          # Copy generated files to the pages branch root
+          cp -r /tmp/generated-docs/* .
+          
+          # Add all files to git
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            # Commit with tag information
+            git commit -m "Deploy documentation for tag ${TAG_NAME}" \
+                       -m "Generated from commit ${GITHUB_SHA}" \
+                       -m "Tag: ${TAG_NAME}" \
+                       -m "Event: ${{ github.event_name }}"
+            
+            # Push to pages branch
+            git push origin pages
+            echo "✅ Successfully pushed to pages branch"
+          fi
+      
+      - name: Summary
+        run: |
+          TAG_NAME="${{ steps.version.outputs.tag }}"
+          echo "✅ Documentation deployed successfully!"
+          echo "📦 Tag: $TAG_NAME"
+          echo "🌐 Pages branch updated"
+          echo "🎯 Triggered by: ${{ github.event_name }}"
+          echo ""
+          echo "The generated documentation has been committed to the 'pages' branch."
+
+# Made with Bob
