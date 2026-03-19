@@ -1,5 +1,10 @@
 # IBM Verify On-Premises Configuration Documentation Generator
 
+> [!NOTE]
+> **For IBM Verify Developers Only**
+>
+> The contents of this repository are only applicable to IBM Verify developers. This repository is used to generate public documentation which will be made available at: https://ibm-verify.github.io/verify-onprem-deployment-docs/
+
 IBM Confidential
 PID 5725-X36
 Copyright IBM Corp. 2026
@@ -12,6 +17,12 @@ Copyright IBM Corp. 2026
   - [Step 2: Update Component Description](#step-2-update-component-description)
   - [Step 3: Generate Documentation](#step-3-generate-documentation)
   - [Requirements](#requirements)
+- [Updating Existing Documentation](#updating-existing-documentation)
+  - [Step 1: Update Schema Files](#step-1-update-schema-files)
+  - [Step 2: Test Documentation Generation Locally](#step-2-test-documentation-generation-locally)
+  - [Step 3: Create a Pull Request](#step-3-create-a-pull-request)
+  - [Step 4: Post-Merge Actions](#step-4-post-merge-actions)
+  - [Common Update Scenarios](#common-update-scenarios)
 - [Key Features](#key-features)
 - [Components](#components)
   - [1. Documentation Regeneration Script](#1-documentation-regeneration-script-regenerate_docspy)
@@ -119,6 +130,96 @@ The [`regenerate_docs.py`](regenerate_docs.py) script will:
 - Schema files must be valid JSON Schema (Draft-04 through 2020-12) or OpenAPI 3.0 format
 - Schema files should include proper `title` and `description` fields
 - External references should use relative paths within the schemas directory
+## Updating Existing Documentation
+
+To update existing documentation in this repository, follow these steps:
+
+### Step 1: Update Schema Files
+
+Modify the appropriate schema files in the [`schemas`](schemas) directory to reflect the changes needed:
+
+```bash
+# Navigate to the component's schema directory
+cd schemas/your-component-name
+
+# Edit the relevant schema files
+# For example: server.yaml, advanced.yaml, etc.
+```
+
+Make your changes to the schema files, ensuring that:
+- The schema remains valid JSON Schema or OpenAPI format
+- All `title` and `description` fields are updated as needed
+- External references are still correct
+- Validation constraints are appropriate
+
+### Step 2: Test Documentation Generation Locally
+
+Before creating a pull request, test that the documentation generates correctly:
+
+```bash
+# Regenerate all documentation
+python3 regenerate_docs.py
+
+# View the updated documentation
+open pages/your-component-name.html
+```
+
+Verify that:
+- The documentation renders correctly
+- All changes are reflected in the output
+- No errors or warnings are displayed
+- External references resolve properly
+
+### Step 3: Create a Pull Request
+
+Once you've verified the changes locally:
+
+1. Commit your schema file changes
+2. Create a pull request with a clear description of the changes
+3. **Important:** In the pull request comment, explicitly state whether the documentation should be regenerated after the PR is reviewed and merged
+
+**Pull Request Comment Template:**
+
+```
+## Changes
+[Describe the schema changes made]
+
+## Documentation Regeneration
+- [ ] Documentation should be regenerated after merge
+- [ ] Documentation does NOT need regeneration (schema changes only affect internal structure)
+
+## Testing
+- [ ] Tested locally with `python3 regenerate_docs.py`
+- [ ] Verified generated HTML renders correctly
+- [ ] Confirmed all external references resolve
+```
+
+### Step 4: Post-Merge Actions
+
+After the pull request is reviewed and merged:
+
+- If documentation regeneration was requested, the GitHub Actions workflow will automatically regenerate and publish the updated documentation
+- If manual regeneration is needed, run `python3 regenerate_docs.py` and commit the updated HTML files
+
+### Common Update Scenarios
+
+**Adding a new property:**
+- Add the property definition to the appropriate schema file
+- Include proper `type`, `description`, and validation constraints
+- Mark as `required` if applicable
+
+**Modifying validation rules:**
+- Update constraints like `minimum`, `maximum`, `pattern`, `enum`, etc.
+- Update the description to reflect the new constraints
+
+**Deprecating a property:**
+- Add a deprecation notice to the property's `description`
+- Consider using `deprecated: true` if using OpenAPI format
+
+**Updating descriptions:**
+- Modify the `description` field in the schema
+- Use markdown formatting for better readability
+
 
 ## Key Features
 

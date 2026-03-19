@@ -1,0 +1,8 @@
+# IBM Confidential
+# PID 5725-X36
+# Copyright IBM Corp. 2026
+#
+# CODEOWNERS file for verify-onprem-deployment-docs repository
+
+# All files in the repository are owned by the maintainers team
+* @ibm-verify/verify-onprem-deployment-docs-maintainers
