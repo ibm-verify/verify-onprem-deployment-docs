@@ -1,0 +1,96 @@
+# IBM Confidential
+# PID 5725-X36
+# Copyright IBM Corp. 2026
+#
+# GitHub Actions Workflow for PR Merge Documentation Release
+
+name: PR Merge Documentation Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      - master
+
+jobs:
+  create-release:
+    name: Create Release if Documentation Regeneration Requested
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    
+    steps:
+      - name: Check if documentation regeneration is requested
+        id: check_regen
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          echo "PR Body:"
+          echo "$PR_BODY"
+          echo ""
+          
+          # Check if the PR body contains the checked checkbox for documentation regeneration
+          if echo "$PR_BODY" | grep -q "\[x\] Documentation should be regenerated after merge"; then
+            echo "✅ Documentation regeneration requested"
+            echo "regen_requested=true" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️ Documentation regeneration not requested"
+            echo "regen_requested=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Checkout repository
+        if: steps.check_regen.outputs.regen_requested == 'true'
+        uses: actions/checkout@v4
+      
+      - name: Generate release tag
+        if: steps.check_regen.outputs.regen_requested == 'true'
+        id: generate_tag
+        run: |
+          # Generate tag in format vYYYYMMDD-HH-MM (UTC)
+          TAG_NAME="v$(date -u +%Y%m%d-%H-%M)"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Generated tag: $TAG_NAME"
+      
+      - name: Create GitHub Release
+        if: steps.check_regen.outputs.regen_requested == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.generate_tag.outputs.tag_name }}
+          release_name: Documentation Release ${{ steps.generate_tag.outputs.tag_name }}
+          body: |
+            ## Documentation Release
+            
+            This release was automatically generated after merging PR #${{ github.event.pull_request.number }}.
+            
+            **PR Title:** ${{ github.event.pull_request.title }}
+            **PR Author:** @${{ github.event.pull_request.user.login }}
+            **Merged by:** @${{ github.event.pull_request.merged_by.login }}
+            **Merge Commit:** ${{ github.sha }}
+            
+            ### Changes
+            ${{ github.event.pull_request.body }}
+            
+            ### Next Steps
+            Documentation should be regenerated and published using the existing deployment workflow.
+          draft: false
+          prerelease: false
+      
+      - name: Summary
+        if: steps.check_regen.outputs.regen_requested == 'true'
+        run: |
+          TAG_NAME="${{ steps.generate_tag.outputs.tag_name }}"
+          echo "✅ Documentation release created successfully!"
+          echo "📦 Tag: $TAG_NAME"
+          echo "🔀 PR: #${{ github.event.pull_request.number }}"
+          echo ""
+          echo "A new release has been created with tag ${TAG_NAME}."
+          echo "The existing deployment workflow will handle documentation generation and publishing."
+      
+      - name: Skip message
+        if: steps.check_regen.outputs.regen_requested == 'false'
+        run: |
+          echo "ℹ️ Skipping release creation"
+          echo "The PR did not request documentation regeneration."
+
+# Made with Bob
