@@ -12,11 +12,19 @@ on:
       - '*'
   release:
     types: [published, created]
+  workflow_run:
+    workflows: ["PR Merge Documentation Release"]
+    types:
+      - completed
 
 jobs:
   deploy-docs:
     name: Deploy Documentation to Pages Branch
     runs-on: ubuntu-latest
+    # Only run if triggered by push/release, or if workflow_run completed successfully
+    if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     
     steps:
       - name: Checkout repository
@@ -75,6 +83,9 @@ jobs:
           if [ "${{ github.event_name }}" == "release" ]; then
             # For release events, use the release tag
             TAG_NAME="${{ github.event.release.tag_name }}"
+          elif [ "${{ github.event_name }}" == "workflow_run" ]; then
+            # For workflow_run events, get the most recent tag
+            TAG_NAME=$(git describe --tags --abbrev=0)
           else
             # For push events, extract from ref
             TAG_NAME=${GITHUB_REF#refs/tags/}
