@@ -30,7 +30,8 @@ jobs:
           echo ""
           
           # Check if the PR body contains the checked checkbox for documentation regeneration
-          if printf '%s\n' "$PR_BODY" | grep -q "\[x\] Documentation should be regenerated after merge"; then
+          # Handle both [x] and [X] (case-insensitive)
+          if printf '%s\n' "$PR_BODY" | grep -iq "\[x\] Documentation should be regenerated after merge"; then
             echo "✅ Documentation regeneration requested"
             echo "regen_requested=true" >> $GITHUB_OUTPUT
           else
