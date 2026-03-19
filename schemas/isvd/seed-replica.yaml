@@ -1,0 +1,19 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  replica:
+    type: object
+    description: >
+      The configuration entries associated with the seed container when initialising a new replica.
+    properties:
+      clean:
+        type: boolean
+        description: >
+          Specifies whether to attempt to clean out any existing data from the '/var/isvd/data' directory prior to setting up the replica.
+        default: false
+
+    examples:
+    - { "seed": { "replica": { "clean": true } } }
+    title: Replica
+

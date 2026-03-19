@@ -1,0 +1,73 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  migrate:
+    type: object
+    description: >
+      The configuration entries associated with the seed container when performing a migration.
+    properties:
+      suffixes:
+        type: array
+        description: >
+          An array of strings, used to designate the custom suffixes which are being migrated.
+        items:
+          type: string
+          description: >
+            A custom suffix which is to be migrated.
+      version:
+        type: string
+        description: >
+          The version of the directory server from which the seed data was
+          obtained.  If no version information is supplied it is assumed that
+          the seed data has been obtained from the current version of the
+          directory server.
+      process-acls:
+        type: boolean
+        description: >
+          Specifies whether to process the ACL information that is contained in the LDIF file. If set to false the default ACL is used.
+        default: true
+      skip-index:
+        type: boolean
+        description: >
+          Controls whether the index should be created or not.
+        default: false
+      drop-index:
+        type: boolean
+        description: >
+          Controls whether the existing index is dropped before the load operation starts.
+        default: false
+      strip-trailing-spaces:
+        type: boolean
+        description: >
+          Controls whether trailing spaces are stripped in attribute values.
+        default: true
+      add-group-members:
+        type: boolean
+        description: >
+          Controls whether members are added to existing static groups.  This must not be set to true if a value has been supplied for the parse-load-cycle-size entry.
+        default: false
+      parse-load-cycle-size:
+        type: number
+        description: >
+          Specifies the number of entries to process in one parse-load cycle.  If a value is not supplied all of the entries will be loaded in a single cycle.  This must not be set if the add-group-members entry has been set to true.
+      string-delimiter:
+        type: string
+        description: >
+          Specifies the string delimiting character that is used for importing.
+        default: "|"
+      translate-data:
+        type: boolean
+        description: >
+          Specifies whether to translate entry data to database code page.  Note: This parameter is necessary only when you use a database other than UTF-8.
+        default: false
+      verify-definitions:
+        type: boolean
+        description: >
+          Verifies whether the directory entries are valid based on the object class definitions and attribute type definitions in the configuration files.  Schema checking verifies that all object classes and attributes are defined. It also checks whether the attributes that are specified for each entry comply with the list of required and allowed attributes in the object class definition. Also verifies whether the binary attribute values are in the correct 64-bit encoded form.
+        default: false
+
+    examples:
+    - { "seed": { "migrate": { "suffixes": [ "dc=com" ] } } }
+    title: Migrate
+

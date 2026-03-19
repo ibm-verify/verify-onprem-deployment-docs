@@ -1,0 +1,43 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  servers:
+    type: array
+    description: >
+      The configuration entries associated with the servers which are being managed by the Web Administration Tool container.
+    items:
+      type: object
+      properties:
+        label:
+          type: string
+          description: >
+            A label which is given to the server.  If the label is missing the
+            host field will be used as the label.
+        host:
+          type: string
+          description: >
+            The hostname or IP address of the server.
+        port:
+          type: integer
+          description: >
+            The port on which the server is listening for requests.
+          default: 636
+        secure:
+          type: boolean
+          description: >
+            Whether LDAPS will be used to communicate with the server.
+          default: true
+        admin-port:
+          type: integer
+          description: >
+            The port on which the server is listening for administrative 
+            requests.  If a value of 0 is specified the server is not
+            considered to be running the administrative service.
+          default: 3538
+      required:
+      - host
+    examples:
+    - { "webadmin": { "servers": [ { "label": "test-ldap", "host": "test-ldap.ibm.com", "port": 9389, "secure": false, "admin-port": 3538 } ] } }
+    title: Servers
+

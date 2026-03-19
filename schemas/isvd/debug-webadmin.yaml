@@ -1,0 +1,16 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+definitions:
+  debug:
+    type: object
+    description: >
+      The configuration entries which can be used to enable debugging within
+      the container.
+    properties:
+      startup:
+        type: boolean
+        description: >
+          A boolean which is used to indicate whether debugging should be 
+            enabled while bootstrapping the container.
+        default: false
+    title: Debug

@@ -1,0 +1,95 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  database:
+    type: object
+    description: >
+      The configuration entries associated with the database which is used
+      by the server.
+    properties:
+      type:
+        type: string
+        description: >
+          The type of database which is in use.
+        enum:
+        - local
+        - postgresql
+        default: local
+      postgresql:
+        type: object
+        description: >
+          Details associated with the postgresql database which is to be
+          used.
+        properties:
+          name:
+            type: string
+            description: >
+              The name of the database to use.
+            default: idsldap
+          change-log-name:
+            type: string
+            description: >
+              The name of the database to use for the change log (if enabled).
+            default: ldapclog
+          user:
+            type: object
+            description: >
+              Details associated with the database user which is used for
+              authentication.
+            properties:
+              id:
+                type: string
+                description: >
+                  The identity of the database user which is used for 
+                  authentication.
+              pwd:
+                type: string
+                description: >
+                  The password of the database user which is used for 
+                  authentication.
+            required:
+            - id
+            - pwd
+          server:
+            type: object
+            description: >
+              Details associated with the server which hosts the database.
+            properties:
+              name:
+                type: string
+                description: >
+                  The hostname or IP address of the server on which the database
+                  resides.
+              port:
+                type: integer
+                description: >
+                  The port on which the database server is listening for 
+                  requests.
+                default: 5432
+            required:
+            - name
+          ssl:
+            type: object
+            description: >
+              Details used when connecting to the server over TLS.
+            properties:
+              verify-hostname:
+                type: boolean
+                description: >
+                  Defines whether the hostname of the server is verified against
+                  the common name or SAN field of the server certificate.
+                default: true
+              ca-cert:
+                type: string
+                description: >
+                  The certificate of the CA which signed the database server 
+                  certificate, in PEM format.  If no certificate is provided the
+                  server will attempt to connect to the database server using an
+                  unsecure connection.
+        required:
+        - user
+        - server
+    examples:
+    - { "server": { "database": { "type": "postgresql", "postgresql": { "name": "db-name", "user": { "id": "db-user-id", "pwd": "db-user-pwd" }, "server": { "name": "postgresql.ibm.com", "port": 5432 }, "ssl": { "ca-cert": "@/var/data/ca_cert.pem" } } } } }
+    title: Change Log

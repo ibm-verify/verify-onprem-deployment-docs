@@ -1,0 +1,52 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  keyfile:
+    type: object
+    description: >
+      The configuration elements associated with the SSL key file.  This will
+      include any keys used by the server, along with any trusted certificates.
+      A self-signed certificate will be created as the default certificate
+      in the key file, with the label: 'self-signed-server'.
+    properties:
+      keys:
+        type: array
+        description: >
+          Any private keys used by the server.  The private key and associated
+          certificate should be combined into a single configuration
+          entry in PEM format, and the private key should not be protected by 
+          a password.  By way of example, to create a private key using
+          OpenSSL the following command can be executed: 
+            'openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365`
+
+           The key and certificate can then be concatenated into a single file.
+
+           If this key is to be used as the main certificate served by the server the general.ssl.cert-label configuration entry must be set to the name of the label for the key.
+        items:
+          type: object
+          properties:
+            key:
+              type: string
+              description: >
+                The PEM encoded private key and public certificate.
+            label:
+              type: string
+              description: >
+                The label which will be associated with this key.
+          required:
+          - label
+          - key
+      trusted-certificates:
+        type: array
+        description: >
+          Any certificates which should be trusted by the server, in PEM
+          format.
+        items:
+          type: string
+          description: >
+            A certificate which is to be trusted by the server, in PEM format.
+    examples:
+    - { "keyfile": { "keys": [ { "label": "server-key", "key": "@/var/data/key.pem" } ], "trusted-certificates": [ "@/var/data/ca_cert.pem" ] } }
+    title: Key File
+

@@ -1,0 +1,111 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  general:
+    description: >
+      The general configuration elements of the container.
+    type: object
+    properties:
+      license:
+        type: object
+        properties:
+          key:
+            type: string
+            description: >
+              The license key, required to run the container.
+          accept:
+            type: string
+            description: >
+              Which license agreement has been accepted, either 'limited' or
+              'standard' or 'enterprise'.  To display a license agreement start the
+              container with the 'license' command, for example: 
+              'docker run --rm icr.io/isvd/verify-directory-webadmin:latest license standard'
+            enum:
+            - limited
+            - standard
+            - enterprise
+        required:
+        - key
+        - accept
+      ports:
+        type: object
+        description: >
+          The ports on which the server will listen for requests.
+        properties:
+          http:
+            type: integer
+            description: >
+              The port on which the server will listen for HTTP requests.  A
+              value of '0' is used to indicate that the server should not
+              listen for HTTP requests.  Please note that the server can
+              listen on ports lower than 1024, but in order to do so the
+              container infrastructure must grant the container the necessary
+              permissions.
+            default: 0
+          https:
+            type: integer
+            description: >
+              The port on which the server will listen for HTTPS requests.  A
+              value of '0' is used to indicate that the server should not
+              listen for HTTPS requests.  Please note that the server can
+              listen on ports lower than 1024, but in order to do so the
+              container infrastructure must grant the container the necessary
+              permissions.
+            default: 9443
+      ssl:
+        type: object
+        description: >
+          SSL configuration details for the server.
+        properties:
+          cert-label:
+            type: string
+            description: >
+              The label that identifies the servers Personal Certificate in 
+              the key database file.  If the field is not specified the default
+              certificate from the key file will be used by the server 
+              for SSL connections.
+          protocols:
+            type: array
+            description: >
+              The TLS protocol versions to enable for the connection.  The options
+              include:
+              <ul>
+              <li>TLS10: Transport Layer Security version 1.0.</li>
+              <li>TLS11: Transport Layer Security version 1.1.</li>
+              <li>TLS12: Transport Layer Security version 1.2.</li>
+              <li>TLS13: Transport Layer Security version 1.3.</li>
+              </ul>
+              Please note that the value is case sensitive.
+            items:
+              type: string
+              enum:
+              - TLS10
+              - TLS11
+              - TLS12
+              - TLS13
+            default: TLS12, TLS13
+          validate-hostname:
+            type: boolean
+            description: >
+              This boolean value controls whether the hostname contained
+              within the certificate which is received from a remote LDAP server
+              is validated against the name of the host which is used to
+              connect to the remote LDAP server.  If validation is enabled, a
+              connection will not be established with a server if the server 
+              hostname does not match the hostname (SANS or CN) found in the 
+              certificate.
+            default: true
+      json-logging:
+        type: boolean
+        description: >
+          Whether the logging and auditing messages should be formatted in 
+          JSON or not.  
+        default: true
+    title: General
+    examples:
+    - { "general": { "license": { "accept": "standard", "key": "VGVzd..." }, "ports": { "http": 0, "https": 9443 } } }
+    required:
+    - license
+
+

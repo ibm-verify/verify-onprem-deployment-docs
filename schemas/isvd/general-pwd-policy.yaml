@@ -1,0 +1,125 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  pwd-policy:
+    type: object
+    description: >
+      The configuration entries associated with the password policy which is
+      enforced by the server.
+    properties:
+      enabled:
+        type: boolean
+        description: >
+          Indicates if the IBM Administrative Password Policy is ON.
+        default: true
+      failure-count-interval:
+        type: number
+        description: >
+          Specifies the number of seconds after which the password failures 
+          are purged from the failure counter, even though no successful 
+          authentication occurred.
+        default: 0
+      lockout:
+        type: boolean
+        description: >
+          Enables replication of security attributes between master and 
+          read-only replica so that password policy for account lockout can be 
+          strongly enforced in replication topologies.
+        default: true
+      lock-duration:
+        type: number
+        description: >
+          Specifies the number of seconds that the password cannot be used to 
+          authenticate due to too many failed bind attempts.
+        default: 300
+      max-consecutive-repeated-chars:
+        type: number
+        description: >
+          Specifies the maximum number of consecutive repeated characters in 
+          the password field.
+        default: 2
+      max-failures:
+        type: number
+        description: >
+          Specifies the number of consecutive failed bind attempts after which 
+          the password may not be used to authenticate.
+        default: 10
+      max-repeated-chars:
+        type: number
+        description: >
+          Specifies the maximum number of repeated characters allowed.
+        default: 2
+      min-alpha-chars:
+        type: number
+        description: >
+          Specifies the minimum number of characters required for a users 
+          password.
+        default: 2
+      min-diff-chars:
+        type: number
+        description: >
+          Specifies the minimum number of different (unique) characters 
+          required for a users password.
+        default: 2
+      min-length:
+        type: number
+        description: >
+          Specifies the minimum number of characters that must be used in a 
+          password.
+        default: 8
+      min-other-chars:
+        type: number
+        description: >
+          Specifies the minimum number of other characters required.
+        default: 2
+      advanced:
+        type: object
+        description: >
+          The configuration entries associated with rules for advanced 
+          password syntax checking.
+        properties:
+          no-spaces:
+            type: boolean
+            description: >
+              Specifies whether the password can contain spaces.
+          no-user-id:
+            type: boolean
+            description: >
+              Specifies that the password cannot be the same, or contain the value of the configured login attribute. The login attribute is configured by using the login-attribute configuration entry. It is set to the name of the LDAP attribute, such as UID that is used as the user ID attribute for users. Note: Enabling this rule might have a performance impact on the user password update operation. To process this rule, an internal search is done on the user to obtain the value of the login attribute. It then checks whether the specified password is the same, or contains the value of the login attribute.
+          login-attribute:
+            type: string
+            description: >
+              The name of the attribute which contains the user identity.  This is used by the no-user-id rule.
+          min-special-chars:
+            type: number
+            description: >
+              Specifies the minimum number of special characters that a password must contain.
+          min-numeric-chars:
+            type: number
+            description: >
+              Specifies the minimum number of numeric characters that a password must contain.
+          min-lowercase-chars:
+            type: number
+            description: >
+              Specifies the minimum number of lowercase characters that a password must contain.
+          min-uppercase-chars:
+            type: number
+            description: >
+              Specifies the minimum number of uppercase characters that a password must contain.
+          max-asc-chars:
+            type: number
+            description: >
+              Specifies the maximum number of ascending characters that a password can contain. The characters can be alphabetic or numeric.
+          max-dsc-chars:
+            type: number
+            description: >
+              Specifies the maximum number of descending characters that a password can contain. The characters can be alphabetic or numeric.
+          custom-policy-script:
+            type: string
+            description: >
+              Specifies a custom password policy written in the Lua scripting language.
+    examples:
+    - { "general": { "pwd-policy": { "enabled": true, "lockout": false, "lock-duration": 1800, "max-failures": 5, "min-length": 5, "failure-count-interval": 0, "max-consecutive-repeated-chars": 2, "max-repeated-chars": 2, "min-alpha-chars": 2, "min-diff-chars": 2, "min-other-chars": 2 } } }
+    title: Password Policy
+

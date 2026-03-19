@@ -1,0 +1,122 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  server-groups:
+    type: array
+    description: >
+      An array of objects which are used to define the various groupings of proxied servers.  Server groupings enable the user to state that several backend servers are mirrors of each other, and proxy server processing can continue even if one or more backend servers in the group are down, assuming that at least one backend server is online. 
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: >
+            The name which will be given to the group.
+        servers:
+          type: array
+          description: >
+            The servers which belong to this group.
+          items:
+            type: object
+            examples:
+            - { "proxy": { "server-groups": [ { "name": "group_a", "servers": [ { "name": "server_a", "id": "server_a_id", "target": "ldap://server_a.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } } ] } ] } }
+            properties:
+              bind-method:
+                type: string
+                description: >
+                  The method used to bind to backend servers.  The options
+                  include:
+
+                  - Simple: The simple username and password bind method.
+
+                  - Digest: The Digest bind method.
+
+                  - Kerberos: The Kerberos bind method.
+
+                  Please note that the value is case sensitive.
+                default: Simple
+                enum:
+                - Simple
+                - Digest
+                - Kerberos
+              certificate-label:
+                type: string
+                description: >
+                 The label that identifies the private key which will be used when communicating with the proxied server.
+              connection-pool-size:
+                type: number
+                description: >
+                  The number of connections to be maintained by the proxy server to an individual backend server.
+                default: 120
+              digest:
+                type: object
+                description: >
+                  The credential information when DIGEST is selected as the bind method to the backend server.
+                properties:
+                  realm:
+                    type: string
+                    description: >
+                      The realm of the digest MD-5 bind when binding to a backend server.
+                  user-name:
+                    type: string
+                    description: >
+                      The username to be used when DIGEST is selected as the bind method to a backend server.
+                required:
+                - user-name
+                - realm
+              health-check-olimit:
+                type: number
+                description: >
+                  The limit on the number of outstanding requests after which a Proxy Health Check can mark a backend server as hung.
+                default: 5
+              id:
+                type: string
+                description: >
+                  The identifier of the server.
+              max-pending-ops-per-client:
+                type: number
+                description: >
+                  The maximum number of operations that could be pending for a single backend server from a single client connection.
+                default: 5
+              name:
+                type: string
+                description: >
+                  The name which will be given to the server.
+              status-interval:
+                type: number
+                description: >
+                  The interval between status checks.
+                default: 3
+              target:
+                type: string
+                description: >
+                  The URL of a backend server.  This must be in the form ldap:// or ldaps:// (to indicate SSL use ldaps).
+              user:
+                type: object
+                description: >
+                  The credential information of the backend server.
+                properties:
+                  dn:
+                    type: string
+                    description: >
+                      The distinguished name of the user which will be used to authenticate to the backend server.
+                  password:
+                    type: string
+                    description: >
+                      The password of the user which will be used to authenticate to the backend server.
+                required:
+                - dn
+                - password
+            required:
+            - name
+            - id
+            - target
+            - user
+      required:
+      - name 
+      - servers
+    examples:
+    - { "proxy": { "server-groups": [ { "name": "group_a", "servers": [ { "name": "server_a", "id": "server_a_id", "target": "ldap://server_a.ibm.com:389", "bind-method": "Simple", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } }, { "name": "server_b", "id": "server_b_id", "target": "ldap://server_b.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } } ] } ] } }
+    title: Server Groups
+

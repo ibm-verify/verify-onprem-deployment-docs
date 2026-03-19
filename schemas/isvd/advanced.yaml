@@ -1,0 +1,61 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  advanced:
+    type: array
+    description: >
+      An array of objects which are used to define specific ibm-slapd 
+      properties to be set for the server.
+    items:
+      type: object
+      properties:
+        attr:
+          type: array
+          description: >
+            The attributes of the DN to modify.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: >
+                  The name of the attribute.
+              operation:
+                description: >
+                  The LDAP operation which is to be performed on the attribute.
+                  The options include: 
+
+                  - replace: Replace any existing attribute value with the new value.
+
+                  - add: Add the additional value to the attribute.
+
+                  - delete: Delete the specified attribute and value.
+
+                  Please note that the value is case sensitive.
+                default: replace
+                enum:
+                - replace
+                - add
+                - delete
+              values:
+                type: array
+                description: >
+                  The string value(s) of the property.  Please note that if the
+                  value is numeric it should be surrounded by quotes.
+                items:
+                  type: string
+            required:
+            - name
+            - values
+        dn:
+          type: string
+          description: >
+            The DN of the property.
+      required:
+      - attr
+      - dn
+    examples:
+    - { advanced: [{dn: cn=Configuration, attr: [{name: ibm-slapdTimeLimit, values: ["900"]}]}] }
+    title: Advanced
+

@@ -1,0 +1,146 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  clusters:
+    type: array
+    description: >
+      An array of objects which are used to define the various endpoints which make up the virtual directory.  Endpoints are directories that are replicas of each other.
+    items:
+      type: object
+      properties:
+        vendor-type:
+          type: string
+          description: >
+            Specify the vendor of the the backend server.
+          default: SecurityDirectoryServer
+          enum:
+          - ActiveDirectory
+          - SecurityDirectoryServer
+          - SunDirectory
+          - OpenLDAP
+        priority:
+          type: integer
+          description: >
+            Priority associated with the backend server / cluster of servers, 1 being the highest.
+          default: 1
+        suffix:
+          type: string
+          description: >
+            The Virtual Directory server suffix.  This suffix will be mapped to the backend suffix, as specified by the 'endpoint-suffix' entry.
+        endpoint-suffix:
+          type: string
+          description: >
+            Specifies the backend suffix. This suffix is mapped to the Virtual Directory server suffix, as specified by the 'suffix' entry.
+        unique-attr:
+          type: string
+          description: >
+            Specifies the unique attribute for the backend.
+        read-only:
+          type: boolean
+          description: >
+            Specifies if the server is read-only.
+          default: false
+        servers:
+          type: array
+          description: >
+            The servers which belong to this cluster.
+          items:
+            type: object
+            examples:
+            - { "virtual-dir": { "clusters": [ { "servers": [ { "target": "ldap://server_a.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } } ] } ] } }
+            properties:
+              target:
+                type: string
+                description: >
+                  The URL which will be used to access the server.  This must be in the form ldap:// or ldaps:// (to indicate SSL use ldaps).
+              health-check-olimit:
+                type: number
+                description: >
+                  The limit on the number of outstanding requests after which a Health Check can mark a backend server as hung.
+                default: 5
+              timeout:
+                type: integer
+                description: >
+                  Specifies the backend server connection timeout in milli-seconds.
+                default: 10000
+              connection-pool-size:
+                type: integer
+                description: >
+                  The number of connections to be maintained by the Virtual Directory server to the backend server.
+                default: 120
+              role:
+                type: string
+                description: >
+                  Specifies the role of the backend server configured with the Virtual Directory server. 
+                enum:
+                - Any
+                - AuthenticationServer
+                - UpdateServer
+                - ReadServer
+                default: AuthenticationServer
+              certificate-label:
+                type: string
+                description: >
+                 The label that identifies the private key which will be used when communicating with the backend server.
+              status-interval:
+                type: number
+                description: >
+                  The interval between status checks.
+                default: 3
+              user:
+                type: object
+                description: >
+                  The credential information of the backend server.
+                properties:
+                  dn:
+                    type: string
+                    description: >
+                      The distinguished name of the user which will be used to authenticate to the backend server.
+                  password:
+                    type: string
+                    description: >
+                      The password of the user which will be used to authenticate to the backend server.
+                required:
+                - dn
+                - password
+            required:
+            - target
+            - user
+        attr-mapping:
+          type: array
+          description: >
+            The mapping of attributes between the Virtual Directory server and the backend server.  If no attribute mapping is supplied all of the standard IBM Verify Directory server attributes will be mapped as-is.
+          items:
+            type: object
+            examples:
+            - { "virtual-dir": { "clusters": [ { "attr-mapping": [ { "attr": "cn", "endpoint-attr": "cn", "class": "Normal" } ] } ] } }
+            properties:
+              attr:
+                type: string
+                description: >
+                  The name of the attribute which will be used by the Virtual Directory server.
+              endpoint-attr:
+                type: string
+                description: >
+                  The name of the attribute which is used by the backend server.
+              class:
+                type: string
+                description: >
+                  The class of the attribute.
+                enum:
+                - Normal
+                - Sensitive
+                - Critical
+            required:
+            - attr
+            - endpoint-attr
+            - class
+      required:
+      - suffix
+      - endpoint-suffix
+      - servers
+    examples:
+    - { "virtual-dir": { "clusters": [ { "suffix": "o=sample", "endpoint-suffix": "o=backend", "servers": [ { "target": "ldap://server_a.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } }, { "target": "ldap://server_b.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } } ],  "attr-mapping": [ { "attr": "cn", "endpoint-attr": "cn", "class": "Normal" } ] } ] } }
+    title: Virtual Directory
+

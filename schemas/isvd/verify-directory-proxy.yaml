@@ -1,0 +1,39 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$ref": "#/definitions/Welcome10"
+title: "IBM Verify Directory: Proxy"
+description: >
+  This page documents the YAML schema which can be used to configure
+  a Verify Directory Proxy container. <br><br>
+  The value of each YAML key entry can be provided in the YAML file as either
+  plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an 
+  environment variable (prefix: '$'), loaded from a local file (prefix: '@'),
+  retrieved from a Kubernetes secret (format: secret:{name}/{field}), or 
+  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}). 
+  <br><br>
+  In addition to this, each of the YAML keys can also be provided as an
+  environment variable, using a normalized value of the key name as the
+  environment variable name.  For example, to set the server port the following
+  environment variable can be set: 'server.port'.
+
+examples:
+  - { "general": { "license": { "key": "VGVzdDotMTowOjCCAaQG...", "accept": "standard" }, "id": "test.ibm.com", "admin": { "pwd": "passw0rd1" }, "ports": { "ldap": 0, "ldaps": 9636 } }, "proxy": { "server-groups": [ { "name": "group_a", "servers": [ { "bind-method": "Simple", "id": "server_a", "name": "server_a", "target": "ldap://10.10.10.200:389", "user": { "dn": "cn=root", "password": "passw0rd" } } ] } ], "suffixes": [ { "base": "dc=ibm.com", "name": "split_a", "num-partitions": 1, "servers": [ { "index": 1, "name": "server_a", "role": "primarywrite" } ] } ] } }
+    
+definitions:
+  Welcome10:
+    type: object
+    properties:
+      advanced:
+        "$ref": "advanced.yaml#/definitions/advanced"
+      debug:
+        "$ref": "debug.yaml#/definitions/debug"
+      general:
+        "$ref": "general.yaml#/definitions/general"
+      keyfile:
+        "$ref": "keyfile.yaml#/definitions/keyfile"
+      proxy:
+        "$ref": "proxy.yaml#/definitions/proxy"
+    required:
+    - general
+    - proxy
+    title: Welcome10

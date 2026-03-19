@@ -1,0 +1,24 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  seed:
+    type: object
+    description: >
+      The configuration entries associated with the seed container, used to seed a container environment with data.
+    properties:
+      migrate:
+        "$ref": "seed-migrate.yaml#/definitions/migrate"
+      replica:
+        "$ref": "seed-replica.yaml#/definitions/replica"
+      conf-to-yaml:
+        type: boolean
+        description: >
+          Specifies whether to migrate ibmslapd.conf file to YAML.
+        default: false
+    examples:
+    - { "seed": { "migrate": { "suffixes": [ "dc=com" ] } } }
+    - { "seed": { "replica": { "clean": true } } }
+    - { "seed": { "conf-to-yaml": true  } }
+    title: Seed
+

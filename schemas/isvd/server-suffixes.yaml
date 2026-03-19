@@ -1,0 +1,45 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  suffixes:
+    type: array
+    description: >
+      The suffixes which will be hosted by this server.
+    items:
+      type: object
+      description: >
+        The definition for a single suffix which will be hosted by this
+        server.
+      properties:
+        dn:
+          type: string
+          description: >
+            The DN of the suffix.
+        object-classes:
+          type: array
+          description: >
+            The object classes which are used in the top level LDAP entry 
+            for this suffix.  If no object classes are specified the top level
+            LDAP entry for this suffix must be created manually.  Please note
+            that after the top level LDAP entry has been created it will not
+            be modified if the YAML is modified.  Any subsequent updates to the 
+            top level LDAP entry must be manually applied.
+          items:
+            type: string
+        attributes:
+          type: array
+          description: >
+            Any attributes, in addition to the attributes defined in the
+            RDN, which should be set on the top level LDAP entry for this 
+            suffix.  Please note that after the top level LDAP entry has been 
+            created it will not be modified if the YAML is modified.  Any 
+            subsequent updates to the top level LDAP entry must be manually 
+            applied.
+          items:
+            type: string
+      required:
+      - dn
+    examples:
+    - { "server": { "suffixes": [ { "dn": "o=ibm,c=us", "object-classes": [ "organization", "country" ], "attributes": [ "c=us" ] }, { "dn": "o=sample" } ] } }
+    title: Suffixes

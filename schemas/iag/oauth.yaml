@@ -1,0 +1,180 @@
+# Copyright contributors to the Application Gateway project
+
+oauth:
+  type: object
+  x-name: OAuth
+  x-openapi-required:
+    - name
+    - attributes
+  properties:
+
+      name:
+        description: >
+          The name which is used to identify and describe this endpoint.
+        type: string
+        x-uuid: true
+        x-required: true
+
+      restricted:
+        description: >
+          A boolean flag which indicates whether this endpoint is restricted
+          to certain resource servers or not.  If the endpoint is restricted
+          only those resource servers which specifically mention this
+          endpoint, using the identity/oauth element within the resource
+          server definition, will be allowed to use this endpoint.
+        type: boolean
+        default: false
+
+      introspection_endpoint:
+        description: |
+          The fully qualified introspection endpoint for the OAuth provider.
+
+          For IBM Security Verify, this URL is usually in the format:<br/>
+          `https://<verify-hostname>/v1.0/endpoint/default/introspect`
+
+          For IBM Security Verify Access, this URL is usually in the format:<br/>
+          `https://<verify-access-hostname>/<junction>/sps/oauth/oauth20/introspect`
+        type: string
+
+      client_id:
+        description: >
+          The client identity which is used to authenticate to the introspection
+          endpoint.
+        type: string
+        x-name: Client ID
+
+      client_secret:
+        description: >
+          The client secret which is used to authenticate to the introspection
+          endpoint.  If a client_id field is not configured the secret will
+          be treated as a bearer token, otherwise it will be used in a basic
+          authentication header.
+        type: string
+
+      client_id_hdr:
+        description: >
+          The name of the HTTP header which contains the client identifier
+          which is used to authenticate to the introspection endpoint.  This
+          configuration entry is mutually exclusive with the client_id
+          configuration entry.  If the client_id configuration entry is
+          provided this configuration entry will be ignored.
+        type: string
+        x-name: Client ID Header
+
+      auth_method:
+        description: >
+          Introspection can be authenticated with BA or Forms. Specify the value
+          `client_secret_post` to post the client credentials or
+          `client_secret_basic` to provide the credentials via the
+          Authorization header. If not provided will default to
+          `client_secret_post`
+        type: string
+        default: "client_secret_post"
+        enum:
+          - client_secret_post
+          - client_secret_basic
+        x-name: Authentication Method
+
+      token_type_hint:
+        description: >
+          A hint about the type of the token submitted for introspection.
+        type: string
+        default: access_token
+
+      ssl:
+        description: >
+          SSL settings for the OAuth introspection connection.
+        type: object
+        x-name: SSL
+        x-openapi-required:
+          - certificate
+        properties:
+          certificate:
+            description: >
+              If required, any signer certificates required for the reverse
+              proxy to trust the OAuth provider can be specified here in PEM
+              format.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+
+      mapped_identity:
+        description: >
+          A formatted string which is used to construct the credential principal
+          name from elements of the introspection response token. Claims can be
+          added to the identity string, surrounded by `{}`, for example:
+            {iss}/{sub} - would construct a principal name like the following:
+            https://server.example.com/248289761001
+        type: string
+        default: "{sub}"
+
+      proxy:
+        description: >
+          Specifies the proxy, if any, which is used to reach the OAuth
+          provider. The proxy configuration entry should be in URL format. Eg:
+          `http[s]://<address>:<port>`
+        type: string
+
+      attributes:
+        description: >
+          A list of JSON data elements from the introspection response token
+          which should be included in or excluded from the credential as an
+          extended attribute. See the [Attributes Format](#attributes-format)
+          table for a description of the expected format.
+        type: array
+        items:
+          type: string
+          x-uuid: true
+          x-required: true
+          x-name: Attribute
+
+      multi_valued_scope:
+        description: >
+          By default the OAuth scope attribute is provided as a single space
+          separated string.  By enabling this configuration option the scope
+          attribute will instead be converted to a multi-value attribute.
+        type: boolean
+        default: true
+
+      headers:
+        description: >
+          Additional HTTP headers which can be included in the introspection 
+          request.
+        type: array
+        items:
+          title: OauthHeaders
+          type: object
+          x-openapi-required:
+            - source
+            - value
+            - name
+          properties:
+            source:
+              description: >
+                The source that the HTTP header value should be taken from.
+              type: string
+              enum:
+                - text
+                - header
+                - credential
+              x-required: true
+              x-uuid: true
+            value:
+              description: >
+                For the `header` or `credential` type, the name of the HTTP 
+                header or credential attribute the value will be taken from.
+
+                For the `text` type, this is the string literal which will be
+                used as the value.
+              type: string
+              x-required: true
+              x-uuid: true
+            name:
+              description: >
+                The name of the HTTP header which will be included in the
+                introspection request.
+              type: string
+              x-required: true
+              x-uuid: true

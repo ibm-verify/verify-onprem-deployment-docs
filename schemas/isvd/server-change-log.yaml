@@ -1,0 +1,46 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  change-log:
+    type: object
+    description: >
+      The configuration entries associated with the change log capability
+      of the server.  The change log records all the directory updates in a 
+      change log database.  When you enable the change log, it significantly 
+      slows down the update performance of a directory server.
+    properties:
+      enabled:
+        type: boolean
+        description: >
+          A boolean which is used to indicate whether the change log
+          functionality is enabled or not.  
+        default: false
+      max-entries:
+        type: number
+        description: >
+          Specifies the maximum number of entries to keep in the
+          change log. A value of 0 means there is no limit on
+          the number of entries.
+        default: 1000000
+      max-days:
+        type: number
+        description: >
+          Specifies, in days, the maximum amount of time to keep
+          entries in the change log. This is combined with the max-hours entry
+          to specify the maximum age of a change log entry.
+          A value of 0 means that there is no age limit on entries in the 
+          change log.
+        default: 0
+      max-hours:
+        type: number
+        description: >
+          Specifies, in hours, the maximum amount of time
+          to keep entries in the change log. This is combined
+          with the max-days entry to specify the maximum age
+          of a change log entry.  A value of 0 means that there is no
+          age limit on enries in the change log.
+        default: 0 
+    examples:
+    - { "server": { "change-log": { "enabled": true, "max-entries": 99999, "max-days": 55, "max-hours": 12 } } }
+    title: Change Log

@@ -1,0 +1,24 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  virtual-dir:
+    type: object
+    description: >
+      The configuration entries associated with the virtual directory.
+    properties:
+      unique-attr-based-auth:
+        type: boolean
+        description: >
+          Specifies whether the Virtual Directory Server should process authentications based on unique attributes.
+        default: false
+      clusters:
+        "$ref": "virtualdir-clusters.yaml#/definitions/clusters"
+      view:
+        "$ref": "virtualdir-view.yaml#/definitions/view"
+    required:
+    - clusters
+    examples:
+    - { "virtual-dir": { "clusters": [ { "suffix": "o=sample", "endpoint-suffix": "o=backend", "servers": [ { "target": "ldap://server_a.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } }, { "target": "ldap://server_b.ibm.com:389", "user": { "dn": "uid=Manager,cn=ibmpolicies", "password": "passw0rd" } } ],  "attr-mapping": [ { "attr": "cn", "endpoint-attr": "cn", "class": "Normal" } ] } ] } }
+    title: Virtual Directory
+

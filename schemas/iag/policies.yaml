@@ -1,0 +1,961 @@
+# Copyright contributors to the Application Gateway project
+
+policies:
+  description: >
+    The `policies` node defines the configuration of path based policies for
+    the IBM Application Gateway.
+  type: object
+  properties:
+
+    http_transformations:
+      description: >
+        The gateway can transform inbound requests from clients before
+        forwarding them to the application or outgoing responses from the
+        application before returning them to the client. Refer to the
+        documentation for information about how to author HTTP transformation
+        rules XSL documents.
+      type: object
+      x-name: HTTP Transformations
+      properties:
+
+        request:
+          description: >
+            This node defines the transformations which will take place on
+            requests. This entry is an array and can be used to specify multiple
+            transformations.
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  request:
+                    - name: resource_1_rule
+                      host: www.test.com
+                      paths:
+                        - "*"
+                      method: GET
+                      rule: "@http_trans_rule.lua"
+          type: array
+          items:
+            $ref: "policies.yaml#/PoliciesHttpTransformationRule"
+            
+
+        preazn:
+          description: >
+            This node defines the transformations which will take place on
+            requests before authorization has been completed. This entry is 
+            an array and can be used to specify multiple transformations.
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  preazn:
+                    - name: resource_1_preazn_rule
+                      host: www.test.com
+                      paths:
+                        - "*"
+                      method: GET
+                      rule: "@http_trans_rule.lua"
+          type: array
+          items:
+            $ref: "policies.yaml#/PoliciesHttpTransformationRule"
+
+        postazn:
+          description: >
+            This node defines the transformations which will take place on
+            requests after authorization has been completed. This entry is 
+            an array and can be used to specify multiple transformations.
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  postazn:
+                    - name: resource_1_postazn_rule
+                      host: www.test.com
+                      paths:
+                        - "*"
+                      method: GET
+                      rule: "@http_trans_rule.lua"
+          type: array
+          items:
+            $ref: "policies.yaml#/PoliciesHttpTransformationRule"
+
+        postauthn:
+          description: >
+            This node defines the transformations which will take place on
+            requests after authentication has been completed. This entry is 
+            an array and can be used to specify multiple transformations.
+
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  postauthn:
+                    - name: resource_1_postauthn_rule
+                      host: www.test.com
+                      authentication_mechanisms:
+                        - oidc
+                      rule: "@http_trans_rule.lua"
+          type: array
+          items:
+            $ref: "policies.yaml#/PoliciesHttpPostAuthnTransformationRule"
+        
+        response:
+          description: >
+            This node defines the transformations which will take place on
+            responses. This entry is an array and can be used to specify multiple
+            transformations.
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  response:
+                    - name: resource_1_rule
+                      host: www.test.com
+                      paths:
+                        - "/resource_1"
+                        - "/alt/resource_1"
+                      method: GET
+                      rule: "@http_trans_rule.lua"
+                    - name: legacy_xslt_rule
+                      host: www.test.com
+                      paths:
+                        - "/legacy"
+                      method: GET
+                      rule: "@legacy_rule.xsl"
+                      attributes:
+                        - AZN_CRED_PRINCIPAL_NAME
+          type: array
+          items:
+            $ref: "policies.yaml#/PoliciesHttpTransformationRule"
+
+        secrets:
+          description: >
+            This node contains secrets which can be loaded in Lua HTTP 
+            Transformation rules.
+
+            The secret values can be loaded using the `Control.getConfig`
+            method, passing a nil value for the first parameter and the
+            secret name for the second parameter.
+
+            For example, the following Lua snippet loads the value of a 
+            secret named "serviceApiKey":
+
+            ```
+            value = Control.getConfig(nil, "serviceApiKey")
+            ```
+
+          x-examples:
+            - policies:
+                http_transformations:
+                  secrets:
+                    - name:  serviceApiKey
+                      value: "$SERVICE_API_KEY"
+                    - name:  serviceApiEndpoint
+                      value: https://api.myservice.ibm.com/v1
+
+          type: array
+          items:
+            type: object
+            properties:
+              name: 
+                type: string
+                description: > 
+                  Name of the secret. This is the name which can be used when 
+                  loading the secret data.
+
+                x-uuid: true
+                x-required: true
+
+              value:
+                type: string
+                description: The content of the secret.
+                
+                x-required: true
+
+    cors:
+      description: >
+        The reverse proxy can support cross-origin resource sharing with
+        CORS aware clients.
+
+        Each defined policy must at a minimum contain:
+          * name
+          * method
+          * policy:allow_origins
+
+        This entry is an array and can be used to specify multiple CORS policies.
+
+      x-examples:
+        - policies:
+            cors:
+              - name: cors_policy_A
+                host: www.test.com
+                paths:
+                  - "/test"
+                  - "/development"
+                method: GET
+                policy:
+                  allow_origins:
+                    - www.test.com
+                    - www.example.com
+                  handle_pre_flight: true
+                  allow_headers:
+                    - test_header
+                    - test_header2
+                  max_age: 600
+                  allow_methods:
+                    - update
+                    - create
+                  allow_credentials: true
+                  expose_headers:
+                    - test_header
+                    - test_header2
+
+      type: array
+      x-name: CORS
+      items:
+        type: object
+        properties:
+
+          name:
+            description: >
+              The name which is associated with this CORS policy.
+            type: string
+            x-uuid: true
+            x-required: true
+
+          host:
+            description: >
+              The host (obtained from the host header in the request) for
+              which this CORS policy will be applied. If no host header
+              is specified all hosts will be matched.
+            type: string
+
+          paths:
+            description: >
+              The paths for which this CORS policy will be applied. This entry
+              is an array and can be used to specify multiple paths.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Path
+
+          method:
+            description: >
+              The HTTP method for which this CORS policy will be applied.
+            type: string
+
+          policy:
+            title: PoliciesCorsPolicy
+            description: >
+              The definition of the CORS policy.
+            type: object
+            properties:
+
+              allow_origins:
+                description: >
+                  A list of origins which are permitted to make cross-origin
+                  requests. To allow cross-origin requests from any origin,
+                  add a single entry `*`.
+                type: array
+                items:
+                  type: string
+                  x-uuid: true
+                  x-required: true
+                  x-name: Origin
+
+              handle_pre_flight:
+                description: >
+                  The reverse proxy can respond to pre-flight requests using
+                  the information from this policy. If set to false,
+                  pre-flight requests will be forwarded to the protected
+                  application.
+                type: boolean
+                default: false
+                x-name: Handle Preflight
+
+              allow_headers:
+                description: >
+                  Headers that are indicated as allowed in responses to
+                  pre-flight requests. Specifying no allow_header entries will
+                  indicate to clients that all headers are permitted.
+                  Not case-sensitive.
+                  Only valid if handle_pre_flight is set to true.
+                type: array
+                items:
+                  type: string
+                  x-uuid: true
+                  x-required: true
+                  x-name: Header
+
+              max_age:
+                description: >
+                  Maximum time (in seconds) a client should cache the
+                  results of a pre-flight request.
+                  A value of -1 indicates to clients that they should not cache,
+                  0 indicates that clients may cache at their own discretion.
+                  Only valid if handle_pre_flight is set to true.
+                type: number
+                minimum: -1
+                maximum: unlimited
+                default: -1
+
+              allow_methods:
+                description: >
+                   Methods that are indicated as allowed in responses to
+                   pre-flight requests.
+                   Specifying no allow_method entries will indicate to
+                   clients that all methods are permitted.
+                   Case-sensitive.
+                   Only valid if handle_pre_flight is set to true.
+                type: array
+                items:
+                  type: string
+                  x-uuid: true
+                  x-required: true
+                  x-name: Method
+
+              allow_credentials:
+                description: >
+                  Indicates to clients that authentication is required when
+                  accessing this resource.
+                type: boolean
+                default: false
+
+              expose_headers:
+                description: >
+                  Indicates to clients which headers they expose from the
+                  response.
+                type: array
+                items:
+                  type: string
+                  x-uuid: true
+                  x-required: true
+                  x-name: Header
+
+    rate_limiting:
+      description: >
+        The gateway can apply rate limiting to incoming requests. This entry defines
+        the rate limiting policies and where they will be applied. Refer to the documentation
+        for information about how to author a rate-limiting policy.
+
+        This entry is an array and can be used to define multiple policies.
+
+      x-examples:
+        - policies:
+            rate_limiting:
+              - name: rate_policy_A
+                methods:
+                  - GET
+                  - POST
+                paths:
+                  - "/test*"
+                  - "/release*"
+                rule: |
+                  ip: true
+                  capacity: 3
+                  interval: 60
+                  reaction: TEMPLATE
+      type: array
+      items:
+        type: object
+        properties:
+
+          name:
+            description: >
+              The name to be associated with this rate limiting rule.
+            type: string
+            x-uuid: true
+            x-required: true
+
+          methods:
+            description: >
+              The methods to which this rate limiting rule will be
+              applied. If the wildcard "*" is specified all methods will be matched.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Method
+
+          paths:
+            description: >
+              The paths to which this rate limiting rule will be applied. The path
+              supports wildcards. This entry is an array and can be used to specify
+              multiple paths. Note that the policy will be duplicated and applied
+              for each specified path, multiple paths do not share a common
+              request bucket. To share a common request bucket for multiple paths,
+              provide a single path pattern which matches all required paths.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Path
+
+          rule:
+            description: >
+              The rate limiting rule.
+            type: string
+
+    content_injection:
+      description: >
+        The gateway can inject content into responses. This entry defines the content
+        and when injection should take place. Content injection is performed based on the request path
+        and a specific location within the response.
+
+        This entry is an array and can define multiple content injection points.
+
+      x-examples:
+        - policies:
+            content_injection:
+              - name: content_injection_1
+                paths:
+                  - "/test"
+                  - "/test2"
+                location: "<h3>*"
+                content: |
+                  <hr/>
+                  <h4>Add heading4 after heading3</h4>
+                  <hr/>
+      type: array
+      items:
+        type: object
+        properties:
+
+          name:
+            description: >
+              A name to be associated with this content injection rule.
+            type: string
+            x-uuid: true
+            x-required: true
+
+          paths:
+            description: >
+              The path for which content injection will take place. This entry
+              is an array and can be used to specify multiple paths.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Path
+
+          full_line_match:
+            description: >
+              Should the location match a full line, or should it match
+              any string in the response?  When a full line match is configured
+              the content will be inserted prior to the matching line.  When a
+              partial line match is configured the content will be inserted
+              immediately prior to the matching string.
+            type: boolean
+            default: true
+
+          location:
+            description: >
+              The location where the content should be injected. If a full
+              line match is being used the location is pattern matched against
+              a line in the response using the `*.` wildcard characters.  The
+              maximum length of a line which can be matched is 8192 bytes.
+            type: string
+
+          replace_match:
+            description: >
+              If a partial line match is being used this configuration entry
+              will control whether the matching string is replaced with
+              the supplied content, or whether the supplied content is
+              inserted prior to the matching string.  This configuration
+              entry will be ignored if full line matches are being used.
+            type: boolean
+            default: false
+
+          content:
+            description: >
+              The data which is to be injected.
+            type: string
+
+    authorization:
+      description: >
+        The gateway can apply authorization rules to incoming requests.
+        This entry defines a list of matching requests, rules and actions
+        to perform if matches are found.
+        The rules can be either:
+          * Defined directly here in an entry.
+          * Defined in the authorization section and reference by name here in an entry.
+
+        This entry defines authorization rules directly.
+        There are also two pre-defined rules which can be used:
+          * "anyuser" : Which allows access to any user, even if they are not authenticated.
+          * "anyauth" : Which allows access to any authenticated user.
+
+
+      x-examples:
+        - policies:
+            authorization:
+              - name: policyA
+                host: www.test.com
+                paths:
+                  - /test*
+                methods:
+                  - GET
+                  - POST
+                rule: (any groupIds = "administrator")
+                action: permit
+
+              - name: policyB
+                host: www.example.com
+                paths:
+                  - /example*
+                methods:
+                  - DELETE
+                rule: anyuser
+                action: obligate
+                obligation:
+                  oidc:
+                    acr_values: "administrator mfa"
+                    prompt: login
+
+              - name: mfa_required
+                rule: 'acr = "urn:ibm:security:policy:id:2"'
+                paths:
+                  - "/sensitive"
+                include_subpaths: true
+                action: "permit"
+
+              - name: mfa_required_obligate
+                rule: 'acr != "urn:ibm:security:policy:id:2"'
+                paths:
+                  - "/sensitive"
+                action: "obligate"
+                obligation:
+                  oidc:
+                    acr_values: "urn:ibm:security:policy:id:2"
+                    prompt: "login"
+
+              - name: eula_not_accepted
+                rule: 'eula != "true"'
+                paths:
+                  - "/application/*"
+                action: "obligate"
+                obligation:
+                  redirect_url: "/eula/landing?origin=%URL%&user=%CREDATTR{preferred_username}%&proxy=%HTTPHDR{x-ibm-proxy}%"
+
+              - name: reauth_required
+                rule: anyauth
+                paths:
+                  - "/application/download/*"
+                action: "reauth"
+                obligation:
+                  oidc:
+                    max_age: 0
+      type: array
+      items:
+        title: PoliciesAuthorization
+        type: object
+        x-openapi-required:
+          - name
+          - paths
+          - methods
+          - rule
+          - action
+        properties:
+
+          name:
+            description: >
+              A name for this policy, which is used to refer to this
+              policy in audit events.
+            type: string
+            x-uuid: true
+            x-required: true
+          host:
+            description: >
+              The host (obtained from the host header in the request) for
+              which this policy will be applied. If no host header
+              is specified all hosts will be matched.
+            type: string
+
+          paths:
+            description: >
+              The paths which this policy will be applied. Each path
+              may contain the `*?` pattern matching characters. This entry
+              is an array and can be used to specify multiple paths.  Please note
+              that if a character immediately follows the '*', the wildcard will 
+              match any sequence of characters up to but not including the first 
+              occurrence of that specific character.  For example, the path
+              "/foo/*a" will match "/foo/ba" but not "/foo/baa".  
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Path
+
+          include_subpaths:
+            description: >
+              Should any sub-paths of the matching path also be included
+              in the match.
+            type: boolean
+            default: false
+
+          methods:
+            description: >
+              The method(s) which this policy applies to. If this is not
+              defined, the policy will apply to all methods.
+            type: array
+            items:
+              type: string
+              x-uuid: true
+              x-required: true
+              x-name: Method
+
+          rule:
+            description: >
+              If a rule string is not defined here, the gateway
+              will look for a named rule (with the same name as this
+              policy) in the authorization section of the configuration
+              YAML. Refer to the authorization section of this template
+              for an explanation of rule syntax. The predefined rules anyuser
+              or anyauth can also be referenced here.
+            type: string
+
+          action:
+            description: >
+              Defines the action to perform if the rule matches. If the action
+              is obligate, the obligation property must also be set for this
+              authorization rule.
+            type: string
+            enum:
+              - permit
+              - deny
+              - obligate
+              - reauth
+
+          obligation:
+            description: |
+              If the action for this rule is obligate or reauth, this obligation can be used to indicate that authentication should take place again with specific parameters.
+
+              This parameter is required for policies with the 'obligation' action, and is optional for policies with the 'reauth' action.
+
+              Note that a policy can only contain one obligated action, that is, this entry must contain `oidc` or `redirect_url`.
+
+              ### Redirect URL Macros
+              The following macros are available:
+
+              Macro | Value
+              ------|------
+              %USERNAME% | The current logged in user, or `unauthenticated` for unauthenticated users.
+              %METHOD% | The HTTP method of the request which matched this policy.
+              %URL% | The URL the client was attempting to access when this policy was matched.
+              %HOSTNAME% | The hostname (HTTP Host header) of the client request which matched this policy.
+              %PROTOCOL% | The protocol (`http` or `https`) which was used
+              %CREDATTR{<attribute_name>}% | The value of the credential attribute named by `<attribute_name>`.
+              %HTTPHDR{<header_name>}% | The value of the HTTP header from the client request named by `<header_name>`.
+
+            type: object
+            properties:
+
+              oidc:
+                description: >
+                  Authentication parameters which can be used when using an
+                  OIDC identity scenario. These parameters are passed as query
+                  string parameters when the authorization endpoint is
+                  requested.
+                type: object
+                x-name: OIDC
+                properties:
+
+                  acr_values:
+                    description: >
+                      A string of ACR (Authentication Context Class References)
+                      to pass to the identity provider. Refer to "acr_values"
+                      in section 3.1.2 of the OpenID Connect Core specification
+                      for further information.
+
+                      Valid ACRs are defined by the identity provider. Refer
+                      to your identity provider for further information about
+                      the ACRs which it supports.
+                    type: string
+                    x-name: acr Values
+
+                  prompt:
+                    description: >
+                      A string of prompt options to pass to the identity
+                      provider. Refer to "prompt" in section 3.1.2 of the
+                      OpenID Connect Core specification for further
+                      information.
+
+                      Prompt options are optional and may not be supported by
+                      all identity providers. Refer to your identity provider
+                      for further information about support prompt values.
+                    type: string
+
+                  max_age:
+                    description: >
+                      The maximum age of the authentication. Refer to 
+                      "max_age" in section 3.1.2 of the OpenID Connect Core 
+                      specification for further information.
+
+                      Setting this to '0' indicates to the provider that
+                      the user should re-authenticate immediately. This 
+                      parameter also forces the provider to include the
+                      auth_time parameter in the returned id token, which
+                      is used by IAG to determine when the user last performed
+                      a re-authentication.
+                    type: number
+
+              redirect_url:
+                description: >
+                  Allows clients to be redirected to a URL as a result of this
+                  policy evaluating successfully.
+
+                  This URL can contain embedded macros to include contextual
+                  information about the request and client which was obligated
+                  to be redirected to this URL. See the 
+                  [Redirect URL Macros](#redirect-url-macros) table above for 
+                  the available macros.
+                type: string
+                x-name: Redirect URL
+    waf:
+      description: >
+        The gateway can act as a Web Application Firewall using the ModSecurity
+        engine.
+
+        The Web Application Firewall policy must at a minimum contain:
+          * configuration
+          * rules
+        
+        If there are no request_match entries defined, the WAF will only be
+        active when the Control.triggerWAF function has been called from 
+        within a Lua HTTP Transformation. 
+
+      x-openapi-required:
+        - configuration
+        - rules
+        - request_match
+      x-examples:
+        - policies:
+            waf:
+              configuration:
+                content: "wafConfigDir"
+                type: path
+              rules:
+                content: "@wafRules.zip"
+                type: zip
+              request_match:
+                - method: GET
+                  path: "/index.html"
+                  version: "HTTP/1.1"
+                - method: GET
+                  path: "/jct/*"
+                - method: GET
+                  path: "/login/*"
+                  phases:
+                    request_headers: true
+                    request_body: true
+                    response_headers: false
+                    response_body: false
+                    logging: true
+      type: object
+      x-name: "Web Application Firewall"
+      properties:
+        configuration:
+          description: >
+            Defines configuration files for the ModSecurity engine. This entry
+            must be either a zip file or a path which is relative to the 
+            `/var/iag/config` directory of the container. The specified 
+            location must contain at least one file, named `modsecurity.conf`.
+            The `modsecurity.conf` configuration will be applied first, other
+            configuration files (with the `.conf` suffix) will be applied in
+            alphabetical order.
+          type: object
+          x-openapi-required:
+            - content
+            - type
+          properties:
+            content:
+              description: >
+                The content which will be used for configuring the ModSecurity 
+                engine.
+              type: string
+            type:
+              description: >
+                The type of content which is being supplied.  Either a zip 
+                file or a directory name.
+              type: string
+              enum:
+                - zip
+                - path
+
+        rules:
+          description: >
+            Defines the rule files for the ModSecurity engine. This entry must 
+            be either a zip file or a path which is relative to the 
+            `/var/iag/config` directory of the container. The specified 
+            location must contain at least one file. Files with a `.conf` 
+            suffix will be treated as configuration files, other files will be
+            treated as data files.
+          x-openapi-required:
+            - content
+            - type
+          type: object
+          properties:
+            content:
+              description: >
+                The content which will be used as rules for the ModSecurity 
+                engine.
+              type: string
+            type:
+              description: >
+                The type of content which is being supplied.  Either a zip 
+                file or a directory name.
+              type: string
+              enum:
+                - zip
+                - path
+        request_match:
+          description: > 
+            This entry defines a list of request matches for which the Web 
+            Application Firewall will be run.
+            
+            Each defined request match must contain at least:
+              * method
+              * path
+          type: array
+          items:
+            type: object
+            x-openapi-required:
+              - method
+              - path
+            properties:
+              method:
+                description: >
+                  The HTTP method for which this match should be triggered. This
+                  value can include the wildcard `*` character to match multiple
+                  methods.
+                type: string
+                x-uuid: true
+              path:
+                description: >
+                  The HTTP path for which this match should be triggered. This
+                  value can include the wildcard `*` character to match multiple
+                  paths.
+                type: string
+                x-uuid: true
+              version:
+                description: >
+                  The HTTP version string for which this match should be 
+                  triggered. This value can include the wildcard `*` character
+                  to match multiple versions.
+                type: string
+                default: "*"
+                x-uuid: true
+              phases:
+                description: >
+                  The phases of the request cycle for which this match should be
+                  triggered. The default is to trigger at each phase of the 
+                  request cycle.
+                type: object
+                properties:
+                  request_headers:
+                    description: >
+                      Whether or not to run the WAF rules after the HTTP request 
+                      headers have been received.
+                    type: boolean
+                    default: true
+                  request_body:
+                    description: >
+                      Whether or not to run the WAF rules after the HTTP request
+                      body has been received.
+                    type: boolean
+                    default: true
+                  response_headers:
+                    description: >
+                      Whether or not to run the WAF rules after the HTTP response
+                      headers have been received.
+                    type: boolean
+                    default: true
+                  response_body:
+                    description: >
+                      Whether or not to run the WAF rules after the HTTP response
+                      body has been received.
+                    type: boolean
+                    default: true
+                  logging:
+                    description: >
+                      Whether or not to run the WAF rules during the logging phase.
+                    type: boolean
+                    default: true
+
+PoliciesHttpTransformationRule:
+  type: object
+  properties:
+
+    name:
+      description: >
+        The name which is associated with this transformation.
+      type: string
+      x-uuid: true
+      x-required: true
+    host:
+      description: >
+        The host (obtained from the host header in the request) for
+        which this transformation will take place. If no host header
+        is specified all hosts will be matched.
+      type: string
+    paths:
+      description: >
+        The paths for which this transformation will take place. If the wildcard
+        "*" is specified all paths will be matched. This entry is an array and can
+        be used to specify multiple paths.
+      type: array
+      items:
+        type: string
+        x-uuid: true
+        x-required: true
+        x-name: Path
+    method:
+      description: >
+        The HTTP method for which this transformation will take
+        place. If the wildcard "*" is specified all methods will be matched.
+      type: string
+    rule:
+      description: >
+        The HTTP transformation rule.
+      type: string
+
+PoliciesHttpPostAuthnTransformationRule:
+  type: object
+  properties:
+
+    name:
+      description: >
+        The name which is associated with this transformation.
+      type: string
+      x-uuid: true
+      x-required: true
+    host:
+      description: >
+        The host (obtained from the host header in the request) for
+        which this transformation will take place. If no host header
+        is specified all hosts will be matched.
+      type: string
+    authentication_mechanisms:
+      description: >
+        The authentication mechanisms for which this transformation should be 
+        triggered.
+
+        The name of the authentication mechanism is located within the
+        AZN_CRED_AUTH_METHOD attribute of an authenticated credential.
+
+      type: array
+      items:
+        type: string
+        x-uuid: true
+        x-required: true
+        x-name: Authentication Mechanisms
+    rule:
+      description: >
+        The HTTP transformation rule.
+      type: string

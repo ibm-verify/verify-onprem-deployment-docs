@@ -1,0 +1,810 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://example.com/schemas/example-showcase
+title: Example Schema Showcase
+description: |
+  # Comprehensive Schema Example
+  
+  This schema demonstrates all the capabilities supported by the `generate_schema_docs.py` script.
+  It includes examples of:
+  
+  - Multiple JSON Schema versions (Draft-04 through 2020-12)
+  - Complex nested objects and arrays
+  - All validation constraints
+  - References ($ref) to definitions
+  - Modern features like prefixItems, dependentSchemas, unevaluatedProperties
+  - Markdown formatting in descriptions
+  - Examples and default values
+  - Enum and const values
+  
+  ## Usage
+  
+  This schema can be used to validate configuration files for a fictional **Cloud Application Platform**.
+
+type: object
+
+properties:
+  
+  application:
+    type: object
+    description: |
+      The main application configuration section.
+      
+      This section defines core application settings including:
+      - Application metadata (name, version)
+      - Runtime environment settings
+      - Feature flags
+    required:
+      - name
+      - version
+    properties:
+      
+      name:
+        type: string
+        description: The unique name of the application
+        pattern: "^[a-z][a-z0-9-]*$"
+        minLength: 3
+        maxLength: 63
+        examples:
+          - "my-app"
+          - "web-service-api"
+      
+      version:
+        type: string
+        description: |
+          Semantic version of the application.
+          
+          Must follow [SemVer 2.0.0](https://semver.org/) format.
+        pattern: "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$"
+        examples:
+          - "1.0.0"
+          - "2.1.3-beta.1"
+          - "3.0.0+build.123"
+      
+      environment:
+        type: string
+        description: The deployment environment
+        enum:
+          - development
+          - staging
+          - production
+        default: development
+      
+      debug:
+        type: boolean
+        description: Enable debug mode with verbose logging
+        default: false
+      
+      features:
+        type: object
+        description: Feature flags to enable/disable functionality
+        properties:
+          analytics:
+            type: boolean
+            default: true
+          darkMode:
+            type: boolean
+            default: false
+          experimentalUI:
+            type: boolean
+            default: false
+        additionalProperties: false
+  
+  server:
+    type: object
+    description: |
+      Server configuration settings.
+      
+      | Setting | Description |
+      |---------|-------------|
+      | host | Server hostname or IP |
+      | port | Server port number |
+      | protocol | HTTP or HTTPS |
+    required:
+      - port
+    properties:
+      
+      host:
+        type: string
+        description: Server hostname or IP address
+        default: "0.0.0.0"
+        examples:
+          - "localhost"
+          - "0.0.0.0"
+          - "192.168.1.100"
+      
+      port:
+        type: integer
+        description: Server port number
+        minimum: 1
+        maximum: 65535
+        default: 8080
+        examples:
+          - 8080
+          - 3000
+          - 443
+      
+      protocol:
+        type: string
+        description: Server protocol
+        enum:
+          - http
+          - https
+        default: http
+      
+      ssl:
+        $ref: "#/$defs/SSLConfiguration"
+      
+      timeout:
+        type: integer
+        description: Request timeout in milliseconds
+        minimum: 100
+        maximum: 300000
+        default: 30000
+        multipleOf: 100
+      
+      maxConnections:
+        type: integer
+        description: Maximum number of concurrent connections
+        minimum: 1
+        exclusiveMaximum: 10000
+        default: 1000
+  
+  database:
+    type: object
+    description: Database connection configuration
+    required:
+      - type
+      - connection
+    properties:
+      
+      type:
+        type: string
+        description: Database type
+        enum:
+          - postgresql
+          - mysql
+          - mongodb
+          - redis
+        examples:
+          - postgresql
+      
+      connection:
+        type: object
+        description: Database connection details
+        required:
+          - host
+          - database
+        properties:
+          host:
+            type: string
+            description: Database host
+          port:
+            type: integer
+            description: Database port
+            minimum: 1
+            maximum: 65535
+          database:
+            type: string
+            description: Database name
+          username:
+            type: string
+            description: Database username
+          password:
+            type: string
+            description: Database password (should be encrypted)
+            writeOnly: true
+        dependentRequired:
+          username: [password]
+          password: [username]
+      
+      pool:
+        type: object
+        description: Connection pool settings
+        properties:
+          min:
+            type: integer
+            minimum: 0
+            default: 2
+          max:
+            type: integer
+            minimum: 1
+            default: 10
+          idleTimeout:
+            type: integer
+            description: Idle timeout in milliseconds
+            minimum: 1000
+            default: 10000
+        dependentSchemas:
+          max:
+            properties:
+              min:
+                type: integer
+                maximum: 10
+  
+  services:
+    type: array
+    description: |
+      External services configuration.
+      
+      Each service can be configured with:
+      - Unique identifier
+      - Endpoint URL
+      - Authentication credentials
+      - Retry policies
+    minItems: 0
+    maxItems: 50
+    items:
+      $ref: "#/$defs/ServiceConfiguration"
+    examples:
+      - - name: "auth-service"
+          url: "https://auth.example.com"
+          enabled: true
+        - name: "payment-service"
+          url: "https://payment.example.com"
+          enabled: false
+  
+  logging:
+    type: object
+    description: Logging configuration
+    properties:
+      
+      level:
+        type: string
+        description: Log level
+        enum:
+          - trace
+          - debug
+          - info
+          - warn
+          - error
+          - fatal
+        default: info
+      
+      format:
+        type: string
+        description: Log output format
+        enum:
+          - json
+          - text
+          - pretty
+        default: json
+      
+      outputs:
+        type: array
+        description: Log output destinations
+        minItems: 1
+        items:
+          type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - console
+                - file
+                - syslog
+            path:
+              type: string
+              description: File path (required when type is 'file')
+            maxSize:
+              type: string
+              description: Maximum log file size (e.g., "100MB")
+              pattern: "^\\d+[KMG]B$"
+          allOf:
+            - if:
+                properties:
+                  type:
+                    const: file
+              then:
+                required:
+                  - path
+        unevaluatedProperties: false
+  
+  security:
+    type: object
+    description: Security configuration
+    properties:
+      
+      authentication:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+            default: true
+          providers:
+            type: array
+            items:
+              type: string
+              enum:
+                - local
+                - oauth2
+                - saml
+                - ldap
+            minContains: 1
+            maxContains: 3
+            uniqueItems: true
+      
+      cors:
+        type: object
+        description: CORS (Cross-Origin Resource Sharing) settings
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          origins:
+            type: array
+            description: Allowed origins
+            items:
+              type: string
+              format: uri
+            examples:
+              - ["https://example.com", "https://app.example.com"]
+          methods:
+            type: array
+            description: Allowed HTTP methods
+            items:
+              type: string
+              enum:
+                - GET
+                - POST
+                - PUT
+                - PATCH
+                - DELETE
+                - OPTIONS
+            default: ["GET", "POST"]
+          credentials:
+            type: boolean
+            default: false
+      
+      rateLimit:
+        $ref: "#/$defs/RateLimitConfiguration"
+  
+  monitoring:
+    type: object
+    description: Monitoring and observability configuration
+    properties:
+      
+      metrics:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+            default: true
+          endpoint:
+            type: string
+            format: uri
+            default: "/metrics"
+          interval:
+            type: integer
+            description: Metrics collection interval in seconds
+            minimum: 1
+            maximum: 3600
+            default: 60
+      
+      healthCheck:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+            default: true
+          endpoint:
+            type: string
+            default: "/health"
+          checks:
+            type: array
+            description: Health check components
+            items:
+              type: string
+            examples:
+              - ["database", "cache", "external-api"]
+      
+      tracing:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          provider:
+            type: string
+            enum:
+              - jaeger
+              - zipkin
+              - datadog
+          samplingRate:
+            type: number
+            minimum: 0
+            maximum: 1
+            default: 0.1
+  
+  deployment:
+    type: object
+    description: Deployment configuration
+    properties:
+      
+      replicas:
+        type: integer
+        description: Number of application replicas
+        minimum: 1
+        maximum: 100
+        default: 1
+      
+      strategy:
+        type: string
+        description: Deployment strategy
+        enum:
+          - rolling
+          - blue-green
+          - canary
+        default: rolling
+      
+      resources:
+        type: object
+        description: Resource limits and requests
+        properties:
+          limits:
+            $ref: "#/$defs/ResourceSpec"
+          requests:
+            $ref: "#/$defs/ResourceSpec"
+      
+      volumes:
+        type: array
+        description: Volume mounts
+        items:
+          type: object
+          required:
+            - name
+            - mountPath
+          properties:
+            name:
+              type: string
+            mountPath:
+              type: string
+            readOnly:
+              type: boolean
+              default: false
+  
+  notifications:
+    type: object
+    description: Notification configuration
+    properties:
+      
+      channels:
+        type: array
+        description: Notification channels
+        prefixItems:
+          - type: object
+            description: Primary notification channel (required)
+            required:
+              - type
+              - enabled
+            properties:
+              type:
+                const: email
+              enabled:
+                type: boolean
+              recipients:
+                type: array
+                items:
+                  type: string
+                  format: email
+          - type: object
+            description: Secondary notification channel (optional)
+            properties:
+              type:
+                enum:
+                  - slack
+                  - webhook
+              enabled:
+                type: boolean
+              url:
+                type: string
+                format: uri
+        items:
+          type: object
+          description: Additional notification channels
+          properties:
+            type:
+              type: string
+            enabled:
+              type: boolean
+        minItems: 1
+        maxItems: 5
+  
+  cache:
+    type: object
+    description: Caching configuration
+    properties:
+      
+      enabled:
+        type: boolean
+        default: true
+      
+      provider:
+        type: string
+        enum:
+          - memory
+          - redis
+          - memcached
+        default: memory
+      
+      ttl:
+        type: integer
+        description: Default time-to-live in seconds
+        minimum: 0
+        default: 3600
+      
+      maxSize:
+        type: string
+        description: Maximum cache size
+        pattern: "^\\d+[KMG]B$"
+        examples:
+          - "100MB"
+          - "1GB"
+
+required:
+  - application
+  - server
+
+additionalProperties: false
+
+$defs:
+  
+  SSLConfiguration:
+    type: object
+    description: SSL/TLS configuration
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: Enable SSL/TLS
+        default: false
+      certificate:
+        type: string
+        description: Path to SSL certificate file
+      privateKey:
+        type: string
+        description: Path to private key file
+      ca:
+        type: string
+        description: Path to CA certificate file
+      protocols:
+        type: array
+        description: Enabled TLS protocols
+        items:
+          type: string
+          enum:
+            - TLSv1.2
+            - TLSv1.3
+        default: ["TLSv1.2", "TLSv1.3"]
+        uniqueItems: true
+      ciphers:
+        type: array
+        description: Allowed cipher suites
+        items:
+          type: string
+        examples:
+          - ["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"]
+    dependentRequired:
+      certificate: [privateKey]
+      privateKey: [certificate]
+  
+  ServiceConfiguration:
+    type: object
+    description: External service configuration
+    required:
+      - name
+      - url
+    properties:
+      name:
+        type: string
+        description: Service identifier
+        pattern: "^[a-z][a-z0-9-]*$"
+      url:
+        type: string
+        description: Service endpoint URL
+        format: uri
+      enabled:
+        type: boolean
+        description: Enable this service
+        default: true
+      timeout:
+        type: integer
+        description: Request timeout in milliseconds
+        minimum: 100
+        maximum: 60000
+        default: 5000
+      retryPolicy:
+        type: object
+        description: Retry policy configuration
+        properties:
+          maxAttempts:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 3
+          backoff:
+            type: string
+            enum:
+              - linear
+              - exponential
+            default: exponential
+          initialDelay:
+            type: integer
+            description: Initial delay in milliseconds
+            minimum: 100
+            default: 1000
+      authentication:
+        type: object
+        description: Service authentication
+        properties:
+          type:
+            type: string
+            enum:
+              - none
+              - basic
+              - bearer
+              - apikey
+            default: none
+          credentials:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+                writeOnly: true
+              token:
+                type: string
+                writeOnly: true
+              apiKey:
+                type: string
+                writeOnly: true
+        dependentSchemas:
+          type:
+            if:
+              properties:
+                type:
+                  const: basic
+            then:
+              required:
+                - credentials
+              properties:
+                credentials:
+                  required:
+                    - username
+                    - password
+  
+  RateLimitConfiguration:
+    type: object
+    description: Rate limiting configuration
+    properties:
+      enabled:
+        type: boolean
+        default: false
+      requests:
+        type: integer
+        description: Maximum requests per window
+        minimum: 1
+        default: 100
+      window:
+        type: integer
+        description: Time window in seconds
+        minimum: 1
+        default: 60
+      strategy:
+        type: string
+        description: Rate limiting strategy
+        enum:
+          - fixed-window
+          - sliding-window
+          - token-bucket
+        default: sliding-window
+  
+  ResourceSpec:
+    type: object
+    description: Resource specification (CPU and memory)
+    properties:
+      cpu:
+        type: string
+        description: CPU allocation (e.g., "100m", "1", "2.5")
+        pattern: "^\\d+(\\.\\d+)?m?$"
+        examples:
+          - "100m"
+          - "1"
+          - "2.5"
+      memory:
+        type: string
+        description: Memory allocation (e.g., "128Mi", "1Gi")
+        pattern: "^\\d+[KMG]i$"
+        examples:
+          - "128Mi"
+          - "1Gi"
+          - "512Mi"
+
+examples:
+  - application:
+      name: "my-cloud-app"
+      version: "1.0.0"
+      environment: "production"
+      debug: false
+      features:
+        analytics: true
+        darkMode: true
+        experimentalUI: false
+    server:
+      host: "0.0.0.0"
+      port: 8080
+      protocol: "https"
+      ssl:
+        enabled: true
+        certificate: "/etc/ssl/certs/server.crt"
+        privateKey: "/etc/ssl/private/server.key"
+        protocols: ["TLSv1.3"]
+      timeout: 30000
+      maxConnections: 1000
+    database:
+      type: "postgresql"
+      connection:
+        host: "db.example.com"
+        port: 5432
+        database: "myapp"
+        username: "dbuser"
+        password: "encrypted_password"
+      pool:
+        min: 2
+        max: 10
+        idleTimeout: 10000
+    logging:
+      level: "info"
+      format: "json"
+      outputs:
+        - type: "console"
+        - type: "file"
+          path: "/var/log/app.log"
+          maxSize: "100MB"
+    security:
+      authentication:
+        enabled: true
+        providers: ["oauth2", "local"]
+      cors:
+        enabled: true
+        origins: ["https://example.com"]
+        methods: ["GET", "POST", "PUT", "DELETE"]
+        credentials: true
+      rateLimit:
+        enabled: true
+        requests: 1000
+        window: 60
+        strategy: "sliding-window"
+    monitoring:
+      metrics:
+        enabled: true
+        endpoint: "/metrics"
+        interval: 60
+      healthCheck:
+        enabled: true
+        endpoint: "/health"
+        checks: ["database", "cache"]
+      tracing:
+        enabled: true
+        provider: "jaeger"
+        samplingRate: 0.1
+    deployment:
+      replicas: 3
+      strategy: "rolling"
+      resources:
+        limits:
+          cpu: "2"
+          memory: "2Gi"
+        requests:
+          cpu: "500m"
+          memory: "512Mi"
+    cache:
+      enabled: true
+      provider: "redis"
+      ttl: 3600
+      maxSize: "1GB"
+
+# Made with Bob

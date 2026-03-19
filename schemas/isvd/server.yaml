@@ -1,0 +1,28 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  server:
+    type: object
+    description: >
+      The configuration entries associated with the IVD server.
+    properties:
+      suffixes:
+        "$ref": "server-suffixes.yaml#/definitions/suffixes"
+      change-log:
+        "$ref": "server-change-log.yaml#/definitions/change-log"
+      replication:
+        "$ref": "server-replication.yaml#/definitions/replication"
+      pass-through-authentication:
+        "$ref": "server-pta.yaml#/definitions/pass-through-authentication"
+      enable-last-auth-timestamp:
+        type: boolean
+        description: >
+          If true, the time stamp that corresponds to the last successful authentication for a user is recorded.  The time stamp will be recorded for users in all suffixes.
+        default: false
+    required:
+    - suffixes
+    examples:
+    - { "server": { "suffixes": [ { "attributes": [ "c=us" ], "dn": "o=ibm,c=us", "object-classes": [ "organization", "country" ] }, { "dn": "o=sample" } ] } }
+    title: Server
+
