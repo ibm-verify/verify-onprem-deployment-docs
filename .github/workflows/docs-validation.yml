@@ -38,7 +38,7 @@ jobs:
       - name: Run documentation regeneration
         run: |
           echo "Running regenerate_docs.py..."
-          python regenerate_docs.py -p docs
+          python3 regenerate_docs.py -p docs
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
@@ -88,7 +88,7 @@ jobs:
       - name: Run documentation regeneration
         run: |
           echo "Running regenerate_docs.py..."
-          python regenerate_docs.py -p docs
+          python3 regenerate_docs.py -p docs
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
