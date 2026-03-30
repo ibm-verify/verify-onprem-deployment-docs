@@ -49,6 +49,55 @@ class TitleExtractor(HTMLParser):
 class IndexGenerator:
     """Generate an index page for configuration documentation."""
     
+    # Product metadata mapping with component descriptions
+    PRODUCT_INFO = {
+        'iag': {
+            'name': 'IBM Application Gateway',
+            'short_name': 'IAG',
+            'description': 'Lightweight, container-based reverse proxy for web applications and APIs',
+            'components': {
+                'openapi': 'IBM Application Gateway configuration parameters and settings'
+            }
+        },
+        'isvd': {
+            'name': 'IBM Security Verify Directory',
+            'short_name': 'ISVD',
+            'description': 'High-performance LDAP directory server for identity management',
+            'components': {
+                'verify-directory-server': 'IBM Security Verify Directory Server configuration parameters and settings',
+                'verify-directory-proxy': 'IBM Security Verify Directory Proxy configuration parameters and settings',
+                'verify-directory-seed': 'IBM Security Verify Directory Seed configuration parameters and settings',
+                'verify-directory-virtualdir': 'IBM Security Verify Directory Virtual Directory configuration parameters and settings',
+                'verify-directory-webadmin': 'IBM Security Verify Directory Web Administration Tool configuration parameters and settings'
+            }
+        },
+        'isva': {
+            'name': 'IBM Security Verify Access',
+            'short_name': 'ISVA',
+            'description': 'Comprehensive access management and federation solution',
+            'components': {
+                'verify-access': 'IBM Security Verify Access configuration parameters and settings'
+            }
+        },
+        'isvg': {
+            'name': 'IBM Security Verify Gateway',
+            'short_name': 'ISVG',
+            'description': 'Cloud-native gateway for secure access to applications',
+            'components': {
+                'verify-gateway': 'IBM Security Verify Gateway configuration parameters and settings'
+            }
+        },
+        # Special category for examples and other documentation
+        'examples': {
+            'name': 'Examples',
+            'short_name': 'Examples',
+            'description': 'Example schemas and documentation',
+            'components': {
+                'example-showcase': 'Comprehensive example demonstrating all JSON Schema features and documentation capabilities'
+            }
+        }
+    }
+    
     def __init__(self, pages_dir: str, output_path: Optional[str] = None):
         """
         Initialize the generator.
@@ -60,37 +109,63 @@ class IndexGenerator:
         self.pages_dir = Path(pages_dir)
         self.output_path = Path(output_path) if output_path else self.pages_dir / 'index.html'
         
-    def scan_pages(self) -> List[Dict[str, Any]]:
+    def scan_pages(self) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
         """
         Scan the pages directory for HTML files and extract their titles.
+        Organizes pages hierarchically by product and version.
         
         Returns:
-            List of dictionaries containing page information
+            Nested dictionary: {product: {version: [page_info, ...]}}
         """
-        pages = []
+        pages_hierarchy = {}
         
         if not self.pages_dir.exists():
             logger.warning(f"Directory not found: {self.pages_dir}")
-            return pages
+            return pages_hierarchy
             
-        for file_path in sorted(self.pages_dir.glob('*.html')):
-            # Skip the index file itself
+        # Recursively find all HTML files
+        for file_path in sorted(self.pages_dir.rglob('*.html')):
+            # Skip index files at any level
             if file_path.name == 'index.html':
                 continue
-                
+            
+            # Get relative path from pages_dir
+            rel_path = file_path.relative_to(self.pages_dir)
+            
+            # Parse the directory structure: product/version/file.html
+            parts = rel_path.parts
+            if len(parts) >= 3:
+                product = parts[0]
+                version = parts[1]
+            elif len(parts) == 2:
+                # File in product directory without version
+                product = parts[0]
+                version = 'default'
+            else:
+                # File in root directory
+                product = 'other'
+                version = 'default'
+            
             # Extract title from HTML
             title = self._extract_title(file_path)
             
-            # Generate a description based on the filename
-            description = self._generate_description(file_path.stem)
+            # Generate a description based on the filename and path
+            description = self._generate_description(file_path.stem, rel_path)
             
-            pages.append({
-                'filename': file_path.name,
+            # Initialize nested structure if needed
+            if product not in pages_hierarchy:
+                pages_hierarchy[product] = {}
+            if version not in pages_hierarchy[product]:
+                pages_hierarchy[product][version] = []
+            
+            pages_hierarchy[product][version].append({
+                'filename': str(rel_path),
                 'title': title or file_path.stem.replace('-', ' ').title(),
-                'description': description
+                'description': description,
+                'stem': file_path.stem
             })
             
-        return pages
+        return pages_hierarchy
     
     def _extract_title(self, file_path: Path) -> Optional[str]:
         """Extract the title from an HTML file."""
@@ -104,47 +179,44 @@ class IndexGenerator:
             logger.warning(f"Could not extract title from {file_path}: {e}")
             return None
     
-    def _generate_description(self, filename_stem: str) -> str:
+    def _generate_description(self, filename_stem: str, rel_path: Path) -> str:
         """
-        Generate a description based on the filename.
+        Generate a description based on the component filename and product.
         
         Args:
             filename_stem: The filename without extension
+            rel_path: Relative path from pages directory
             
         Returns:
             Description string
             
         Raises:
-            ValueError: If no description is defined for the filename
+            ValueError: If no description is defined for the component
         """
-        # Map common component names to descriptions
-        descriptions = {
-            'iag': 'IBM Application Gateway configuration parameters and settings',
-            'verify-directory-server': 'IBM Security Verify Directory Server configuration parameters and settings',
-            'verify-directory-proxy': 'IBM Security Verify Directory Proxy configuration parameters and settings',
-            'verify-directory-seed': 'IBM Security Verify Directory Seed configuration parameters and settings',
-            'verify-directory-virtualdir': 'IBM Security Verify Directory Virtual Directory configuration parameters and settings',
-            'verify-directory-webadmin': 'IBM Security Verify Directory Web Administration Tool configuration parameters and settings',
-            'verify-access': 'IBM Security Verify Access configuration parameters and settings',
-            'verify-gateway': 'IBM Security Verify Gateway configuration parameters and settings',
-            'example-showcase': 'Comprehensive example demonstrating all JSON Schema features and documentation capabilities',
-        }
+        # Extract product from path
+        parts = rel_path.parts
+        product = parts[0] if len(parts) >= 1 else 'other'
         
-        if filename_stem not in descriptions:
-            raise ValueError(
-                f"No description defined for '{filename_stem}'. "
-                f"Please add a description in the _generate_description() method of generate_index.py"
-            )
+        # Look up component description in PRODUCT_INFO
+        if product in self.PRODUCT_INFO:
+            components = self.PRODUCT_INFO[product].get('components', {})
+            if filename_stem in components:
+                return components[filename_stem]
         
-        return descriptions[filename_stem]
+        # If not found, raise an error with helpful message
+        raise ValueError(
+            f"No description defined for component '{filename_stem}' in product '{product}' (path: {rel_path}).\n"
+            f"Please add the component to PRODUCT_INFO['{product}']['components'] in generate_index.py:\n"
+            f"  '{filename_stem}': 'Your component description here'"
+        )
     
     def generate_html(self) -> str:
         """Generate the complete HTML index page."""
-        pages = self.scan_pages()
+        pages_hierarchy = self.scan_pages()
         
         html = self._generate_header()
         html += self._generate_body_start()
-        html += self._generate_page_list(pages)
+        html += self._generate_page_list(pages_hierarchy)
         html += self._generate_footer()
         
         return html
@@ -239,11 +311,140 @@ class IndexGenerator:
             line-height: 1.5;
         }}
         
+        .product-section {{
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }}
+        
+        .product-header {{
+            background: linear-gradient(90deg, #0f62fe 0%, #0353e9 100%);
+            color: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }}
+        
+        .product-header:hover {{
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }}
+        
+        .product-header-content {{
+            flex: 1;
+        }}
+        
+        .product-title {{
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }}
+        
+        .product-short-name {{
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }}
+        
+        .product-description {{
+            margin: 0.5rem 0 0 0;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }}
+        
+        .product-toggle {{
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }}
+        
+        .product-content {{
+            display: block;
+        }}
+        
+        .product-content.collapsed {{
+            display: none;
+        }}
+        
+        .product-header.collapsed .product-toggle {{
+            transform: rotate(-90deg);
+        }}
+        
+        .version-section {{
+            margin-bottom: 2rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--cds-border-subtle-01);
+        }}
+        
+        .version-header {{
+            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--cds-ui-01);
+            border-radius: 4px;
+            border-left: 4px solid #0f62fe;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }}
+        
+        .version-header:hover {{
+            background-color: var(--cds-hover-ui);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }}
+        
+        .version-title {{
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--cds-text-01);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+        
+        .version-badge {{
+            background-color: #0f62fe;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }}
+        
+        .version-toggle {{
+            font-size: 1.25rem;
+            transition: transform 0.3s;
+            color: var(--cds-text-02);
+        }}
+        
+        .version-content {{
+            display: block;
+        }}
+        
+        .version-content.collapsed {{
+            display: none;
+        }}
+        
+        .version-header.collapsed .version-toggle {{
+            transform: rotate(-90deg);
+        }}
+        
         .page-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }}
         
         .page-card {{
@@ -335,8 +536,43 @@ class IndexGenerator:
             .container {{
                 padding: 1.5rem;
             }}
+            
+            .product-header {{
+                padding: 1rem 1.5rem;
+            }}
+            
+            .product-title {{
+                font-size: 1.5rem;
+            }}
         }}
     </style>
+    <script>
+        function toggleProduct(productId) {{
+            const content = document.getElementById(productId + '-content');
+            const header = document.getElementById(productId + '-header');
+            
+            if (content.classList.contains('collapsed')) {{
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+            }} else {{
+                content.classList.add('collapsed');
+                header.classList.add('collapsed');
+            }}
+        }}
+        
+        function toggleVersion(versionId) {{
+            const content = document.getElementById(versionId + '-content');
+            const header = document.getElementById(versionId + '-header');
+            
+            if (content.classList.contains('collapsed')) {{
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+            }} else {{
+                content.classList.add('collapsed');
+                header.classList.add('collapsed');
+            }}
+        }}
+    </script>
 </head>
 '''
     
@@ -360,9 +596,9 @@ class IndexGenerator:
         </div>
 '''
     
-    def _generate_page_list(self, pages: List[Dict[str, Any]]) -> str:
-        """Generate the list of documentation pages."""
-        if not pages:
+    def _generate_page_list(self, pages_hierarchy: Dict[str, Dict[str, List[Dict[str, Any]]]]) -> str:
+        """Generate the hierarchical list of documentation pages organized by product and version."""
+        if not pages_hierarchy:
             return '''
         <div class="empty-state">
             <div class="empty-state-icon">📭</div>
@@ -370,24 +606,108 @@ class IndexGenerator:
         </div>
 '''
         
-        html = '        <div class="page-grid">\n'
+        html = ''
         
-        for page in pages:
+        # Sort products alphabetically
+        sorted_products = sorted(pages_hierarchy.keys())
+        
+        for product_id in sorted_products:
+            versions = pages_hierarchy[product_id]
+            
+            # Get product information
+            product_info = self.PRODUCT_INFO.get(product_id, {
+                'name': product_id.upper(),
+                'short_name': product_id.upper(),
+                'description': f'{product_id.upper()} configuration documentation'
+            })
+            
+            # Generate product section
             html += f'''
-            <div class="page-card">
-                <a href="{self._escape_html(page['filename'])}" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">{self._escape_html(page['title'])}</h3>
-                    </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">{self._escape_html(page['description'])}</p>
-                    </div>
-                </a>
+        <div class="product-section">
+            <div class="product-header" id="{self._escape_html(product_id)}-header" onclick="toggleProduct('{self._escape_html(product_id)}')">
+                <div class="product-header-content">
+                    <h2 class="product-title">
+                        {self._escape_html(product_info['name'])}
+                        <span class="product-short-name">{self._escape_html(product_info['short_name'])}</span>
+                    </h2>
+                    <p class="product-description">{self._escape_html(product_info['description'])}</p>
+                </div>
+                <div class="product-toggle">▼</div>
             </div>
+            <div class="product-content" id="{self._escape_html(product_id)}-content">
+'''
+            
+            # Sort versions (try semantic versioning, fallback to string sort)
+            sorted_versions = sorted(versions.keys(), key=lambda v: self._version_sort_key(v), reverse=True)
+            
+            for version in sorted_versions:
+                pages = versions[version]
+                
+                # Create unique ID for this version section
+                version_id = f"{product_id}-{version.replace('.', '-')}"
+                
+                # Generate version section (collapsed by default)
+                html += f'''
+                <div class="version-section">
+                    <div class="version-header collapsed" id="{self._escape_html(version_id)}-header" onclick="toggleVersion('{self._escape_html(version_id)}')">
+                        <h3 class="version-title">
+                            Version <span class="version-badge">{self._escape_html(version)}</span>
+                        </h3>
+                        <div class="version-toggle">▼</div>
+                    </div>
+                    <div class="version-content collapsed" id="{self._escape_html(version_id)}-content">
+                        <div class="page-grid">
+'''
+                
+                # Generate page cards
+                for page in pages:
+                    html += f'''
+                            <div class="page-card">
+                                <a href="{self._escape_html(page['filename'])}" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">{self._escape_html(page['title'])}</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">{self._escape_html(page['description'])}</p>
+                                    </div>
+                                </a>
+                            </div>
+'''
+                
+                html += '''
+                        </div>
+                    </div>
+                </div>
+'''
+            
+            html += '''
+            </div>
+        </div>
 '''
         
-        html += '        </div>\n'
         return html
+    
+    def _version_sort_key(self, version: str) -> tuple:
+        """
+        Generate a sort key for version strings.
+        Handles semantic versioning (e.g., "25.12", "11.0.0") and special cases like "default".
+        
+        Args:
+            version: Version string
+            
+        Returns:
+            Tuple for sorting (special versions first, then by numeric components)
+        """
+        if version == 'default':
+            return (0,)  # Default versions come first
+        
+        try:
+            # Try to parse as semantic version
+            parts = version.split('.')
+            return tuple(int(p) for p in parts)
+        except (ValueError, AttributeError):
+            # Fallback to string comparison
+            return (1, version)
     
     def _generate_footer(self) -> str:
         """Generate HTML footer."""

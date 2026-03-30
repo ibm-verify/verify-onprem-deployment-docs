@@ -121,29 +121,33 @@ class DocumentationRegenerator:
             logger.warning(f"Could not read {file_path}: {e}")
             return None
     
-    def _get_output_filename(self, schema_path: Path) -> str:
+    def _get_output_path(self, schema_path: Path) -> Path:
         """
-        Generate output HTML filename from schema path.
+        Generate output HTML path from schema path, mirroring directory structure.
         
         Args:
             schema_path: Path to the schema file
             
         Returns:
-            Output HTML filename
+            Output HTML path relative to pages_dir
         """
         rel_path = schema_path.relative_to(self.schemas_dir)
         
-        # Special case: openapi.yaml in a subdirectory should use the directory name
-        if schema_path.stem == 'openapi' and len(rel_path.parts) > 1:
-            base_name = rel_path.parts[0]  # Use parent directory name
-        else:
-            # Use the filename without extension as the base
-            base_name = schema_path.stem
+        # Get the directory structure (all parts except the filename)
+        dir_parts = rel_path.parts[:-1]
+        
+        # Get the base filename
+        base_name = schema_path.stem
         
         # Remove any .jsonschema suffix if present
         base_name = base_name.replace('.jsonschema', '')
         
-        return f"{base_name}.html"
+        # Construct the output path with mirrored directory structure
+        if dir_parts:
+            output_dir = self.pages_dir.joinpath(*dir_parts)
+            return output_dir / f"{base_name}.html"
+        else:
+            return self.pages_dir / f"{base_name}.html"
     
     def _is_main_schema(self, schema_path: Path) -> bool:
         """
@@ -152,7 +156,7 @@ class DocumentationRegenerator:
         Main schemas are typically:
         - Files that match their parent directory name
         - Files in the root schemas directory
-        - Files with specific patterns like 'openapi.yaml'
+        - OpenAPI specification files (detected by content, not filename)
         - Files that are top-level schemas (have $schema and $ref at root)
         
         Args:
@@ -167,6 +171,12 @@ class DocumentationRegenerator:
         if len(rel_path.parts) == 1:
             return True
         
+        # Check if this is an OpenAPI specification (by content, not filename)
+        # OpenAPI specs are always main schemas
+        schema_type = self._detect_schema_type(schema_path)
+        if schema_type == 'openapi':
+            return True
+        
         # Check if filename matches parent directory name
         parent_dir = rel_path.parts[-2]
         filename_stem = schema_path.stem
@@ -174,10 +184,6 @@ class DocumentationRegenerator:
         # Main schema patterns:
         # - verify-directory-server.yaml in isvd/
         # - example-showcase.yaml in example/
-        # - openapi.yaml (OpenAPI specs are main schemas)
-        if filename_stem == 'openapi':
-            return True
-        
         # Check if the filename contains the parent directory name
         # or if parent directory name is in the filename
         if parent_dir in filename_stem or filename_stem in parent_dir:
@@ -269,6 +275,9 @@ class DocumentationRegenerator:
         """
         logger.info(f"Generating documentation: {schema_path} -> {output_path}")
         
+        # Ensure output directory exists
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         # Run the documentation generator
         result = subprocess.run(
             ['python3', 'generate_schema_docs.py', str(schema_path), str(output_path)],
@@ -281,8 +290,9 @@ class DocumentationRegenerator:
             logger.error(result.stderr)
             raise RuntimeError(f"Documentation generation failed for {schema_path}")
         
-        # Track this schema as processed
-        self.processed_schemas.add(output_path.name)
+        # Track this schema as processed (store relative path from pages_dir)
+        rel_path = output_path.relative_to(self.pages_dir)
+        self.processed_schemas.add(str(rel_path))
     
     def generate_index(self) -> None:
         """Generate the index page."""
@@ -320,9 +330,15 @@ class DocumentationRegenerator:
             return False
         
         unknown_files = []
-        for html_file in self.pages_dir.glob('*.html'):
-            if html_file.name != 'index.html' and html_file.name not in self.processed_schemas:
-                unknown_files.append(html_file.name)
+        # Recursively find all HTML files in pages directory
+        for html_file in self.pages_dir.rglob('*.html'):
+            rel_path = html_file.relative_to(self.pages_dir)
+            # Skip index.html files at any level
+            if html_file.name == 'index.html':
+                continue
+            # Check if this file was generated
+            if str(rel_path) not in self.processed_schemas:
+                unknown_files.append(str(rel_path))
         
         if unknown_files:
             logger.error("Unknown HTML files detected in pages directory:")
@@ -368,9 +384,8 @@ class DocumentationRegenerator:
             # Process each schema file
             for schema_path, schema_type in schema_files:
                 try:
-                    # Determine output filename
-                    output_filename = self._get_output_filename(schema_path)
-                    output_path = self.pages_dir / output_filename
+                    # Determine output path (mirroring directory structure)
+                    output_path = self._get_output_path(schema_path)
                     
                     # Convert OpenAPI to JSON Schema if needed
                     if schema_type == 'openapi':
