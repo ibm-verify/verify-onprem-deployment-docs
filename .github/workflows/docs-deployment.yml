@@ -26,16 +26,6 @@ jobs:
       github.event_name != 'workflow_run' ||
       github.event.workflow_run.conclusion == 'success'
     
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-    
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -109,22 +99,68 @@ jobs:
           touch docs/.nojekyll
           echo "✅ Added .nojekyll file to disable Jekyll"
       
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './docs'
-      
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to pages branch
+        run: |
+          TAG_NAME="${{ steps.version.outputs.tag }}"
+          echo "Deploying documentation for tag: $TAG_NAME"
+          
+          # Save the generated docs directory to temp location
+          echo "Saving generated docs to temporary location..."
+          cp -r docs /tmp/generated-docs
+          
+          # Remove the docs directory from working tree to avoid conflicts
+          rm -rf docs
+          
+          # Check if pages branch exists
+          if git ls-remote --heads origin pages | grep -q pages; then
+            echo "Pages branch exists, checking it out..."
+            git fetch origin pages
+            git checkout pages
+            # Remove all existing files except .git
+            git rm -rf . 2>/dev/null || true
+          else
+            echo "Pages branch does not exist, creating it..."
+            git checkout --orphan pages
+            # Remove all files from the orphan branch
+            git rm -rf . 2>/dev/null || true
+          fi
+          
+          # Copy generated files to the pages branch root
+          cp -r /tmp/generated-docs/* .
+          
+          # Verify .nojekyll file exists
+          if [ ! -f ".nojekyll" ]; then
+            echo "⚠️  .nojekyll file missing, creating it..."
+            touch .nojekyll
+          fi
+          
+          # Add all files to git
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            # Commit with tag information
+            git commit -m "Deploy documentation for tag ${TAG_NAME}" \
+                       -m "Generated from commit ${GITHUB_SHA}" \
+                       -m "Tag: ${TAG_NAME}" \
+                       -m "Event: ${{ github.event_name }}"
+            
+            # Push to pages branch with force to ensure clean state
+            git push -f origin pages
+            echo "✅ Successfully pushed to pages branch"
+          fi
       
       - name: Summary
         run: |
           TAG_NAME="${{ steps.version.outputs.tag }}"
           echo "✅ Documentation deployed successfully!"
           echo "📦 Tag: $TAG_NAME"
-          echo "🌐 Deployed to GitHub Pages"
+          echo "🌐 Pages branch updated"
           echo "🎯 Triggered by: ${{ github.event_name }}"
-          echo "🔗 URL: ${{ steps.deployment.outputs.page_url }}"
+          echo ""
+          echo "The generated documentation has been committed to the 'pages' branch."
+          echo "Make sure GitHub Pages is configured to deploy from the 'pages' branch."
 
 # Made with Bob
