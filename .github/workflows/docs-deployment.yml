@@ -125,14 +125,20 @@ jobs:
             git rm -rf . 2>/dev/null || true
           fi
           
-          # Copy generated files to the pages branch root
-          cp -r /tmp/generated-docs/* .
+          # Create docs directory on pages branch
+          mkdir -p docs
           
-          # Verify .nojekyll file exists
-          if [ ! -f ".nojekyll" ]; then
+          # Copy generated files to the docs directory on pages branch
+          cp -r /tmp/generated-docs/* docs/
+          
+          # Verify .nojekyll file exists in docs directory
+          if [ ! -f "docs/.nojekyll" ]; then
             echo "⚠️  .nojekyll file missing, creating it..."
-            touch .nojekyll
+            touch docs/.nojekyll
           fi
+          
+          # Also add .nojekyll to root to prevent Jekyll processing at any level
+          touch .nojekyll
           
           # Add all files to git
           git add -A
