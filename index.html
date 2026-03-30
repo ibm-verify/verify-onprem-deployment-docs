@@ -83,11 +83,140 @@
             line-height: 1.5;
         }
         
+        .product-section {
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .product-header {
+            background: linear-gradient(90deg, #0f62fe 0%, #0353e9 100%);
+            color: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .product-header:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .product-header-content {
+            flex: 1;
+        }
+        
+        .product-title {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .product-short-name {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .product-description {
+            margin: 0.5rem 0 0 0;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .product-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .product-content {
+            display: block;
+        }
+        
+        .product-content.collapsed {
+            display: none;
+        }
+        
+        .product-header.collapsed .product-toggle {
+            transform: rotate(-90deg);
+        }
+        
+        .version-section {
+            margin-bottom: 2rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--cds-border-subtle-01);
+        }
+        
+        .version-header {
+            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--cds-ui-01);
+            border-radius: 4px;
+            border-left: 4px solid #0f62fe;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .version-header:hover {
+            background-color: var(--cds-hover-ui);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .version-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--cds-text-01);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .version-badge {
+            background-color: #0f62fe;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .version-toggle {
+            font-size: 1.25rem;
+            transition: transform 0.3s;
+            color: var(--cds-text-02);
+        }
+        
+        .version-content {
+            display: block;
+        }
+        
+        .version-content.collapsed {
+            display: none;
+        }
+        
+        .version-header.collapsed .version-toggle {
+            transform: rotate(-90deg);
+        }
+        
         .page-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
         
         .page-card {
@@ -179,8 +308,43 @@
             .container {
                 padding: 1.5rem;
             }
+            
+            .product-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .product-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
+    <script>
+        function toggleProduct(productId) {
+            const content = document.getElementById(productId + '-content');
+            const header = document.getElementById(productId + '-header');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+                header.classList.add('collapsed');
+            }
+        }
+        
+        function toggleVersion(versionId) {
+            const content = document.getElementById(versionId + '-content');
+            const header = document.getElementById(versionId + '-header');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+                header.classList.add('collapsed');
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="header">
@@ -198,83 +362,130 @@
                 configure and deploy your IBM Verify infrastructure.
             </p>
         </div>
-        <div class="page-grid">
 
-            <div class="page-card">
-                <a href="example-showcase.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">Example Schema Showcase</h3>
-                    </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">Comprehensive example demonstrating all JSON Schema features and documentation capabilities</p>
-                    </div>
-                </a>
+        <div class="product-section">
+            <div class="product-header" id="iag-header" onclick="toggleProduct('iag')">
+                <div class="product-header-content">
+                    <h2 class="product-title">
+                        IBM Application Gateway
+                        <span class="product-short-name">IAG</span>
+                    </h2>
+                    <p class="product-description">Lightweight, container-based reverse proxy for web applications and APIs</p>
+                </div>
+                <div class="product-toggle">▼</div>
             </div>
+            <div class="product-content" id="iag-content">
 
-            <div class="page-card">
-                <a href="iag.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Application Gateway Configuration Specification (OpenAPI)</h3>
+                <div class="version-section">
+                    <div class="version-header collapsed" id="iag-25-12-header" onclick="toggleVersion('iag-25-12')">
+                        <h3 class="version-title">
+                            Version <span class="version-badge">25.12</span>
+                        </h3>
+                        <div class="version-toggle">▼</div>
                     </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Application Gateway configuration parameters and settings</p>
+                    <div class="version-content collapsed" id="iag-25-12-content">
+                        <div class="page-grid">
+
+                            <div class="page-card">
+                                <a href="iag/25.12/openapi.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Application Gateway Configuration Specification (OpenAPI)</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Application Gateway configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
                     </div>
-                </a>
+                </div>
+
             </div>
+        </div>
 
-            <div class="page-card">
-                <a href="verify-directory-proxy.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Verify Directory: Proxy</h3>
-                    </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Security Verify Directory Proxy configuration parameters and settings</p>
-                    </div>
-                </a>
+        <div class="product-section">
+            <div class="product-header" id="isvd-header" onclick="toggleProduct('isvd')">
+                <div class="product-header-content">
+                    <h2 class="product-title">
+                        IBM Security Verify Directory
+                        <span class="product-short-name">ISVD</span>
+                    </h2>
+                    <p class="product-description">High-performance LDAP directory server for identity management</p>
+                </div>
+                <div class="product-toggle">▼</div>
             </div>
+            <div class="product-content" id="isvd-content">
 
-            <div class="page-card">
-                <a href="verify-directory-seed.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Verify Directory: Seed</h3>
+                <div class="version-section">
+                    <div class="version-header collapsed" id="isvd-11-0-0-header" onclick="toggleVersion('isvd-11-0-0')">
+                        <h3 class="version-title">
+                            Version <span class="version-badge">11.0.0</span>
+                        </h3>
+                        <div class="version-toggle">▼</div>
                     </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Security Verify Directory Seed configuration parameters and settings</p>
-                    </div>
-                </a>
-            </div>
+                    <div class="version-content collapsed" id="isvd-11-0-0-content">
+                        <div class="page-grid">
 
-            <div class="page-card">
-                <a href="verify-directory-server.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Verify Directory: Server</h3>
-                    </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Security Verify Directory Server configuration parameters and settings</p>
-                    </div>
-                </a>
-            </div>
+                            <div class="page-card">
+                                <a href="isvd/11.0.0/verify-directory-proxy.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Verify Directory: Proxy</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Security Verify Directory Proxy configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
 
-            <div class="page-card">
-                <a href="verify-directory-virtualdir.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Verify Directory: Virtual Directory</h3>
-                    </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Security Verify Directory Virtual Directory configuration parameters and settings</p>
-                    </div>
-                </a>
-            </div>
+                            <div class="page-card">
+                                <a href="isvd/11.0.0/verify-directory-seed.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Verify Directory: Seed</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Security Verify Directory Seed configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
 
-            <div class="page-card">
-                <a href="verify-directory-webadmin.html" class="page-card-link">
-                    <div class="page-card-header">
-                        <h3 class="page-card-title">IBM Verify Directory: Web Administration Tool</h3>
+                            <div class="page-card">
+                                <a href="isvd/11.0.0/verify-directory-server.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Verify Directory: Server</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Security Verify Directory Server configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="page-card">
+                                <a href="isvd/11.0.0/verify-directory-virtualdir.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Verify Directory: Virtual Directory</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Security Verify Directory Virtual Directory configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="page-card">
+                                <a href="isvd/11.0.0/verify-directory-webadmin.html" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">IBM Verify Directory: Web Administration Tool</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">IBM Security Verify Directory Web Administration Tool configuration parameters and settings</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="page-card-body">
-                        <p class="page-card-description">IBM Security Verify Directory Web Administration Tool configuration parameters and settings</p>
-                    </div>
-                </a>
+                </div>
+
             </div>
         </div>
 
