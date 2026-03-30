@@ -62,45 +62,80 @@ To add documentation for a new component to this repository, follow these steps:
 
 ### Step 1: Add Schema Files
 
-Add your JSON Schema or OpenAPI schema files to a new sub-directory within the [`schemas`](schemas) directory:
+Add your JSON Schema or OpenAPI schema files to a new sub-directory within the [`schemas`](schemas) directory. The directory structure should follow the pattern: `schemas/<product-name>/<version>/`
 
 ```bash
-# Create a new directory for your component
-mkdir schemas/your-component-name
+# Create a new directory structure for your component
+# Format: schemas/<product-name>/<version>/
+mkdir -p schemas/your-product-name/1.0.0
 
 # Add your schema files
-cp your-schema-files.yaml schemas/your-component-name/
+cp your-schema-files.yaml schemas/your-product-name/1.0.0/
 ```
+
+**Directory Structure:**
+- `schemas/<product-name>/<version>/` - Organize schemas by product and version
+- Example: `schemas/iag/25.12/` for IBM Application Gateway version 25.12
+- Example: `schemas/isvd/11.0.0/` for IBM Security Verify Directory version 11.0.0
 
 **Schema File Naming:**
 - For a main schema file, name it to match the component (e.g., `your-component-name.yaml`)
-- Alternatively, name it `openapi.yaml` if it's an OpenAPI specification
+- OpenAPI specifications can use any descriptive name (e.g., `openapi.yaml`, `gateway.yaml`, `config.yaml`)
 - Component schemas referenced by the main schema can have descriptive names (e.g., `server.yaml`, `advanced.yaml`)
 
-### Step 2: Update Component Description
+**Generated Documentation Structure:**
+The generated HTML documentation will mirror the source directory structure:
+- `schemas/iag/25.12/openapi.yaml` → `pages/iag/25.12/openapi.html`
+- `schemas/isvd/11.0.0/verify-directory-server.yaml` → `pages/isvd/11.0.0/verify-directory-server.html`
 
-Update the [`_generate_description`](generate_index.py#L107-L139) function in [`generate_index.py`](generate_index.py) to include a description for your component:
+### Step 2: Update Product Information
+
+When adding documentation for a **new product** or **new components**, update the `PRODUCT_INFO` dictionary in [`generate_index.py`](generate_index.py):
 
 1. Open [`generate_index.py`](generate_index.py)
-2. Locate the `_generate_description` method (around line 107)
-3. Add an entry to the `descriptions` dictionary with your component name and description
+2. Locate the `PRODUCT_INFO` dictionary (around line 53)
+3. Add or update the product entry with metadata and component descriptions
 
-**Determining the Component Name:**
+**Product ID Format:**
+The product ID is derived from the directory name in `schemas/<product-id>/<version>/`
 
-The component name is derived from the main schema filename (without the `.yaml` extension). For example:
-- `schemas/iag/openapi.yaml` → component name is `iag` (uses parent directory name)
-- `schemas/isvd/verify-directory-server.yaml` → component name is `verify-directory-server`
-- `schemas/your-component/your-component.yaml` → component name is `your-component`
+**Component Name Format:**
+The component name is derived from the main schema filename (without the `.yaml` extension):
+- `schemas/iag/25.12/openapi.yaml` → component name is `openapi`
+- `schemas/isvd/11.0.0/verify-directory-server.yaml` → component name is `verify-directory-server`
+- `schemas/your-product/1.0.0/your-component.yaml` → component name is `your-component`
 
 **Example:**
 
 ```python
-descriptions = {
-    'iag': 'IBM Application Gateway configuration parameters and settings',
-    'verify-directory-server': 'IBM Security Verify Directory Server configuration parameters and settings',
-    'your-component-name': 'Your Component description and configuration parameters',
+PRODUCT_INFO = {
+    'iag': {
+        'name': 'IBM Application Gateway',
+        'short_name': 'IAG',
+        'description': 'Lightweight, container-based reverse proxy for web applications and APIs',
+        'components': {
+            'openapi': 'IBM Application Gateway configuration parameters and settings'
+        }
+    },
+    'your-product-id': {
+        'name': 'Your Product Full Name',
+        'short_name': 'ACRONYM',
+        'description': 'Brief description of your product',
+        'components': {
+            'your-component-name': 'Your component description and configuration parameters',
+            'another-component': 'Another component description'
+        }
+    }
 }
 ```
+
+**What to Include:**
+- **name**: Full product name (e.g., "IBM Application Gateway")
+- **short_name**: Acronym or short name (e.g., "IAG")
+- **description**: Brief product description for the index page
+- **components**: Dictionary mapping component filenames to their descriptions
+
+**Note:** If you don't add product information, the index will use the product ID in uppercase as a fallback, but it's recommended to provide proper metadata for a professional appearance.
 
 ### Step 3: Generate Documentation
 
@@ -114,16 +149,25 @@ To test the documentation generation locally before committing:
 # Regenerate all documentation
 python3 regenerate_docs.py
 
-# View the generated files in the pages/ directory
+# View the index page (shows hierarchical organization by product/version)
 open pages/index.html
+
+# Or directly view your generated documentation
+# Format: pages/<product>/<version>/<component>.html
+open pages/your-product/your-version/your-component.html
 ```
 
 The [`regenerate_docs.py`](regenerate_docs.py) script will:
-- Detect your new schema files
+- Detect your new schema files in the `schemas/<product>/<version>/` directory structure
 - Convert OpenAPI files to JSON Schema if needed
-- Generate HTML documentation
-- Update the index page
+- Generate HTML documentation in the corresponding `pages/<product>/<version>/` directory
+- Update the hierarchical index page with your product and version
 - Validate the output
+
+**Generated Structure:**
+- Source: `schemas/your-product/1.0.0/your-schema.yaml`
+- Output: `pages/your-product/1.0.0/your-schema.html`
+- Index: `pages/index.html` (with collapsible product/version sections)
 
 ### Requirements
 
@@ -140,7 +184,8 @@ Modify the appropriate schema files in the [`schemas`](schemas) directory to ref
 
 ```bash
 # Navigate to the component's schema directory
-cd schemas/your-component-name
+# Format: schemas/<product-name>/<version>/
+cd schemas/your-product-name/1.0.0
 
 # Edit the relevant schema files
 # For example: server.yaml, advanced.yaml, etc.
@@ -160,15 +205,28 @@ Before creating a pull request, test that the documentation generates correctly:
 # Regenerate all documentation
 python3 regenerate_docs.py
 
-# View the updated documentation
-open pages/your-component-name.html
+# View the updated documentation (note the hierarchical path structure)
+# Format: pages/<product>/<version>/<component>.html
+open pages/your-product/your-version/your-component.html
+
+# For example:
+open pages/iag/25.12/openapi.html
+open pages/isvd/11.0.0/verify-directory-server.html
+
+# Or view the index page to navigate to your documentation
+open pages/index.html
 ```
 
+**Note:** The generated HTML files mirror the source schema directory structure:
+- Source: `schemas/<product>/<version>/<schema>.yaml`
+- Output: `pages/<product>/<version>/<schema>.html`
+
 Verify that:
-- The documentation renders correctly
+- The documentation renders correctly in the hierarchical structure
 - All changes are reflected in the output
 - No errors or warnings are displayed
 - External references resolve properly
+- The index page correctly lists your documentation under the appropriate product and version
 
 ### Step 3: Create a Pull Request
 
@@ -283,11 +341,16 @@ python3 regenerate_docs.py -s schemas -p pages
 **Main Schema Detection:**
 The script identifies "main" schema files that should generate documentation:
 - Files in the root schemas directory
-- Files named `openapi.yaml` (converted to use parent directory name)
-- Files matching their parent directory name (e.g., `verify-directory-server.yaml` in `isvd/`)
-- Known main schemas like `example-showcase.yaml`
+- Files matching their parent directory name (e.g., `verify-directory-server.yaml` in `isvd/11.0.0/`)
+- Files with top-level schema indicators (`$schema` and `$ref` or `title`)
+- OpenAPI specification files (detected by the presence of `openapi` field in the schema)
 
 Component schema files (like `advanced.yaml`, `server.yaml`, etc.) are not processed individually as they are referenced by main schemas.
+
+**Directory Structure:**
+The generated documentation mirrors the source schema directory structure:
+- Source: `schemas/<product>/<version>/<schema>.yaml`
+- Output: `pages/<product>/<version>/<schema>.html`
 
 ### 2. Schema Documentation Generator (`generate_schema_docs.py`)
 
@@ -347,14 +410,41 @@ python3 openapi_to_jsonschema.py schemas/iag/openapi.yaml schemas/iag/openapi.js
 
 ### 4. Index Page Generator (`generate_index.py`)
 
-Creates a landing page that lists all available configuration documentation files.
+Creates a hierarchical landing page that organizes documentation by product and version.
 
 **Features:**
-- Scans directory for HTML documentation files
-- Extracts titles from HTML files
-- Generates descriptions based on filenames
-- Creates a responsive card-based layout
-- IBM Carbon Design System styling
+- **Hierarchical Organization**: Groups documentation by product and version
+- **Collapsible Sections**:
+  - Product sections (expanded by default) with full product names and descriptions
+  - Version sections (collapsed by default) for cleaner navigation
+- **Product Metadata**: Displays full product names, short names, and descriptions
+- **Version Sorting**: Intelligent semantic version sorting (newest first)
+- **Responsive Design**: Card-based layout with IBM Carbon Design System styling
+- **Interactive Navigation**: Click to expand/collapse products and versions independently
+
+**Directory Structure Support:**
+The generator automatically detects the hierarchical structure:
+```
+pages/
+├── iag/
+│   └── 25.12/
+│       └── openapi.html
+└── isvd/
+    └── 11.0.0/
+        ├── verify-directory-server.html
+        └── verify-directory-proxy.html
+```
+
+**Generated Index Structure:**
+```
+📦 IBM Application Gateway [IAG] ▼ (Collapsible)
+  └─ 📋 Version 25.12 ▶ (Collapsed by default)
+      └─ Documentation pages...
+
+📦 IBM Security Verify Directory [ISVD] ▼ (Collapsible)
+  ├─ 📋 Version 11.0.1 ▶ (Collapsed by default)
+  └─ 📋 Version 11.0.0 ▶ (Collapsed by default)
+```
 
 **Usage:**
 ```bash
@@ -365,6 +455,9 @@ python3 generate_index.py <pages_directory> [output_file]
 ```bash
 python3 generate_index.py pages
 ```
+
+**Configuration:**
+When adding a new product, update the `PRODUCT_INFO` dictionary in `generate_index.py` to provide product metadata and component descriptions (see [Step 2](#step-2-update-product-information) above).
 
 ## Installation
 
@@ -431,7 +524,23 @@ After generating multiple documentation files:
 python3 generate_index.py pages
 ```
 
-**Note:** When adding schemas for a new product, update the `descriptions` dictionary in `generate_index.py` (around line 102) to include a description for the new product. This ensures the index page displays an appropriate description for the new documentation.
+**Important:** When adding documentation for a new product or component, update the `PRODUCT_INFO` dictionary in `generate_index.py` (around line 53):
+
+```python
+PRODUCT_INFO = {
+    'your-product-id': {
+        'name': 'Your Product Full Name',
+        'short_name': 'ACRONYM',
+        'description': 'Brief product description',
+        'components': {
+            'your-component': 'Your component configuration parameters',
+            'another-component': 'Another component description'
+        }
+    }
+}
+```
+
+The index page will organize documentation hierarchically by product and version, with collapsible sections for easy navigation.
 
 Example:
 ```python
@@ -603,9 +712,45 @@ The generated documentation works in:
 ├── generate_schema_docs.py          # Main documentation generator
 ├── openapi_to_jsonschema.py         # OpenAPI to JSON Schema converter
 ├── generate_index.py                # Index page generator
+├── regenerate_docs.py               # Automated documentation regeneration script
 ├── README.md                         # This file
 ├── pages/                            # Generated HTML documentation pages
-└── schemas/                          # Schema files (organized by component)
+│   ├── index.html                   # Landing page with all documentation links
+│   ├── <product>/                   # Product-specific documentation
+│   │   └── <version>/               # Version-specific documentation
+│   │       └── *.html               # Generated HTML files
+└── schemas/                          # Schema files (organized by product/version)
+    ├── <product>/                   # Product name (e.g., iag, isvd)
+    │   └── <version>/               # Version number (e.g., 25.12, 11.0.0)
+    │       └── *.yaml               # Schema files
+```
+
+**Example Structure:**
+```
+schemas/
+├── iag/
+│   └── 25.12/
+│       ├── openapi.yaml             # Main OpenAPI schema
+│       ├── advanced.yaml            # Component schema
+│       ├── server.yaml              # Component schema
+│       └── ...
+└── isvd/
+    └── 11.0.0/
+        ├── verify-directory-server.yaml    # Main schema
+        ├── verify-directory-proxy.yaml     # Main schema
+        ├── server.yaml                     # Component schema
+        └── ...
+
+pages/
+├── index.html                       # Landing page
+├── iag/
+│   └── 25.12/
+│       └── openapi.html             # Generated documentation
+└── isvd/
+    └── 11.0.0/
+        ├── verify-directory-server.html
+        ├── verify-directory-proxy.html
+        └── ...
 ```
 
 ## Troubleshooting
