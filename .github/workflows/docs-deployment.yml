@@ -122,6 +122,9 @@ jobs:
           # Copy generated files to the pages branch root
           cp -r /tmp/generated-docs/* .
           
+          # Create .nojekyll file to disable Jekyll processing
+          touch .nojekyll
+          
           # Add all files to git
           git add -A
           
