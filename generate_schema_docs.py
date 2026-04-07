@@ -65,6 +65,9 @@ class SchemaDocGenerator:
         'http://json-schema.org/draft-06/schema#',
     ]
     
+    # Maximum recursion depth for circular references
+    MAX_RECURSION_DEPTH = 10
+    
     def __init__(self, schema_path: str, output_path: Optional[str] = None):
         """
         Initialize the generator.
@@ -79,6 +82,7 @@ class SchemaDocGenerator:
         self.schema_cache = {}
         self.main_schema = None
         self.schema_version = None
+        self.ref_stack = []  # Track reference resolution stack to detect circular refs
         
     def load_schema(self, path: Path) -> Dict[str, Any]:
         """Load a schema file (YAML or JSON) and detect schema version."""
@@ -652,17 +656,27 @@ class SchemaDocGenerator:
     <div class="container">
 '''
     
-    def _generate_schema_content(self, schema: Dict[str, Any], level: int = 0) -> str:
+    def _generate_schema_content(self, schema: Dict[str, Any], level: int = 0, depth: int = 0) -> str:
         """Generate content for a schema object."""
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded. Stopping recursion.")
+            return '<div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div>\n'
+        
         html = ''
         
         if 'properties' in schema:
-            html += self._generate_properties(schema, level)
+            html += self._generate_properties(schema, level, depth)
         
         return html
     
-    def _generate_definition_section(self, name: str, schema: Dict[str, Any], level: int = 0) -> str:
+    def _generate_definition_section(self, name: str, schema: Dict[str, Any], level: int = 0, depth: int = 0) -> str:
         """Generate a collapsible section for a definition."""
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded for definition '{name}'. Stopping recursion.")
+            return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div></div>\n'
+        
         section_id = self._generate_id(name)
         description = schema.get('description', '')
         examples = schema.get('examples', [])
@@ -690,17 +704,17 @@ class SchemaDocGenerator:
             ref_examples = ref_schema.get('examples', [])
             if ref_examples and not examples:
                 examples = ref_examples
-            html += self._generate_schema_content(ref_schema, level + 1)
+            html += self._generate_schema_content(ref_schema, level + 1, depth + 1)
         elif 'properties' in schema:
             # Add properties container with header if there's a description
             if description:
                 html += '<div class="nested-section">\n'
                 html += '<div class="properties-header">⚙️ Properties</div>\n'
-            html += self._generate_properties(schema, level + 1)
+            html += self._generate_properties(schema, level + 1, depth + 1)
             if description:
                 html += '</div>\n'
         elif schema.get('type') == 'array' and 'items' in schema:
-            html += self._generate_array_items(schema['items'], level + 1)
+            html += self._generate_array_items(schema['items'], level + 1, depth + 1)
         else:
             # For simple schemas (enum, type only, etc.), display as a property
             html += self._generate_simple_schema_display(schema)
@@ -715,27 +729,32 @@ class SchemaDocGenerator:
 '''
         return html
     
-    def _generate_properties(self, schema: Dict[str, Any], level: int = 0) -> str:
+    def _generate_properties(self, schema: Dict[str, Any], level: int = 0, depth: int = 0) -> str:
         """Generate HTML for schema properties."""
         properties = schema.get('properties', {})
         required = schema.get('required', [])
         
         html = ''
         for prop_name, prop_schema in properties.items():
-            html += self._generate_property(prop_name, prop_schema, prop_name in required, level)
+            html += self._generate_property(prop_name, prop_schema, prop_name in required, level, depth)
         
         return html
     
-    def _generate_property(self, name: str, schema: Dict[str, Any], is_required: bool, level: int) -> str:
+    def _generate_property(self, name: str, schema: Dict[str, Any], is_required: bool, level: int, depth: int = 0) -> str:
         """Generate HTML for a single property."""
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded for property '{name}'. Stopping recursion.")
+            return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div></div>\n'
+        
         # Handle $ref and $dynamicRef
         if '$ref' in schema:
             ref_schema, ref_name = self.resolve_ref(schema['$ref'], self.schema_path)
-            return self._generate_definition_section(name, ref_schema, level)
+            return self._generate_definition_section(name, ref_schema, level, depth + 1)
         
         if '$dynamicRef' in schema:
             ref_schema, ref_name = self.resolve_ref(schema['$dynamicRef'], self.schema_path)
-            return self._generate_definition_section(name, ref_schema, level)
+            return self._generate_definition_section(name, ref_schema, level, depth + 1)
         
         prop_type = schema.get('type', 'any')
         description = schema.get('description', '')
@@ -783,21 +802,21 @@ class SchemaDocGenerator:
             if has_nested_properties:
                 html += '            <div class="nested-section">\n'
                 html += '            <div class="properties-header">⚙️ Properties</div>\n'
-                html += self._generate_properties(schema, level + 1)
+                html += self._generate_properties(schema, level + 1, depth + 1)
                 html += '            </div>\n'
             
             # Handle arrays with items
             if has_array_items:
                 html += '            <div class="nested-section">\n'
                 if 'items' in schema:
-                    html += self._generate_array_items(schema['items'], level + 1)
+                    html += self._generate_array_items(schema['items'], level + 1, depth + 1)
                 if 'prefixItems' in schema:
-                    html += self._generate_prefix_items(schema['prefixItems'], level + 1)
+                    html += self._generate_prefix_items(schema['prefixItems'], level + 1, depth + 1)
                 html += '            </div>\n'
             
             # Handle dependentSchemas (JSON Schema 2019-09+)
             if has_dependent_schemas:
-                html += self._generate_dependent_schemas(schema['dependentSchemas'], level + 1)
+                html += self._generate_dependent_schemas(schema['dependentSchemas'], level + 1, depth + 1)
             
             # Handle unevaluatedProperties (JSON Schema 2019-09+)
             if 'unevaluatedProperties' in schema:
@@ -854,20 +873,25 @@ class SchemaDocGenerator:
         html += '        </div>\n'
         return html
     
-    def _generate_array_items(self, items_schema: Dict[str, Any], level: int) -> str:
+    def _generate_array_items(self, items_schema: Dict[str, Any], level: int, depth: int = 0) -> str:
         """Generate HTML for array items."""
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded in array items. Stopping recursion.")
+            return '<div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div>\n'
+        
         html = '<div class="array-items-container">\n'
         html += '<div class="array-items-header">📋 Array Items</div>\n'
         html += '<div class="array-items-content">\n'
         
         if '$ref' in items_schema:
             ref_schema, ref_name = self.resolve_ref(items_schema['$ref'], self.schema_path)
-            html += self._generate_schema_content(ref_schema, level)
+            html += self._generate_schema_content(ref_schema, level, depth + 1)
         elif '$dynamicRef' in items_schema:
             ref_schema, ref_name = self.resolve_ref(items_schema['$dynamicRef'], self.schema_path)
-            html += self._generate_schema_content(ref_schema, level)
+            html += self._generate_schema_content(ref_schema, level, depth + 1)
         elif 'properties' in items_schema:
-            html += self._generate_properties(items_schema, level)
+            html += self._generate_properties(items_schema, level, depth + 1)
         elif items_schema.get('type'):
             html += f'<div class="property-description"><strong>Type:</strong> <code>{items_schema["type"]}</code></div>\n'
             if 'description' in items_schema:
@@ -877,11 +901,16 @@ class SchemaDocGenerator:
         html += '</div>\n'  # Close array-items-container
         return html
     
-    def _generate_prefix_items(self, prefix_items: List[Dict[str, Any]], level: int) -> str:
+    def _generate_prefix_items(self, prefix_items: List[Dict[str, Any]], level: int, depth: int = 0) -> str:
         """
         Generate HTML for prefixItems (JSON Schema 2020-12).
         prefixItems defines a tuple validation where each position has a specific schema.
         """
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded in prefix items. Stopping recursion.")
+            return '<div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div>\n'
+        
         html = '<div class="array-items-container">\n'
         html += '<div class="array-items-header">📋 Prefix Items (Tuple Validation)</div>\n'
         html += '<div class="array-items-content">\n'
@@ -893,9 +922,9 @@ class SchemaDocGenerator:
             
             if '$ref' in item_schema:
                 ref_schema, ref_name = self.resolve_ref(item_schema['$ref'], self.schema_path)
-                html += self._generate_schema_content(ref_schema, level)
+                html += self._generate_schema_content(ref_schema, level, depth + 1)
             elif 'properties' in item_schema:
-                html += self._generate_properties(item_schema, level)
+                html += self._generate_properties(item_schema, level, depth + 1)
             else:
                 item_type = item_schema.get('type', 'any')
                 html += f'<div class="property-description"><strong>Type:</strong> <code>{item_type}</code></div>\n'
@@ -908,11 +937,16 @@ class SchemaDocGenerator:
         html += '</div>\n'  # Close array-items-container
         return html
     
-    def _generate_dependent_schemas(self, dependent_schemas: Dict[str, Dict[str, Any]], level: int) -> str:
+    def _generate_dependent_schemas(self, dependent_schemas: Dict[str, Dict[str, Any]], level: int, depth: int = 0) -> str:
         """
         Generate HTML for dependentSchemas (JSON Schema 2019-09+).
         Defines schemas that apply when certain properties are present.
         """
+        # Prevent infinite recursion
+        if depth > self.MAX_RECURSION_DEPTH:
+            logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded in dependent schemas. Stopping recursion.")
+            return '<div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div>\n'
+        
         html = '<div class="nested-section">\n'
         html += '<div class="properties-header">🔗 Dependent Schemas</div>\n'
         html += '<div class="property-description">Additional schema constraints that apply when specific properties are present:</div>\n'
@@ -922,7 +956,7 @@ class SchemaDocGenerator:
             html += f'<div class="property-name">When <code>{self._escape_html(prop_name)}</code> is present:</div>\n'
             
             if 'properties' in dep_schema:
-                html += self._generate_properties(dep_schema, level)
+                html += self._generate_properties(dep_schema, level, depth + 1)
             elif 'required' in dep_schema:
                 html += '<div class="property-description"><strong>Required properties:</strong> '
                 html += ', '.join(f'<code>{self._escape_html(r)}</code>' for r in dep_schema['required'])
