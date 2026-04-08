@@ -32,6 +32,7 @@ import json
 import os
 import sys
 import re
+import hashlib
 import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
@@ -83,6 +84,7 @@ class SchemaDocGenerator:
         self.main_schema = None
         self.schema_version = None
         self.ref_stack = []  # Track reference resolution stack to detect circular refs
+        self.expanded_refs = {}  # Track which refs have been expanded and their section IDs
         
     def load_schema(self, path: Path) -> Dict[str, Any]:
         """Load a schema file (YAML or JSON) and detect schema version."""
@@ -210,7 +212,12 @@ class SchemaDocGenerator:
             if defs_key in self.main_schema:
                 # If only definitions (no properties), show all definitions
                 for def_name, def_schema in self.main_schema[defs_key].items():
+                    # Clear ref_stack for each top-level definition to allow fresh traversal
+                    self.ref_stack = []
+                    # Add the definition itself to the stack so self-references are detected
+                    self.ref_stack.append(f'#/{defs_key}/{def_name}')
                     html += self._generate_definition_section(def_name, def_schema, level=1)
+                    self.ref_stack.pop()
         
         # Close Configuration section
         html += '''
@@ -749,12 +756,95 @@ class SchemaDocGenerator:
         
         # Handle $ref and $dynamicRef
         if '$ref' in schema:
-            ref_schema, ref_name = self.resolve_ref(schema['$ref'], self.schema_path)
-            return self._generate_definition_section(name, ref_schema, level, depth + 1)
+            ref = schema['$ref']
+            description = schema.get('description', '')
+            
+            # Check if this ref has already been expanded elsewhere
+            if ref in self.expanded_refs:
+                # Link to the first expansion - extract the property name from section_id
+                section_id = self.expanded_refs[ref]
+                # Extract the property name from the section_id (before the hash)
+                link_text = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Reference to already expanded definition '{name}' -> {ref}")
+                
+                # Build the description with optional local description
+                desc_html = ''
+                if description:
+                    desc_html = f'{self._format_description(description)}<br>'
+                desc_html += f'<em>See <a href="#{section_id}">{self._escape_html(link_text)}</a> above</em>'
+                
+                return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
+            
+            # Check for circular reference - if already in stack, just show a note
+            if ref in self.ref_stack:
+                # Get the section_id from expanded_refs if available
+                section_id = self.expanded_refs.get(ref, self._generate_id(name))
+                link_text = section_id.split('-')[0] if '-' in section_id else name
+                logger.info(f"Circular reference detected for property '{name}' -> {ref}")
+                
+                # Build the description with optional local description
+                desc_html = ''
+                if description:
+                    desc_html = f'{self._format_description(description)}<br>'
+                desc_html += f'<em>See <a href="#{section_id}">{self._escape_html(link_text)}</a> above</em>'
+                
+                return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
+            
+            # First time seeing this ref - expand it inline and track it
+            section_id = self._generate_id(name)
+            self.expanded_refs[ref] = section_id
+            self.ref_stack.append(ref)
+            try:
+                ref_schema, ref_name = self.resolve_ref(ref, self.schema_path)
+                result = self._generate_definition_section(name, ref_schema, level, depth + 1)
+            finally:
+                self.ref_stack.pop()
+            return result
         
         if '$dynamicRef' in schema:
-            ref_schema, ref_name = self.resolve_ref(schema['$dynamicRef'], self.schema_path)
-            return self._generate_definition_section(name, ref_schema, level, depth + 1)
+            ref = schema['$dynamicRef']
+            description = schema.get('description', '')
+            
+            # Check if this ref has already been expanded elsewhere
+            if ref in self.expanded_refs:
+                # Link to the first expansion - extract the property name from section_id
+                section_id = self.expanded_refs[ref]
+                link_text = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Reference to already expanded definition '{name}' -> {ref}")
+                
+                # Build the description with optional local description
+                desc_html = ''
+                if description:
+                    desc_html = f'{self._format_description(description)}<br>'
+                desc_html += f'<em>See <a href="#{section_id}">{self._escape_html(link_text)}</a> above</em>'
+                
+                return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
+            
+            # Check for circular reference - if already in stack, just show a note
+            if ref in self.ref_stack:
+                # Get the section_id from expanded_refs if available
+                section_id = self.expanded_refs.get(ref, self._generate_id(name))
+                link_text = section_id.split('-')[0] if '-' in section_id else name
+                logger.info(f"Circular reference detected for property '{name}' -> {ref}")
+                
+                # Build the description with optional local description
+                desc_html = ''
+                if description:
+                    desc_html = f'{self._format_description(description)}<br>'
+                desc_html += f'<em>See <a href="#{section_id}">{self._escape_html(link_text)}</a> above</em>'
+                
+                return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
+            
+            # First time seeing this ref - expand it inline and track it
+            section_id = self._generate_id(name)
+            self.expanded_refs[ref] = section_id
+            self.ref_stack.append(ref)
+            try:
+                ref_schema, ref_name = self.resolve_ref(ref, self.schema_path)
+                result = self._generate_definition_section(name, ref_schema, level, depth + 1)
+            finally:
+                self.ref_stack.pop()
+            return result
         
         prop_type = schema.get('type', 'any')
         description = schema.get('description', '')
@@ -885,11 +975,52 @@ class SchemaDocGenerator:
         html += '<div class="array-items-content">\n'
         
         if '$ref' in items_schema:
-            ref_schema, ref_name = self.resolve_ref(items_schema['$ref'], self.schema_path)
-            html += self._generate_schema_content(ref_schema, level, depth + 1)
+            ref = items_schema['$ref']
+            
+            # Check if this ref has already been expanded elsewhere
+            if ref in self.expanded_refs:
+                # Link to the first expansion - extract property name from the section_id
+                section_id = self.expanded_refs[ref]
+                # Try to extract a readable name from the section_id
+                prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Array items reference to already expanded definition -> {ref}")
+                html += f'<div class="property-description"><em>Array items: See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+            elif ref in self.ref_stack:
+                # Circular reference within current expansion
+                section_id = self.expanded_refs.get(ref, self._generate_id('items'))
+                prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Circular reference detected in array items -> {ref}")
+                html += f'<div class="property-description"><em>Array items: See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+            else:
+                self.ref_stack.append(ref)
+                try:
+                    ref_schema, ref_name = self.resolve_ref(ref, self.schema_path)
+                    html += self._generate_schema_content(ref_schema, level, depth + 1)
+                finally:
+                    self.ref_stack.pop()
         elif '$dynamicRef' in items_schema:
-            ref_schema, ref_name = self.resolve_ref(items_schema['$dynamicRef'], self.schema_path)
-            html += self._generate_schema_content(ref_schema, level, depth + 1)
+            ref = items_schema['$dynamicRef']
+            
+            # Check if this ref has already been expanded elsewhere
+            if ref in self.expanded_refs:
+                # Link to the first expansion
+                section_id = self.expanded_refs[ref]
+                prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Array items reference to already expanded definition -> {ref}")
+                html += f'<div class="property-description"><em>Array items: See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+            elif ref in self.ref_stack:
+                # Circular reference within current expansion
+                section_id = self.expanded_refs.get(ref, self._generate_id('items'))
+                prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                logger.info(f"Circular reference detected in array items -> {ref}")
+                html += f'<div class="property-description"><em>Array items: See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+            else:
+                self.ref_stack.append(ref)
+                try:
+                    ref_schema, ref_name = self.resolve_ref(ref, self.schema_path)
+                    html += self._generate_schema_content(ref_schema, level, depth + 1)
+                finally:
+                    self.ref_stack.pop()
         elif 'properties' in items_schema:
             html += self._generate_properties(items_schema, level, depth + 1)
         elif items_schema.get('type'):
@@ -921,8 +1052,28 @@ class SchemaDocGenerator:
             html += f'<div class="properties-header">Position {idx}</div>\n'
             
             if '$ref' in item_schema:
-                ref_schema, ref_name = self.resolve_ref(item_schema['$ref'], self.schema_path)
-                html += self._generate_schema_content(ref_schema, level, depth + 1)
+                ref = item_schema['$ref']
+                
+                # Check if this ref has already been expanded elsewhere
+                if ref in self.expanded_refs:
+                    # Link to the first expansion
+                    section_id = self.expanded_refs[ref]
+                    prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                    logger.info(f"Prefix items reference to already expanded definition -> {ref}")
+                    html += f'<div class="property-description"><em>See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+                elif ref in self.ref_stack:
+                    # Circular reference within current expansion
+                    section_id = self.expanded_refs.get(ref, self._generate_id('item'))
+                    prop_name = section_id.split('-')[0] if '-' in section_id else 'definition'
+                    logger.info(f"Circular reference detected in prefix items -> {ref}")
+                    html += f'<div class="property-description"><em>See <a href="#{section_id}">{self._escape_html(prop_name)}</a> above</em></div>\n'
+                else:
+                    self.ref_stack.append(ref)
+                    try:
+                        ref_schema, ref_name = self.resolve_ref(ref, self.schema_path)
+                        html += self._generate_schema_content(ref_schema, level, depth + 1)
+                    finally:
+                        self.ref_stack.pop()
             elif 'properties' in item_schema:
                 html += self._generate_properties(item_schema, level, depth + 1)
             else:
@@ -1563,8 +1714,12 @@ class SchemaDocGenerator:
         return description
     
     def _generate_id(self, name: str) -> str:
-        """Generate a valid HTML ID from a name."""
-        return re.sub(r'[^a-zA-Z0-9-_]', '-', name.lower())
+        """Generate a valid, collision-resistant HTML ID from a name."""
+        slug = re.sub(r'[^a-zA-Z0-9]+', '-', name.lower()).strip('-')
+        if not slug:
+            slug = 'section'
+        digest = hashlib.sha1(name.encode('utf-8')).hexdigest()[:8]
+        return f'{slug}-{digest}'
     
     def generate(self) -> None:
         """Generate the documentation and write to file."""
