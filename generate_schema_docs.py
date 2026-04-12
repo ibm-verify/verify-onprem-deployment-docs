@@ -884,8 +884,10 @@ class SchemaDocGenerator:
             if const_value is not None:
                 html += f'            <div class="property-default"><strong>Constant Value:</strong> <code>{self._escape_html(str(const_value))}</code></div>\n'
             
-            # Handle x-examples
-            if 'x-examples' in schema:
+            # Handle examples (standard JSON Schema keyword) and x-examples (custom extension)
+            if 'examples' in schema:
+                html += self._generate_inline_examples(schema['examples'])
+            elif 'x-examples' in schema:
                 html += self._generate_inline_examples(schema['x-examples'])
             
             # Handle nested objects
@@ -956,8 +958,10 @@ class SchemaDocGenerator:
         if 'dependentRequired' in schema:
             html += self._generate_dependent_required(schema['dependentRequired'])
         
-        # Handle x-examples
-        if 'x-examples' in schema:
+        # Handle examples (standard JSON Schema keyword) and x-examples (custom extension)
+        if 'examples' in schema:
+            html += self._generate_inline_examples(schema['examples'])
+        elif 'x-examples' in schema:
             html += self._generate_inline_examples(schema['x-examples'])
         
         html += '        </div>\n'
