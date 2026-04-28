@@ -5,9 +5,7 @@
 >
 > The contents of this repository are only applicable to IBM Verify developers. This repository is used to generate public documentation which will be made available at: https://ibm-verify.github.io/verify-onprem-deployment-docs/
 
-IBM Confidential
-PID 5725-X36
-Copyright IBM Corp. 2026
+Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
 
 ## Table of Contents
 
