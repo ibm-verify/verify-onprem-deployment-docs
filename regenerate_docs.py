@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-IBM Confidential
-PID 5725-X36
-Copyright IBM Corp. 2026
+Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
 
 Documentation Regeneration Script
 Regenerates all HTML documentation pages from schema files.

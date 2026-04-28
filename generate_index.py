@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-IBM Confidential
-PID 5725-X36
-Copyright IBM Corp. 2026
+Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
 
 Index Page Generator
 Generates an index page for IBM Verify on-premises component configuration documentation
@@ -235,9 +233,7 @@ class IndexGenerator:
     <link rel="stylesheet" href="https://unpkg.com/carbon-components@10.58.0/css/carbon-components.min.css">
     <style>
         /*
-        IBM Confidential
-        PID 5725-X36
-        Copyright IBM Corp. 2026
+        Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
         */
         
         :root {{
