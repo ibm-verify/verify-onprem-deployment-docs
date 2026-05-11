@@ -1,0 +1,21 @@
+# Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
+
+defaults:
+  jiraProjectKey: VDEV
+  jiraIssueTypeName: Task
+  jiraAutoCloseTransitionName: "Done"
+  jiraFields:
+    reporter:
+      name: "isamdev@au1.ibm.com"
+    labels:
+    - "security-scanning"
+    components:
+      - name: "verify-core"
+
+squads:
+- name: development
+  sourceRepositories:
+  - name: verify-onprem-deployment-docs
+    sourceRepos: 
+    - github.com/ibm-verify/verify-onprem-deployment-docs
+

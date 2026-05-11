@@ -1,0 +1,39 @@
+# Copyright contributors to the IBM Verify On-Premises Configuration Documentation Generator project
+
+version: '2'
+
+tasks:
+  security-scanning:
+    runtimeClassName: medium
+    steps:
+      - name: user-defined-pre-setup-step
+        when: false # set to true for this step to be used
+        script: |
+          #!/usr/bin/env bash
+          # NOTE: Any user configurations that need to happen before setup can be placed here
+          echo "Hello from pipeline config override"
+      - name: user-defined-pre-scans-step
+        when: false # set to true for this step to be used
+        script: |
+          #!/usr/bin/env bash
+          # NOTE: Any user configurations that need to happen before the scans start to run can be placed here
+          echo "Hello from pipeline config override"
+      - name: static-scan
+        when: true
+      - name: compliance-checks
+        when: true
+      - name: image-scan
+        when: true
+      - name: dynamic-scan
+        when: false
+      - name: detect-secrets
+        when: true
+      - name: user-defined-post-scans-step
+        when: false # set to true for this step to be used
+        script: |
+          #!/usr/bin/env sh
+          # NOTE: Any user configurations that need to happen after the scans run can be placed here
+          # Notice that if you want to use `sh` instead of `bash` to use the shebang above
+          echo "Hello from pipeline config override"
+      - name: scans-results-upload
+        when: true
