@@ -17,5 +17,7 @@ squads:
   sourceRepositories:
   - name: verify-onprem-deployment-docs
     sourceRepos: 
-    - github.com/ibm-verify/verify-onprem-deployment-docs
+    - name: github.com/ibm-verify/verify-onprem-deployment-docs
+      properties:
+      - repository_token_name: github-com-token
 
