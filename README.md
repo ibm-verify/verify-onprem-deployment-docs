@@ -15,6 +15,10 @@ Copyright contributors to the IBM Verify On-Premises Configuration Documentation
   - [Step 2: Update Component Description](#step-2-update-component-description)
   - [Step 3: Generate Documentation](#step-3-generate-documentation)
   - [Requirements](#requirements)
+- [Adding Static Content](#adding-static-content)
+  - [Step 1: Add Static Files](#step-1-add-static-files)
+  - [Step 2: Update Product Information](#step-2-update-product-information-for-static-content)
+  - [Step 3: Regenerate Documentation](#step-3-regenerate-documentation)
 - [Updating Existing Documentation](#updating-existing-documentation)
   - [Step 1: Update Schema Files](#step-1-update-schema-files)
   - [Step 2: Test Documentation Generation Locally](#step-2-test-documentation-generation-locally)
@@ -172,6 +176,89 @@ The [`regenerate_docs.py`](regenerate_docs.py) script will:
 - Schema files must be valid JSON Schema (Draft-04 through 2020-12) or OpenAPI 3.0 format
 - Schema files should include proper `title` and `description` fields
 - External references should use relative paths within the schemas directory
+
+## Adding Static Content
+
+In addition to generated schema documentation, this repository supports static content such as pre-built HTML documentation (e.g., Doxygen-generated API references, user guides, etc.).
+
+### Step 1: Add Static Files
+
+Add your static content to the `static` directory following the same product/version structure:
+
+```bash
+# Create a directory structure for your static content
+# Format: static/<product-name>/<version>/<content-type>/
+mkdir -p static/your-product-name/1.0.0/lua
+
+# Add your static HTML files
+cp -r your-static-docs/* static/your-product-name/1.0.0/lua/
+```
+
+**Directory Structure:**
+- `static/<product-name>/<version>/<content-type>/` - Organize static content by product, version, and type
+- Example: `static/iag/25.12/lua/` for IBM Application Gateway Lua API documentation
+- Example: `static/ivia/11.0.2.0/lua/` for IBM Verify Identity Adapter Lua API documentation
+
+**Requirements:**
+- Static content directories must contain an `index.html` file as the entry point
+- All assets (CSS, JavaScript, images) should be included in the same directory structure
+- Use relative paths for internal links within the static content
+
+### Step 2: Update Product Information for Static Content
+
+Update the `PRODUCT_INFO` dictionary in [`generate_index.py`](generate_index.py) to include descriptions for your static content:
+
+1. Open [`generate_index.py`](generate_index.py)
+2. Locate the `PRODUCT_INFO` dictionary (around line 51)
+3. Add a `static_content` section to your product entry
+
+**Example:**
+
+```python
+PRODUCT_INFO = {
+    'your-product-id': {
+        'name': 'Your Product Full Name',
+        'short_name': 'ACRONYM',
+        'description': 'Brief product description',
+        'components': {
+            'your-component': 'Your component configuration parameters'
+        },
+        'static_content': {
+            'lua': 'Lua scripting API reference documentation',
+            'user-guide': 'User guide and tutorials'
+        }
+    }
+}
+```
+
+**What to Include:**
+- **static_content**: Dictionary mapping content directory names to their descriptions
+- The key should match the directory name in `static/<product>/<version>/<key>/`
+- The value is a description that will appear on the index page
+
+### Step 3: Regenerate Documentation
+
+Run the regeneration script to copy static content and update the index:
+
+```bash
+# Regenerate all documentation (includes static content)
+python3 regenerate_docs.py
+
+# View the index page to see your static content listed
+open pages/index.html
+```
+
+The script will:
+- Copy all files from `static/` to `pages/` preserving the directory structure
+- Detect static content directories (those containing `index.html`)
+- Add links to static content on the index page alongside schema documentation
+- Static content will appear with a 📚 icon to distinguish it from schema documentation
+
+**Generated Structure:**
+- Source: `static/your-product/1.0.0/lua/index.html`
+- Output: `pages/your-product/1.0.0/lua/index.html`
+- Index: `pages/index.html` (with links to both schema docs and static content)
+
 ## Updating Existing Documentation
 
 To update existing documentation in this repository, follow these steps:
@@ -716,11 +803,19 @@ The generated documentation works in:
 │   ├── index.html                   # Landing page with all documentation links
 │   ├── <product>/                   # Product-specific documentation
 │   │   └── <version>/               # Version-specific documentation
-│   │       └── *.html               # Generated HTML files
-└── schemas/                          # Schema files (organized by product/version)
-    ├── <product>/                   # Product name (e.g., iag, isvd)
-    │   └── <version>/               # Version number (e.g., 25.12, 11.0.0)
-    │       └── *.yaml               # Schema files
+│   │       ├── *.html               # Generated HTML files
+│   │       └── <content-type>/      # Static content (e.g., lua/)
+│   │           └── index.html       # Static content entry point
+├── schemas/                          # Schema files (organized by product/version)
+│   ├── <product>/                   # Product name (e.g., iag, isvd)
+│   │   └── <version>/               # Version number (e.g., 25.12, 11.0.0)
+│   │       └── *.yaml               # Schema files
+└── static/                           # Static content files (organized by product/version)
+    ├── <product>/                   # Product name (e.g., iag, ivia)
+    │   └── <version>/               # Version number (e.g., 25.12, 11.0.2.0)
+    │       └── <content-type>/      # Content type (e.g., lua/)
+    │           ├── index.html       # Entry point
+    │           └── ...              # Other static files
 ```
 
 **Example Structure:**
@@ -739,11 +834,27 @@ schemas/
         ├── server.yaml                     # Component schema
         └── ...
 
+static/
+├── iag/
+│   └── 25.12/
+│       └── lua/                     # Lua API documentation
+│           ├── index.html
+│           ├── classes.html
+│           └── ...
+└── ivia/
+    └── 11.0.2.0/
+        └── lua/                     # Lua API documentation
+            ├── index.html
+            └── ...
+
 pages/
 ├── index.html                       # Landing page
 ├── iag/
 │   └── 25.12/
-│       └── openapi.html             # Generated documentation
+│       ├── openapi.html             # Generated documentation
+│       └── lua/                     # Static content (copied from static/)
+│           ├── index.html
+│           └── ...
 └── isvd/
     └── 11.0.0/
         ├── verify-directory-server.html

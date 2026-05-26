@@ -55,6 +55,12 @@ class IndexGenerator:
             'description': 'Lightweight, container-based reverse proxy for web applications and APIs',
             'components': {
                 'openapi': 'IBM Application Gateway configuration parameters and settings'
+            },
+            'static_content': {
+                'lua': {
+                    'title': 'Lua Module Documentation',
+                    'description': 'Lua module documentation for http transformation rules'
+                }
             }
         },
         'isvd': {
@@ -69,12 +75,24 @@ class IndexGenerator:
                 'verify-directory-webadmin': 'IBM Security Verify Directory Web Administration Tool configuration parameters and settings'
             }
         },
-        'isva': {
-            'name': 'IBM Security Verify Access',
-            'short_name': 'ISVA',
-            'description': 'Comprehensive access management and federation solution',
-            'components': {
-                'verify-access': 'IBM Security Verify Access configuration parameters and settings'
+        'ivia': {
+            'name': 'IBM Verify Identity Access',
+            'short_name': 'IVIA',
+            'description': 'User-friendly access management and multifactor authentication to help organizations maintain security as they adopt new technologies.',
+            'components': {},
+            'static_content': {
+                'lua': {
+                    'title': 'Lua API Reference',
+                    'description': 'Lua module documentation for http transformation rules'
+                },
+                'rapi': {
+                    'title': 'REST API documentation',
+                    'description': 'Configuration REST API documentation'
+                },
+                'rapi_container': {
+                    'title': 'REST API documentation for containers',
+                    'description': 'Configuration REST API documentation'
+                }
             }
         },
         'isvg': {
@@ -107,10 +125,84 @@ class IndexGenerator:
         self.pages_dir = Path(pages_dir)
         self.output_path = Path(output_path) if output_path else self.pages_dir / 'index.html'
         
+    def scan_static_content(self) -> Dict[str, Dict[str, List[Dict[str, str]]]]:
+        """
+        Scan the pages directory for static content directories.
+        Organizes static content hierarchically by product and version.
+        
+        Returns:
+            Nested dictionary: {product: {version: [static_info, ...]}}
+        """
+        static_hierarchy = {}
+        
+        if not self.pages_dir.exists():
+            return static_hierarchy
+        
+        # Look for static content directories (non-HTML directories with index.html inside)
+        for product_dir in self.pages_dir.iterdir():
+            if not product_dir.is_dir() or product_dir.name.startswith('.'):
+                continue
+            
+            product = product_dir.name
+            
+            for version_dir in product_dir.iterdir():
+                if not version_dir.is_dir() or version_dir.name.startswith('.'):
+                    continue
+                
+                version = version_dir.name
+                
+                # Look for subdirectories that contain index.html (static content)
+                for content_dir in version_dir.iterdir():
+                    if not content_dir.is_dir() or content_dir.name.startswith('.'):
+                        continue
+                    
+                    index_file = content_dir / 'index.html'
+                    if index_file.exists():
+                        # This is static content
+                        content_name = content_dir.name
+                        
+                        # Get title and description from PRODUCT_INFO
+                        title = None
+                        description = None
+                        if product in self.PRODUCT_INFO:
+                            static_content_info = self.PRODUCT_INFO[product].get('static_content', {})
+                            content_info = static_content_info.get(content_name)
+                            
+                            # Support both string (legacy) and dict (new) format
+                            if isinstance(content_info, dict):
+                                title = content_info.get('title')
+                                description = content_info.get('description')
+                            elif isinstance(content_info, str):
+                                # Legacy format: just a description string
+                                description = content_info
+                        
+                        # Fallback to auto-generated values
+                        if not title:
+                            title = content_name.replace('_', ' ').title()
+                        if not description:
+                            description = f'{content_name.replace("_", " ").title()} documentation'
+                        
+                        # Initialize nested structure
+                        if product not in static_hierarchy:
+                            static_hierarchy[product] = {}
+                        if version not in static_hierarchy[product]:
+                            static_hierarchy[product][version] = []
+                        
+                        rel_path = content_dir.relative_to(self.pages_dir)
+                        static_hierarchy[product][version].append({
+                            'name': content_name,
+                            'title': title,
+                            'path': str(rel_path / 'index.html'),
+                            'description': description
+                        })
+        
+        return static_hierarchy
+    
     def scan_pages(self) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
         """
         Scan the pages directory for HTML files and extract their titles.
         Organizes pages hierarchically by product and version.
+        Skips HTML files that are part of static content directories.
         
         Returns:
             Nested dictionary: {product: {version: [page_info, ...]}}
@@ -125,6 +217,11 @@ class IndexGenerator:
         for file_path in sorted(self.pages_dir.rglob('*.html')):
             # Skip index files at any level
             if file_path.name == 'index.html':
+                continue
+            
+            # Skip files that are part of static content directories
+            # Static content directories are identified by having an index.html file
+            if self._is_in_static_content_dir(file_path):
                 continue
             
             # Get relative path from pages_dir
@@ -176,6 +273,30 @@ class IndexGenerator:
         except Exception as e:
             logger.warning(f"Could not extract title from {file_path}: {e}")
             return None
+    def _is_in_static_content_dir(self, file_path: Path) -> bool:
+        """
+        Check if a file is inside a static content directory.
+        Static content directories are identified by having an index.html file.
+        
+        Args:
+            file_path: Path to the HTML file
+            
+        Returns:
+            True if the file is inside a static content directory
+        """
+        # Check if the file's parent directory contains an index.html
+        parent_dir = file_path.parent
+        
+        # Walk up the directory tree from the file's parent
+        while parent_dir != self.pages_dir and parent_dir != parent_dir.parent:
+            index_file = parent_dir / 'index.html'
+            if index_file.exists() and index_file != file_path:
+                # This directory has an index.html, so it's a static content directory
+                return True
+            parent_dir = parent_dir.parent
+        
+        return False
+    
     
     def _generate_description(self, filename_stem: str, rel_path: Path) -> str:
         """
@@ -211,10 +332,11 @@ class IndexGenerator:
     def generate_html(self) -> str:
         """Generate the complete HTML index page."""
         pages_hierarchy = self.scan_pages()
+        static_hierarchy = self.scan_static_content()
         
         html = self._generate_header()
         html += self._generate_body_start()
-        html += self._generate_page_list(pages_hierarchy)
+        html += self._generate_page_list(pages_hierarchy, static_hierarchy)
         html += self._generate_footer()
         
         return html
@@ -484,6 +606,10 @@ class IndexGenerator:
             font-size: 1.25rem;
         }}
         
+        .page-card.static-content .page-card-title::before {{
+            content: "📚";
+        }}
+        
         .page-card-body {{
             padding: 1.5rem;
         }}
@@ -592,9 +718,12 @@ class IndexGenerator:
         </div>
 '''
     
-    def _generate_page_list(self, pages_hierarchy: Dict[str, Dict[str, List[Dict[str, Any]]]]) -> str:
+    def _generate_page_list(self, pages_hierarchy: Dict[str, Dict[str, List[Dict[str, Any]]]], static_hierarchy: Optional[Dict[str, Dict[str, List[Dict[str, str]]]]] = None) -> str:
         """Generate the hierarchical list of documentation pages organized by product and version."""
-        if not pages_hierarchy:
+        if static_hierarchy is None:
+            static_hierarchy = {}
+        
+        if not pages_hierarchy and not static_hierarchy:
             return '''
         <div class="empty-state">
             <div class="empty-state-icon">📭</div>
@@ -604,11 +733,16 @@ class IndexGenerator:
         
         html = ''
         
-        # Sort products alphabetically
-        sorted_products = sorted(pages_hierarchy.keys())
+        # Combine products from both hierarchies
+        all_products = set(pages_hierarchy.keys()) | set(static_hierarchy.keys())
+        sorted_products = sorted(all_products)
         
         for product_id in sorted_products:
-            versions = pages_hierarchy[product_id]
+            versions = pages_hierarchy.get(product_id, {})
+            static_versions = static_hierarchy.get(product_id, {})
+            
+            # Combine versions from both sources
+            all_versions = set(versions.keys()) | set(static_versions.keys())
             
             # Get product information
             product_info = self.PRODUCT_INFO.get(product_id, {
@@ -634,10 +768,11 @@ class IndexGenerator:
 '''
             
             # Sort versions (try semantic versioning, fallback to string sort)
-            sorted_versions = sorted(versions.keys(), key=lambda v: self._version_sort_key(v), reverse=True)
+            sorted_versions = sorted(all_versions, key=lambda v: self._version_sort_key(v), reverse=True)
             
             for version in sorted_versions:
-                pages = versions[version]
+                pages = versions.get(version, [])
+                static_content = static_versions.get(version, [])
                 
                 # Create unique ID for this version section
                 version_id = f"{product_id}-{version.replace('.', '-')}"
@@ -655,7 +790,7 @@ class IndexGenerator:
                         <div class="page-grid">
 '''
                 
-                # Generate page cards
+                # Generate page cards for schema documentation
                 for page in pages:
                     html += f'''
                             <div class="page-card">
@@ -665,6 +800,21 @@ class IndexGenerator:
                                     </div>
                                     <div class="page-card-body">
                                         <p class="page-card-description">{self._escape_html(page['description'])}</p>
+                                    </div>
+                                </a>
+                            </div>
+'''
+                
+                # Generate cards for static content
+                for content in static_content:
+                    html += f'''
+                            <div class="page-card static-content">
+                                <a href="{self._escape_html(content['path'])}" class="page-card-link">
+                                    <div class="page-card-header">
+                                        <h4 class="page-card-title">{self._escape_html(content['title'])}</h4>
+                                    </div>
+                                    <div class="page-card-body">
+                                        <p class="page-card-description">{self._escape_html(content['description'])}</p>
                                     </div>
                                 </a>
                             </div>
