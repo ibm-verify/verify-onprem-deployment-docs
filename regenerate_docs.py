@@ -12,6 +12,7 @@ import subprocess
 import tempfile
 import argparse
 import logging
+import shutil
 from pathlib import Path
 from typing import List, Tuple, Set, Optional
 import yaml
@@ -28,16 +29,18 @@ logger = logging.getLogger(__name__)
 class DocumentationRegenerator:
     """Regenerate all HTML documentation from schema files."""
     
-    def __init__(self, schemas_dir: str = "schemas", pages_dir: str = "pages"):
+    def __init__(self, schemas_dir: str = "schemas", pages_dir: str = "pages", static_dir: str = "static"):
         """
         Initialize the regenerator.
         
         Args:
             schemas_dir: Directory containing schema files
             pages_dir: Directory for output HTML files
+            static_dir: Directory containing static content files
         """
         self.schemas_dir = Path(schemas_dir)
         self.pages_dir = Path(pages_dir)
+        self.static_dir = Path(static_dir)
         self.temp_files: List[Path] = []
         self.processed_schemas: Set[str] = set()
         
@@ -317,9 +320,34 @@ class DocumentationRegenerator:
             logger.warning(result.stdout)
             # Don't fail here, just warn
     
+    def _is_in_static_content_dir(self, file_path: Path) -> bool:
+        """
+        Check if a file is inside a static content directory.
+        Static content directories are identified by having an index.html file.
+        
+        Args:
+            file_path: Path to the HTML file
+            
+        Returns:
+            True if the file is inside a static content directory
+        """
+        # Check if the file's parent directory contains an index.html
+        parent_dir = file_path.parent
+        
+        # Walk up the directory tree from the file's parent
+        while parent_dir != self.pages_dir and parent_dir != parent_dir.parent:
+            index_file = parent_dir / 'index.html'
+            if index_file.exists() and index_file != file_path:
+                # This directory has an index.html, so it's a static content directory
+                return True
+            parent_dir = parent_dir.parent
+        
+        return False
+    
     def check_for_unknown_files(self) -> bool:
         """
         Check if there are any HTML files in pages directory that weren't generated.
+        Skips files that are part of static content directories.
         
         Returns:
             True if unknown files found, False otherwise
@@ -334,6 +362,9 @@ class DocumentationRegenerator:
             # Skip index.html files at any level
             if html_file.name == 'index.html':
                 continue
+            # Skip files that are part of static content directories
+            if self._is_in_static_content_dir(html_file):
+                continue
             # Check if this file was generated
             if str(rel_path) not in self.processed_schemas:
                 unknown_files.append(str(rel_path))
@@ -347,6 +378,36 @@ class DocumentationRegenerator:
             return True
         
         return False
+    
+    def copy_static_content(self) -> None:
+        """
+        Copy static content from static directory to pages directory.
+        Preserves the directory structure.
+        """
+        if not self.static_dir.exists():
+            logger.info(f"No static directory found at {self.static_dir}, skipping static content copy")
+            return
+        
+        logger.info(f"Copying static content from {self.static_dir} to {self.pages_dir}")
+        
+        # Count files copied
+        files_copied = 0
+        
+        # Recursively copy all files from static to pages
+        for item in self.static_dir.rglob('*'):
+            if item.is_file():
+                # Calculate relative path from static_dir
+                rel_path = item.relative_to(self.static_dir)
+                dest_path = self.pages_dir / rel_path
+                
+                # Create parent directories if needed
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                
+                # Copy the file
+                shutil.copy2(item, dest_path)
+                files_copied += 1
+        
+        logger.info(f"Copied {files_copied} static file(s)")
     
     def cleanup_temp_files(self) -> None:
         """Remove temporary files created during processing."""
@@ -397,6 +458,11 @@ class DocumentationRegenerator:
                 except Exception as e:
                     logger.error(f"Error processing {schema_path}: {e}")
                     return 1
+            
+            # Copy static content
+            logger.info("-" * 70)
+            self.copy_static_content()
+            logger.info("")
             
             # Generate index page
             logger.info("-" * 70)
@@ -468,6 +534,12 @@ The script will:
     )
     
     parser.add_argument(
+        '--static-dir',
+        default='static',
+        help='Directory containing static content files (default: static)'
+    )
+    
+    parser.add_argument(
         '--version',
         action='version',
         version='%(prog)s 1.0.0'
@@ -476,7 +548,7 @@ The script will:
     args = parser.parse_args()
     
     # Create regenerator and run
-    regenerator = DocumentationRegenerator(args.schemas_dir, args.pages_dir)
+    regenerator = DocumentationRegenerator(args.schemas_dir, args.pages_dir, args.static_dir)
     exit_code = regenerator.regenerate_all()
     sys.exit(exit_code)
 
