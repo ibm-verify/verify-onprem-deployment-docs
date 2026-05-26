@@ -18,6 +18,9 @@ jobs:
     name: Create Release if Documentation Regeneration Requested
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
+      pull-requests: read
     
     steps:
       - name: Check if documentation regeneration is requested
