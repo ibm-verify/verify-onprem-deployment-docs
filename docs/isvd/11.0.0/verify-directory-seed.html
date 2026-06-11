@@ -409,7 +409,7 @@
 <body>
     <div class="header">
         <h1>IBM Verify Directory: Seed</h1>
-        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Seed container.</p><p>The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).</p><p>In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to skip the creation of indexes during a migration operation the following environment variable can be set: 'seed.migrate.skip-index'.<br></p></div>
+        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Seed container. <br><br> The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).  <br><br> In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to skip the creation of indexes during a migration operation the following environment variable can be set: 'seed.migrate.skip-index'.</p></div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search properties, descriptions, and types..." oninput="performSearch()" />
             <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">✕</button>
@@ -436,8 +436,8 @@
             </div>
             <div class="section-content expanded">
 
-        <div class="section" id="debug-32faaeca">
-            <div class="section-header" onclick="toggleSection('debug-32faaeca')">
+        <div class="section" id="debug">
+            <div class="section-header" onclick="toggleSection('debug')">
                 <h3>
                     debug
                     <span class="property-type">object</span>
@@ -445,8 +445,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -456,9 +455,8 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be <br>
-  enabled while bootstrapping the container.<br>
-</p></div>
+            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be 
+  enabled while bootstrapping the container.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -468,8 +466,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the debug level to assign to the runtime. The value is a  bit mask that controls which output is generated, with values from 1  to 65535.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the debug level to assign to the runtime. The value is a  bit mask that controls which output is generated, with values from 1  to 65535.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
 <div class="property-enum" style="margin-top: 0.5rem;">
 <div class="property-enum-title">Validation Constraints:</div>
@@ -484,8 +481,8 @@
             </div>
         </div>
 
-        <div class="section" id="general-dfe2db74">
-            <div class="section-header" onclick="toggleSection('general-dfe2db74')">
+        <div class="section" id="general">
+            <div class="section-header" onclick="toggleSection('general')">
                 <h3>
                     general
                     <span class="property-type">object</span>
@@ -493,13 +490,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The general configuration elements of the container.<br>
-</p></div>
+<div class="property-description"><p>The general configuration elements of the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="admin-2-169e1249">
-            <div class="section-header" onclick="toggleSection('admin-2-169e1249')">
+        <div class="section" id="general_admin">
+            <div class="section-header" onclick="toggleSection('general_admin')">
                 <h5>
                     admin
                     <span class="property-type">object</span>
@@ -508,8 +504,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The credential information of the server.  This object is only used when the seed container is performing a migration of data and is ignored if the seed container is copying replica data.<br>
-</p></div>
+            <div class="property-description"><p>The credential information of the server.  This object is only used when the seed container is performing a migration of data and is ignored if the seed container is copying replica data.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -519,8 +514,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The distinguished name of the user for the created LDAP instance.<br>
-</p></div>
+            <div class="property-description"><p>The distinguished name of the user for the created LDAP instance.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>cn=root</code></div>
         </div>
 
@@ -530,8 +524,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The password of the user for the created LDAP instance.  This field is only required when using the seed container to migrate data.<br>
-</p></div>
+            <div class="property-description"><p>The password of the user for the created LDAP instance.  This field is only required when using the seed container to migrate data.</p></div>
         </div>
             </div>
 
@@ -544,12 +537,11 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The contents of the key stash file (.ksf) which is used to protect data.  This file should be provided if the seed container is being used to migrate data and cryptographic synchronisation is required.  The key stash can either be obtained from a software based directory server installation, or a new one can be generated by starting this image with the 'keystash' argument.  For example: 'docker run --rm icr.io/isvd/verify-directory-seed:latest keystash'. Please note that this will send a base-64 encoded version of the key stash to the console of the container.<br>
-</p></div>
+            <div class="property-description"><p>The contents of the key stash file (.ksf) which is used to protect data.  This file should be provided if the seed container is being used to migrate data and cryptographic synchronisation is required.  The key stash can either be obtained from a software based directory server installation, or a new one can be generated by starting this image with the 'keystash' argument.  For example: 'docker run --rm icr.io/isvd/verify-directory-seed:latest keystash'. Please note that this will send a base-64 encoded version of the key stash to the console of the container.</p></div>
         </div>
 
-        <div class="section" id="license-2-70d0809e">
-            <div class="section-header" onclick="toggleSection('license-2-70d0809e')">
+        <div class="section" id="general_license">
+            <div class="section-header" onclick="toggleSection('general_license')">
                 <h5>
                     license
                     <span class="property-type">object</span>
@@ -567,8 +559,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The license key, required to run the container.<br>
-</p></div>
+            <div class="property-description"><p>The license key, required to run the container.</p></div>
         </div>
 
         <div class="property">
@@ -577,8 +568,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-seed:latest license standard'<br>
-</p></div>
+            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-seed:latest license standard'</p></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
                 <div class="property-enum-values">
@@ -599,13 +589,12 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.  Note that debug messages will not be formatted in JSON.<br>
-</p></div>
+            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.  Note that debug messages will not be formatted in JSON.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
-        <div class="section" id="pwd-policy-6fb52236">
-            <div class="section-header" onclick="toggleSection('pwd-policy-6fb52236')">
+        <div class="section" id="general_pwd_policy">
+            <div class="section-header" onclick="toggleSection('general_pwd_policy')">
                 <h4>
                     pwd-policy
                     <span class="property-type">object</span>
@@ -613,8 +602,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the password policy which is enforced by the server.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the password policy which is enforced by the server.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -624,8 +612,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Indicates if the IBM Administrative Password Policy is ON.<br>
-</p></div>
+            <div class="property-description"><p>Indicates if the IBM Administrative Password Policy is ON.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -635,8 +622,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of seconds after which the password failures  are purged from the failure counter, even though no successful  authentication occurred.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of seconds after which the password failures  are purged from the failure counter, even though no successful  authentication occurred.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -646,8 +632,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Enables replication of security attributes between master and  read-only replica so that password policy for account lockout can be  strongly enforced in replication topologies.<br>
-</p></div>
+            <div class="property-description"><p>Enables replication of security attributes between master and  read-only replica so that password policy for account lockout can be  strongly enforced in replication topologies.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -657,8 +642,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of seconds that the password cannot be used to  authenticate due to too many failed bind attempts.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of seconds that the password cannot be used to  authenticate due to too many failed bind attempts.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>300</code></div>
         </div>
 
@@ -668,8 +652,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of consecutive repeated characters in  the password field.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of consecutive repeated characters in  the password field.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -679,8 +662,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of consecutive failed bind attempts after which  the password may not be used to authenticate.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of consecutive failed bind attempts after which  the password may not be used to authenticate.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>10</code></div>
         </div>
 
@@ -690,8 +672,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of repeated characters allowed.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of repeated characters allowed.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -701,8 +682,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of characters required for a users  password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of characters required for a users  password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -712,8 +692,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of different (unique) characters  required for a users password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of different (unique) characters  required for a users password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -723,8 +702,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of characters that must be used in a  password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of characters that must be used in a  password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>8</code></div>
         </div>
 
@@ -734,13 +712,12 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of other characters required.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of other characters required.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
-        <div class="section" id="advanced-3-9df47401">
-            <div class="section-header" onclick="toggleSection('advanced-3-9df47401')">
+        <div class="section" id="general_pwd_policy_advanced">
+            <div class="section-header" onclick="toggleSection('general_pwd_policy_advanced')">
                 <h6>
                     advanced
                     <span class="property-type">object</span>
@@ -749,8 +726,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The configuration entries associated with rules for advanced  password syntax checking.<br>
-</p></div>
+            <div class="property-description"><p>The configuration entries associated with rules for advanced  password syntax checking.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -760,8 +736,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether the password can contain spaces.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether the password can contain spaces.</p></div>
         </div>
 
         <div class="property">
@@ -770,8 +745,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies that the password cannot be the same, or contain the value of the configured login attribute. The login attribute is configured by using the login-attribute configuration entry. It is set to the name of the LDAP attribute, such as UID that is used as the user ID attribute for users. Note: Enabling this rule might have a performance impact on the user password update operation. To process this rule, an internal search is done on the user to obtain the value of the login attribute. It then checks whether the specified password is the same, or contains the value of the login attribute.<br>
-</p></div>
+            <div class="property-description"><p>Specifies that the password cannot be the same, or contain the value of the configured login attribute. The login attribute is configured by using the login-attribute configuration entry. It is set to the name of the LDAP attribute, such as UID that is used as the user ID attribute for users. Note: Enabling this rule might have a performance impact on the user password update operation. To process this rule, an internal search is done on the user to obtain the value of the login attribute. It then checks whether the specified password is the same, or contains the value of the login attribute.</p></div>
         </div>
 
         <div class="property">
@@ -780,8 +754,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The name of the attribute which contains the user identity.  This is used by the no-user-id rule.<br>
-</p></div>
+            <div class="property-description"><p>The name of the attribute which contains the user identity.  This is used by the no-user-id rule.</p></div>
         </div>
 
         <div class="property">
@@ -790,8 +763,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of special characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of special characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -800,8 +772,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of numeric characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of numeric characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -810,8 +781,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of lowercase characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of lowercase characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -820,8 +790,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of uppercase characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of uppercase characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -830,8 +799,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of ascending characters that a password can contain. The characters can be alphabetic or numeric.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of ascending characters that a password can contain. The characters can be alphabetic or numeric.</p></div>
         </div>
 
         <div class="property">
@@ -840,8 +808,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of descending characters that a password can contain. The characters can be alphabetic or numeric.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of descending characters that a password can contain. The characters can be alphabetic or numeric.</p></div>
         </div>
 
         <div class="property">
@@ -850,8 +817,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies a custom password policy written in the Lua scripting language.<br>
-</p></div>
+            <div class="property-description"><p>Specifies a custom password policy written in the Lua scripting language.</p></div>
         </div>
             </div>
 
@@ -883,8 +849,8 @@
             </div>
         </div>
 
-        <div class="section" id="schemas-c20018ff">
-            <div class="section-header" onclick="toggleSection('schemas-c20018ff')">
+        <div class="section" id="general_schemas">
+            <div class="section-header" onclick="toggleSection('general_schemas')">
                 <h4>
                     schemas
                     <span class="property-type">array</span>
@@ -892,14 +858,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>Any additional schema files (.ot or .at) which will be added to the server.  The schema files specified here can also be used to replace the IBM Verify Directory standard schema files.  Please note however that if you supply a schema file in the YAML this schema should not be subsequently modified using an LDAP modify operation, otherwise the updates will be lost when the container next starts.<br>
-</p></div>
+<div class="property-description"><p>Any additional schema files (.ot or .at) which will be added to the server.  The schema files specified here can also be used to replace the IBM Verify Directory standard schema files.  Please note however that if you supply a schema file in the YAML this schema should not be subsequently modified using an LDAP modify operation, otherwise the updates will be lost when the container next starts.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>The name of a schema file (.ot or .at).  The file must exist within the container file system.<br>
-</p></div>
+<div class="property-description"><p>The name of a schema file (.ot or .at).  The file must exist within the container file system.</p></div>
 </div>
 </div>
 <div style="margin-top: 1.5rem;">
@@ -938,8 +902,8 @@
             </div>
         </div>
 
-        <div class="section" id="seed-92713d47">
-            <div class="section-header" onclick="toggleSection('seed-92713d47')">
+        <div class="section" id="seed">
+            <div class="section-header" onclick="toggleSection('seed')">
                 <h3>
                     seed
                     <span class="property-type">object</span>
@@ -947,13 +911,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the seed container, used to seed a container environment with data.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the seed container, used to seed a container environment with data.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="migrate-ce5070ef">
-            <div class="section-header" onclick="toggleSection('migrate-ce5070ef')">
+        <div class="section" id="seed_migrate">
+            <div class="section-header" onclick="toggleSection('seed_migrate')">
                 <h4>
                     migrate
                     <span class="property-type">object</span>
@@ -961,13 +924,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the seed container when performing a migration.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the seed container when performing a migration.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="suffixes-3-2df1c2ef">
-            <div class="section-header" onclick="toggleSection('suffixes-3-2df1c2ef')">
+        <div class="section" id="seed_migrate_suffixes">
+            <div class="section-header" onclick="toggleSection('seed_migrate_suffixes')">
                 <h6>
                     suffixes
                     <span class="property-type">array</span>
@@ -976,15 +938,13 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>An array of strings, used to designate the custom suffixes which are being migrated.<br>
-</p></div>
+            <div class="property-description"><p>An array of strings, used to designate the custom suffixes which are being migrated.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>A custom suffix which is to be migrated.<br>
-</p></div>
+<div class="property-description"><p>A custom suffix which is to be migrated.</p></div>
 </div>
 </div>
             </div>
@@ -998,8 +958,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The version of the directory server from which the seed data was obtained.  If no version information is supplied it is assumed that the seed data has been obtained from the current version of the directory server.<br>
-</p></div>
+            <div class="property-description"><p>The version of the directory server from which the seed data was obtained.  If no version information is supplied it is assumed that the seed data has been obtained from the current version of the directory server.</p></div>
         </div>
 
         <div class="property">
@@ -1008,8 +967,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to process the ACL information that is contained in the LDIF file. If set to false the default ACL is used.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to process the ACL information that is contained in the LDIF file. If set to false the default ACL is used.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1019,8 +977,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Controls whether the index should be created or not.<br>
-</p></div>
+            <div class="property-description"><p>Controls whether the index should be created or not.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1030,8 +987,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Controls whether the existing index is dropped before the load operation starts.<br>
-</p></div>
+            <div class="property-description"><p>Controls whether the existing index is dropped before the load operation starts.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1041,8 +997,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Controls whether trailing spaces are stripped in attribute values.<br>
-</p></div>
+            <div class="property-description"><p>Controls whether trailing spaces are stripped in attribute values.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1052,8 +1007,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Controls whether members are added to existing static groups.  This must not be set to true if a value has been supplied for the parse-load-cycle-size entry.<br>
-</p></div>
+            <div class="property-description"><p>Controls whether members are added to existing static groups.  This must not be set to true if a value has been supplied for the parse-load-cycle-size entry.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1063,8 +1017,7 @@
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of entries to process in one parse-load cycle.  If a value is not supplied all of the entries will be loaded in a single cycle.  This must not be set if the add-group-members entry has been set to true.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of entries to process in one parse-load cycle.  If a value is not supplied all of the entries will be loaded in a single cycle.  This must not be set if the add-group-members entry has been set to true.</p></div>
         </div>
 
         <div class="property">
@@ -1073,8 +1026,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the string delimiting character that is used for importing.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the string delimiting character that is used for importing.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>|</code></div>
         </div>
 
@@ -1084,8 +1036,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to translate entry data to database code page.  Note: This parameter is necessary only when you use a database other than UTF-8.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to translate entry data to database code page.  Note: This parameter is necessary only when you use a database other than UTF-8.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1095,8 +1046,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Verifies whether the directory entries are valid based on the object class definitions and attribute type definitions in the configuration files.  Schema checking verifies that all object classes and attributes are defined. It also checks whether the attributes that are specified for each entry comply with the list of required and allowed attributes in the object class definition. Also verifies whether the binary attribute values are in the correct 64-bit encoded form.<br>
-</p></div>
+            <div class="property-description"><p>Verifies whether the directory entries are valid based on the object class definitions and attribute type definitions in the configuration files.  Schema checking verifies that all object classes and attributes are defined. It also checks whether the attributes that are specified for each entry comply with the list of required and allowed attributes in the object class definition. Also verifies whether the binary attribute values are in the correct 64-bit encoded form.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 </div>
@@ -1116,8 +1066,8 @@
             </div>
         </div>
 
-        <div class="section" id="replica-f1078ceb">
-            <div class="section-header" onclick="toggleSection('replica-f1078ceb')">
+        <div class="section" id="seed_replica">
+            <div class="section-header" onclick="toggleSection('seed_replica')">
                 <h4>
                     replica
                     <span class="property-type">object</span>
@@ -1125,8 +1075,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the seed container when initialising a new replica.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the seed container when initialising a new replica.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -1136,8 +1085,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to attempt to clean out any existing data from the '/var/isvd/data' directory prior to setting up the replica.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to attempt to clean out any existing data from the '/var/isvd/data' directory prior to setting up the replica.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 </div>
@@ -1162,8 +1110,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to migrate ibmslapd.conf file to YAML.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to migrate ibmslapd.conf file to YAML.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 </div>
@@ -1234,8 +1181,28 @@ seed:
             const header = section.querySelector('.section-header');
             const content = section.querySelector('.section-content');
             
+            const wasExpanded = header.classList.contains('expanded');
+            
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+            
+            // Update URL when expanding a section
+            if (!wasExpanded && sectionId !== 'configuration') {
+                // Use pushState to update URL without triggering hashchange event
+                history.pushState(null, '', '#' + sectionId);
+            } else if (wasExpanded && window.location.hash === '#' + sectionId) {
+                // When collapsing the section that's in the URL, update to parent section
+                // Extract parent ID by removing the last segment
+                const parts = sectionId.split('_');
+                if (parts.length > 1) {
+                    // Has a parent - update to parent section ID
+                    const parentId = parts.slice(0, -1).join('_');
+                    history.pushState(null, '', '#' + parentId);
+                } else {
+                    // No parent (top-level section) - remove hash
+                    history.pushState(null, '', window.location.pathname);
+                }
+            }
         }
         
         function expandAll() {
@@ -1476,6 +1443,59 @@ seed:
                 document.getElementById('searchInput').focus();
             }
         });
+        
+        // Handle URL fragments for deep linking
+        function handleUrlFragment() {
+            const hash = window.location.hash;
+            if (hash && hash.length > 1) {
+                const targetId = hash.substring(1); // Remove the '#'
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Find the section that contains this element
+                    let section = targetElement;
+                    if (!section.classList.contains('section')) {
+                        section = targetElement.closest('.section');
+                    }
+                    
+                    if (section) {
+                        // Expand all parent sections
+                        let currentSection = section;
+                        while (currentSection) {
+                            const header = currentSection.querySelector('.section-header');
+                            const content = currentSection.querySelector('.section-content');
+                            if (header && content) {
+                                header.classList.add('expanded');
+                                content.classList.add('expanded');
+                            }
+                            // Move up to parent section if exists
+                            currentSection = currentSection.parentElement.closest('.section');
+                        }
+                        
+                        // Scroll to the target element with a small delay to ensure expansion is complete
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // Add a temporary highlight effect
+                            targetElement.style.transition = 'background-color 0.5s';
+                            const originalBg = window.getComputedStyle(targetElement).backgroundColor;
+                            targetElement.style.backgroundColor = '#fff1c2';
+                            setTimeout(() => {
+                                targetElement.style.backgroundColor = originalBg;
+                                setTimeout(() => {
+                                    targetElement.style.transition = '';
+                                }, 500);
+                            }, 1000);
+                        }, 100);
+                    }
+                }
+            }
+        }
+        
+        // Handle fragment on page load
+        window.addEventListener('DOMContentLoaded', handleUrlFragment);
+        
+        // Handle fragment changes (e.g., when clicking internal links)
+        window.addEventListener('hashchange', handleUrlFragment);
     </script>
 </body>
 </html>

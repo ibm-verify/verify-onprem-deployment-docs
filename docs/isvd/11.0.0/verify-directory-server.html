@@ -409,7 +409,7 @@
 <body>
     <div class="header">
         <h1>IBM Verify Directory: Server</h1>
-        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Server container.</p><p>The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).</p><p>In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to set the server port the following environment variable can be set: 'server.port'.<br></p></div>
+        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Server container. <br><br> The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).  <br><br> In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to set the server port the following environment variable can be set: 'server.port'.</p></div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search properties, descriptions, and types..." oninput="performSearch()" />
             <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">✕</button>
@@ -436,8 +436,8 @@
             </div>
             <div class="section-content expanded">
 
-        <div class="section" id="advanced-e6285436">
-            <div class="section-header" onclick="toggleSection('advanced-e6285436')">
+        <div class="section" id="advanced">
+            <div class="section-header" onclick="toggleSection('advanced')">
                 <h3>
                     advanced
                     <span class="property-type">array</span>
@@ -445,14 +445,13 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>An array of objects which are used to define specific ibm-slapd  properties to be set for the server.<br>
-</p></div>
+<div class="property-description"><p>An array of objects which are used to define specific ibm-slapd  properties to be set for the server.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 
-        <div class="section" id="attr-2-855e0b18">
-            <div class="section-header" onclick="toggleSection('attr-2-855e0b18')">
+        <div class="section" id="advanced_attr">
+            <div class="section-header" onclick="toggleSection('advanced_attr')">
                 <h5>
                     attr
                     <span class="property-type">array</span>
@@ -461,8 +460,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The attributes of the DN to modify.<br>
-</p></div>
+            <div class="property-description"><p>The attributes of the DN to modify.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -474,8 +472,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The name of the attribute.<br>
-</p></div>
+            <div class="property-description"><p>The name of the attribute.</p></div>
         </div>
 
         <div class="property">
@@ -484,12 +481,11 @@
                 <span class="property-type">any</span>
                 
             </div>
-            <div class="property-description"><p>The LDAP operation which is to be performed on the attribute. The options include: <br>
-- replace: Replace any existing attribute value with the new value.<br>
-- add: Add the additional value to the attribute.<br>
-- delete: Delete the specified attribute and value.<br>
-Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The LDAP operation which is to be performed on the attribute. The options include: 
+- replace: Replace any existing attribute value with the new value.
+- add: Add the additional value to the attribute.
+- delete: Delete the specified attribute and value.
+Please note that the value is case sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>replace</code></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
@@ -501,8 +497,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="values-3-f7700d60">
-            <div class="section-header" onclick="toggleSection('values-3-f7700d60')">
+        <div class="section" id="advanced_attr_values">
+            <div class="section-header" onclick="toggleSection('advanced_attr_values')">
                 <h6>
                     values
                     <span class="property-type">array</span>
@@ -511,8 +507,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The string value(s) of the property.  Please note that if the value is numeric it should be surrounded by quotes.<br>
-</p></div>
+            <div class="property-description"><p>The string value(s) of the property.  Please note that if the value is numeric it should be surrounded by quotes.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -537,8 +532,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The DN of the property.<br>
-</p></div>
+            <div class="property-description"><p>The DN of the property.</p></div>
         </div>
 </div>
 </div>
@@ -560,8 +554,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="debug-32faaeca">
-            <div class="section-header" onclick="toggleSection('debug-32faaeca')">
+        <div class="section" id="debug">
+            <div class="section-header" onclick="toggleSection('debug')">
                 <h3>
                     debug
                     <span class="property-type">object</span>
@@ -569,8 +563,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -580,9 +573,8 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be <br>
-  enabled while bootstrapping the container.<br>
-</p></div>
+            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be 
+  enabled while bootstrapping the container.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -592,8 +584,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the debug level to assign to the runtime. The value is a  bit mask that controls which output is generated, with values from 1  to 65535.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the debug level to assign to the runtime. The value is a  bit mask that controls which output is generated, with values from 1  to 65535.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
 <div class="property-enum" style="margin-top: 0.5rem;">
 <div class="property-enum-title">Validation Constraints:</div>
@@ -608,8 +599,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="general-dfe2db74">
-            <div class="section-header" onclick="toggleSection('general-dfe2db74')">
+        <div class="section" id="general">
+            <div class="section-header" onclick="toggleSection('general')">
                 <h3>
                     general
                     <span class="property-type">object</span>
@@ -617,13 +608,12 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The general configuration elements of the container.<br>
-</p></div>
+<div class="property-description"><p>The general configuration elements of the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="admin-2-169e1249">
-            <div class="section-header" onclick="toggleSection('admin-2-169e1249')">
+        <div class="section" id="general_admin">
+            <div class="section-header" onclick="toggleSection('general_admin')">
                 <h5>
                     admin
                     <span class="property-type">object</span>
@@ -632,8 +622,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The credential information of the server.<br>
-</p></div>
+            <div class="property-description"><p>The credential information of the server.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -643,8 +632,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The distinguished name of the user which can be used to authenticate to the server.<br>
-</p></div>
+            <div class="property-description"><p>The distinguished name of the user which can be used to authenticate to the server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>cn=root</code></div>
         </div>
 
@@ -654,12 +642,11 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The password of the user which can be used to authenticate to the server.<br>
-</p></div>
+            <div class="property-description"><p>The password of the user which can be used to authenticate to the server.</p></div>
         </div>
 
-        <div class="section" id="users-3-8ad625d4">
-            <div class="section-header" onclick="toggleSection('users-3-8ad625d4')">
+        <div class="section" id="general_admin_users">
+            <div class="section-header" onclick="toggleSection('general_admin_users')">
                 <h6>
                     users
                     <span class="property-type">array</span>
@@ -668,8 +655,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Additional administrative users for this server.<br>
-</p></div>
+            <div class="property-description"><p>Additional administrative users for this server.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -681,8 +667,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The common name of the user.<br>
-</p></div>
+            <div class="property-description"><p>The common name of the user.</p></div>
         </div>
 
         <div class="property">
@@ -691,8 +676,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The password of the user.  This password must conform to the configured password policy.<br>
-</p></div>
+            <div class="property-description"><p>The password of the user.  This password must conform to the configured password policy.</p></div>
         </div>
 
         <div class="property">
@@ -701,8 +685,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">any</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The role assigned to the user.  Refer to the official documentation for the permissions assigned to each role. Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The role assigned to the user.  Refer to the official documentation for the permissions assigned to each role. Please note that the value is case sensitive.</p></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
                 <div class="property-enum-values">
@@ -727,8 +710,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="audit-7876153a">
-            <div class="section-header" onclick="toggleSection('audit-7876153a')">
+        <div class="section" id="general_audit">
+            <div class="section-header" onclick="toggleSection('general_audit')">
                 <h4>
                     audit
                     <span class="property-type">object</span>
@@ -736,8 +719,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the auditing of operations.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the auditing of operations.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -747,8 +729,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Enable or disable the audit service.<br>
-</p></div>
+            <div class="property-description"><p>Enable or disable the audit service.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -758,8 +739,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>If enabled, the audit records will be sent to the  '/var/isvd/logs/audit.log' file, otherwise the audit records will be sent to the console of the container.<br>
-</p></div>
+            <div class="property-description"><p>If enabled, the audit records will be sent to the  '/var/isvd/logs/audit.log' file, otherwise the audit records will be sent to the console of the container.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -769,8 +749,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>If enabled, the audit records will be formatted as JSON, otherwise the audit records will created in the legacy auditing format.<br>
-</p></div>
+            <div class="property-description"><p>If enabled, the audit records will be formatted as JSON, otherwise the audit records will created in the legacy auditing format.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -780,8 +759,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log all failures.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log all failures.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -791,8 +769,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the groups sent on a group control. <br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the groups sent on a group control. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -802,8 +779,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the attributes sent on a group  evaluation extended operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the attributes sent on a group  evaluation extended operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -813,8 +789,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to collect and log performance data in audit  logs.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to collect and log performance data in audit  logs.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -824,13 +799,12 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log pass-through authentication information  related to bind operations.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log pass-through authentication information  related to bind operations.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
-        <div class="section" id="operation-3-33534604">
-            <div class="section-header" onclick="toggleSection('operation-3-33534604')">
+        <div class="section" id="general_audit_operation">
+            <div class="section-header" onclick="toggleSection('general_audit_operation')">
                 <h6>
                     operation
                     <span class="property-type">object</span>
@@ -839,8 +813,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The operations which can be audited.<br>
-</p></div>
+            <div class="property-description"><p>The operations which can be audited.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -850,8 +823,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Add operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Add operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -861,8 +833,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Bind operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Bind operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -872,8 +843,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Compare operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Compare operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -883,8 +853,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Delete operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Delete operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -894,8 +863,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Extended operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Extended operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -905,8 +873,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Extended operation event.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Extended operation event.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -916,8 +883,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Modify operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Modify operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -927,8 +893,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the ModifyRDN operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the ModifyRDN operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -938,8 +903,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Search operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Search operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -949,8 +913,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether to log the Unbind operation.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether to log the Unbind operation.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
             </div>
@@ -997,8 +960,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The identifier of the server.  If no identifier is specified the hostname of the container will be used as the identifier.<br>
-</p></div>
+            <div class="property-description"><p>The identifier of the server.  If no identifier is specified the hostname of the container will be used as the identifier.</p></div>
         </div>
 
         <div class="property">
@@ -1007,8 +969,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.<br>
-</p></div>
+            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1018,12 +979,11 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The contents of the key stash file (.ksf) which is used to protect data.  This file should be provided if cryptographic synchronisation is required between different servers.  The key stash can either be  obtained from a software based directory server installation, or a  new one can be generated by starting this image with the 'keystash'  argument.  For example: 'docker run --rm icr.io/isvd/verify-directory-seed:latest keystash'. Please note that this will send a base-64 encoded version of the key stash to the console of the container.<br>
-</p></div>
+            <div class="property-description"><p>The contents of the key stash file (.ksf) which is used to protect data.  This file should be provided if cryptographic synchronisation is required between different servers.  The key stash can either be  obtained from a software based directory server installation, or a  new one can be generated by starting this image with the 'keystash'  argument.  For example: 'docker run --rm icr.io/isvd/verify-directory-seed:latest keystash'. Please note that this will send a base-64 encoded version of the key stash to the console of the container.</p></div>
         </div>
 
-        <div class="section" id="license-2-70d0809e">
-            <div class="section-header" onclick="toggleSection('license-2-70d0809e')">
+        <div class="section" id="general_license">
+            <div class="section-header" onclick="toggleSection('general_license')">
                 <h5>
                     license
                     <span class="property-type">object</span>
@@ -1041,8 +1001,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The license key, required to run the container.<br>
-</p></div>
+            <div class="property-description"><p>The license key, required to run the container.</p></div>
         </div>
 
         <div class="property">
@@ -1051,8 +1010,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-server:latest license standard'<br>
-</p></div>
+            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-server:latest license standard'</p></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
                 <div class="property-enum-values">
@@ -1067,8 +1025,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="ports-2-c68c9295">
-            <div class="section-header" onclick="toggleSection('ports-2-c68c9295')">
+        <div class="section" id="general_ports">
+            <div class="section-header" onclick="toggleSection('general_ports')">
                 <h5>
                     ports
                     <span class="property-type">object</span>
@@ -1077,8 +1035,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The ports on which the server will listen for requests.<br>
-</p></div>
+            <div class="property-description"><p>The ports on which the server will listen for requests.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -1088,8 +1045,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server will listen for LDAP requests.  A value of '0' is used to indicate that the server should not listen for LDAP requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server will listen for LDAP requests.  A value of '0' is used to indicate that the server should not listen for LDAP requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -1099,8 +1055,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server will listen for LDAPS requests.  A value of '0' is used to indicate that the server should not listen for LDAPS requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server will listen for LDAPS requests.  A value of '0' is used to indicate that the server should not listen for LDAPS requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>9636</code></div>
         </div>
             </div>
@@ -1114,8 +1069,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The encoding mechanism for the user passwords before they are  stored in the directory.  Please note that the value is case  sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The encoding mechanism for the user passwords before they are  stored in the directory.  Please note that the value is case  sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>ssha512</code></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
@@ -1147,8 +1101,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="pwd-policy-6fb52236">
-            <div class="section-header" onclick="toggleSection('pwd-policy-6fb52236')">
+        <div class="section" id="general_pwd_policy">
+            <div class="section-header" onclick="toggleSection('general_pwd_policy')">
                 <h4>
                     pwd-policy
                     <span class="property-type">object</span>
@@ -1156,8 +1110,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the password policy which is enforced by the server.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the password policy which is enforced by the server.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -1167,8 +1120,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Indicates if the IBM Administrative Password Policy is ON.<br>
-</p></div>
+            <div class="property-description"><p>Indicates if the IBM Administrative Password Policy is ON.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1178,8 +1130,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of seconds after which the password failures  are purged from the failure counter, even though no successful  authentication occurred.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of seconds after which the password failures  are purged from the failure counter, even though no successful  authentication occurred.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -1189,8 +1140,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Enables replication of security attributes between master and  read-only replica so that password policy for account lockout can be  strongly enforced in replication topologies.<br>
-</p></div>
+            <div class="property-description"><p>Enables replication of security attributes between master and  read-only replica so that password policy for account lockout can be  strongly enforced in replication topologies.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1200,8 +1150,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of seconds that the password cannot be used to  authenticate due to too many failed bind attempts.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of seconds that the password cannot be used to  authenticate due to too many failed bind attempts.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>300</code></div>
         </div>
 
@@ -1211,8 +1160,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of consecutive repeated characters in  the password field.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of consecutive repeated characters in  the password field.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -1222,8 +1170,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the number of consecutive failed bind attempts after which  the password may not be used to authenticate.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the number of consecutive failed bind attempts after which  the password may not be used to authenticate.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>10</code></div>
         </div>
 
@@ -1233,8 +1180,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of repeated characters allowed.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of repeated characters allowed.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -1244,8 +1190,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of characters required for a users  password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of characters required for a users  password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -1255,8 +1200,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of different (unique) characters  required for a users password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of different (unique) characters  required for a users password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
@@ -1266,8 +1210,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of characters that must be used in a  password.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of characters that must be used in a  password.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>8</code></div>
         </div>
 
@@ -1277,13 +1220,12 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of other characters required.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of other characters required.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>2</code></div>
         </div>
 
-        <div class="section" id="advanced-3-9df47401">
-            <div class="section-header" onclick="toggleSection('advanced-3-9df47401')">
+        <div class="section" id="general_pwd_policy_advanced">
+            <div class="section-header" onclick="toggleSection('general_pwd_policy_advanced')">
                 <h6>
                     advanced
                     <span class="property-type">object</span>
@@ -1292,8 +1234,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The configuration entries associated with rules for advanced  password syntax checking.<br>
-</p></div>
+            <div class="property-description"><p>The configuration entries associated with rules for advanced  password syntax checking.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -1303,8 +1244,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether the password can contain spaces.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether the password can contain spaces.</p></div>
         </div>
 
         <div class="property">
@@ -1313,8 +1253,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies that the password cannot be the same, or contain the value of the configured login attribute. The login attribute is configured by using the login-attribute configuration entry. It is set to the name of the LDAP attribute, such as UID that is used as the user ID attribute for users. Note: Enabling this rule might have a performance impact on the user password update operation. To process this rule, an internal search is done on the user to obtain the value of the login attribute. It then checks whether the specified password is the same, or contains the value of the login attribute.<br>
-</p></div>
+            <div class="property-description"><p>Specifies that the password cannot be the same, or contain the value of the configured login attribute. The login attribute is configured by using the login-attribute configuration entry. It is set to the name of the LDAP attribute, such as UID that is used as the user ID attribute for users. Note: Enabling this rule might have a performance impact on the user password update operation. To process this rule, an internal search is done on the user to obtain the value of the login attribute. It then checks whether the specified password is the same, or contains the value of the login attribute.</p></div>
         </div>
 
         <div class="property">
@@ -1323,8 +1262,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The name of the attribute which contains the user identity.  This is used by the no-user-id rule.<br>
-</p></div>
+            <div class="property-description"><p>The name of the attribute which contains the user identity.  This is used by the no-user-id rule.</p></div>
         </div>
 
         <div class="property">
@@ -1333,8 +1271,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of special characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of special characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -1343,8 +1280,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of numeric characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of numeric characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -1353,8 +1289,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of lowercase characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of lowercase characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -1363,8 +1298,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the minimum number of uppercase characters that a password must contain.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the minimum number of uppercase characters that a password must contain.</p></div>
         </div>
 
         <div class="property">
@@ -1373,8 +1307,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of ascending characters that a password can contain. The characters can be alphabetic or numeric.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of ascending characters that a password can contain. The characters can be alphabetic or numeric.</p></div>
         </div>
 
         <div class="property">
@@ -1383,8 +1316,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of descending characters that a password can contain. The characters can be alphabetic or numeric.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of descending characters that a password can contain. The characters can be alphabetic or numeric.</p></div>
         </div>
 
         <div class="property">
@@ -1393,8 +1325,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies a custom password policy written in the Lua scripting language.<br>
-</p></div>
+            <div class="property-description"><p>Specifies a custom password policy written in the Lua scripting language.</p></div>
         </div>
             </div>
 
@@ -1426,8 +1357,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="schemas-c20018ff">
-            <div class="section-header" onclick="toggleSection('schemas-c20018ff')">
+        <div class="section" id="general_schemas">
+            <div class="section-header" onclick="toggleSection('general_schemas')">
                 <h4>
                     schemas
                     <span class="property-type">array</span>
@@ -1435,14 +1366,12 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>Any additional schema files (.ot or .at) which will be added to the server.  The schema files specified here can also be used to replace the IBM Verify Directory standard schema files.  Please note however that if you supply a schema file in the YAML this schema should not be subsequently modified using an LDAP modify operation, otherwise the updates will be lost when the container next starts.<br>
-</p></div>
+<div class="property-description"><p>Any additional schema files (.ot or .at) which will be added to the server.  The schema files specified here can also be used to replace the IBM Verify Directory standard schema files.  Please note however that if you supply a schema file in the YAML this schema should not be subsequently modified using an LDAP modify operation, otherwise the updates will be lost when the container next starts.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>The name of a schema file (.ot or .at).  The file must exist within the container file system.<br>
-</p></div>
+<div class="property-description"><p>The name of a schema file (.ot or .at).  The file must exist within the container file system.</p></div>
 </div>
 </div>
 <div style="margin-top: 1.5rem;">
@@ -1462,8 +1391,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="ssl-2-4065e7c3">
-            <div class="section-header" onclick="toggleSection('ssl-2-4065e7c3')">
+        <div class="section" id="general_ssl">
+            <div class="section-header" onclick="toggleSection('general_ssl')">
                 <h5>
                     ssl
                     <span class="property-type">object</span>
@@ -1472,8 +1401,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>SSL configuration details for the server.<br>
-</p></div>
+            <div class="property-description"><p>SSL configuration details for the server.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -1483,11 +1411,10 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The authentication type for the ssl connection.  The options include:<br>
-- ServerAuth: Supports server authentication at the client.<br>
-- ServerClientAuth: Supports both server and client authentication.<br>
-Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The authentication type for the ssl connection.  The options include:
+- ServerAuth: Supports server authentication at the client.
+- ServerClientAuth: Supports both server and client authentication.
+Please note that the value is case sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>ServerAuth</code></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
@@ -1504,12 +1431,11 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The label that identifies the servers Personal Certificate in  the key database file.  If the field is not specified the default certificate from the key file will be used by the LDAP server  for SSL connections.<br>
-</p></div>
+            <div class="property-description"><p>The label that identifies the servers Personal Certificate in  the key database file.  If the field is not specified the default certificate from the key file will be used by the LDAP server  for SSL connections.</p></div>
         </div>
 
-        <div class="section" id="ciphers-3-2b6cfd4a">
-            <div class="section-header" onclick="toggleSection('ciphers-3-2b6cfd4a')">
+        <div class="section" id="general_ssl_ciphers">
+            <div class="section-header" onclick="toggleSection('general_ssl_ciphers')">
                 <h6>
                     ciphers
                     <span class="property-type">array</span>
@@ -1518,8 +1444,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The allowable encryption/decryption methods for establishing a  SSL connection between LDAP client(s) and server.  Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The allowable encryption/decryption methods for establishing a  SSL connection between LDAP client(s) and server.  Please note that the value is case sensitive.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -1532,8 +1457,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="protocols-3-4add3d13">
-            <div class="section-header" onclick="toggleSection('protocols-3-4add3d13')">
+        <div class="section" id="general_ssl_protocols">
+            <div class="section-header" onclick="toggleSection('general_ssl_protocols')">
                 <h6>
                     protocols
                     <span class="property-type">array</span>
@@ -1542,8 +1467,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The SSL or TLS protocol versions to enable for the connection.  The options include: - SSLV3: Secure Sockets Layer version 3.0. - TLS10: Transport Layer Security version 1.0. - TLS11: Transport Layer Security version 1.1. - TLS12: Transport Layer Security version 1.2. - TLS13: Transport Layer Security version 1.3. Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The SSL or TLS protocol versions to enable for the connection.  The options include: - SSLV3: Secure Sockets Layer version 3.0. - TLS10: Transport Layer Security version 1.0. - TLS11: Transport Layer Security version 1.1. - TLS12: Transport Layer Security version 1.2. - TLS13: Transport Layer Security version 1.3. Please note that the value is case sensitive.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -1562,8 +1486,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Should the server operate in FIPS process mode?<br>
-</p></div>
+            <div class="property-description"><p>Should the server operate in FIPS process mode?</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1573,8 +1496,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>The non-FIPS certified crypographic library is loaded as a secondary backup and is used if a requested algorithm is not contained in the certified library.  This configuration option is ignored if the 'general.ssl.fips' configuration entry has not been set to 'true'.<br>
-</p></div>
+            <div class="property-description"><p>The non-FIPS certified crypographic library is loaded as a secondary backup and is used if a requested algorithm is not contained in the certified library.  This configuration option is ignored if the 'general.ssl.fips' configuration entry has not been set to 'true'.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
             </div>
@@ -1604,8 +1526,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="keyfile-1460c58c">
-            <div class="section-header" onclick="toggleSection('keyfile-1460c58c')">
+        <div class="section" id="keyfile">
+            <div class="section-header" onclick="toggleSection('keyfile')">
                 <h3>
                     keyfile
                     <span class="property-type">object</span>
@@ -1613,13 +1535,12 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration elements associated with the SSL key file.  This will include any keys used by the server, along with any trusted certificates. A self-signed certificate will be created as the default certificate in the key file, with the label: 'self-signed-server'.<br>
-</p></div>
+<div class="property-description"><p>The configuration elements associated with the SSL key file.  This will include any keys used by the server, along with any trusted certificates. A self-signed certificate will be created as the default certificate in the key file, with the label: 'self-signed-server'.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="keys-2-828152b0">
-            <div class="section-header" onclick="toggleSection('keys-2-828152b0')">
+        <div class="section" id="keyfile_keys">
+            <div class="section-header" onclick="toggleSection('keyfile_keys')">
                 <h5>
                     keys
                     <span class="property-type">array</span>
@@ -1628,8 +1549,10 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Any private keys used by the server.  The private key and associated certificate should be combined into a single configuration entry in PEM format, and the private key should not be protected by  a password.  By way of example, to create a private key using OpenSSL the following command can be executed: <br>
-  'openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365`</p><p>The key and certificate can then be concatenated into a single file.</p><p>If this key is to be used as the main certificate served by the server the general.ssl.cert-label configuration entry must be set to the name of the label for the key.<br></p></div>
+            <div class="property-description"><p>Any private keys used by the server.  The private key and associated certificate should be combined into a single configuration entry in PEM format, and the private key should not be protected by  a password.  By way of example, to create a private key using OpenSSL the following command can be executed: 
+  'openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365`</p>
+<p>The key and certificate can then be concatenated into a single file.</p>
+<p>If this key is to be used as the main certificate served by the server the general.ssl.cert-label configuration entry must be set to the name of the label for the key.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -1641,8 +1564,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The PEM encoded private key and public certificate.<br>
-</p></div>
+            <div class="property-description"><p>The PEM encoded private key and public certificate.</p></div>
         </div>
 
         <div class="property">
@@ -1651,8 +1573,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The label which will be associated with this key.<br>
-</p></div>
+            <div class="property-description"><p>The label which will be associated with this key.</p></div>
         </div>
 </div>
 </div>
@@ -1661,8 +1582,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="trusted-certificates-2-4b938dbd">
-            <div class="section-header" onclick="toggleSection('trusted-certificates-2-4b938dbd')">
+        <div class="section" id="keyfile_trusted_certificates">
+            <div class="section-header" onclick="toggleSection('keyfile_trusted_certificates')">
                 <h5>
                     trusted-certificates
                     <span class="property-type">array</span>
@@ -1671,15 +1592,13 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Any certificates which should be trusted by the server, in PEM format.<br>
-</p></div>
+            <div class="property-description"><p>Any certificates which should be trusted by the server, in PEM format.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>A certificate which is to be trusted by the server, in PEM format.<br>
-</p></div>
+<div class="property-description"><p>A certificate which is to be trusted by the server, in PEM format.</p></div>
 </div>
 </div>
             </div>
@@ -1705,8 +1624,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="server-3de4f901">
-            <div class="section-header" onclick="toggleSection('server-3de4f901')">
+        <div class="section" id="server">
+            <div class="section-header" onclick="toggleSection('server')">
                 <h3>
                     server
                     <span class="property-type">object</span>
@@ -1714,13 +1633,12 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the IVD server.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the IVD server.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="suffixes-300a5491">
-            <div class="section-header" onclick="toggleSection('suffixes-300a5491')">
+        <div class="section" id="server_suffixes">
+            <div class="section-header" onclick="toggleSection('server_suffixes')">
                 <h4>
                     suffixes
                     <span class="property-type">array</span>
@@ -1728,8 +1646,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The suffixes which will be hosted by this server.<br>
-</p></div>
+<div class="property-description"><p>The suffixes which will be hosted by this server.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
@@ -1740,12 +1657,11 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The DN of the suffix.<br>
-</p></div>
+            <div class="property-description"><p>The DN of the suffix.</p></div>
         </div>
 
-        <div class="section" id="object-classes-3-cca97e76">
-            <div class="section-header" onclick="toggleSection('object-classes-3-cca97e76')">
+        <div class="section" id="server_suffixes_object_classes">
+            <div class="section-header" onclick="toggleSection('server_suffixes_object_classes')">
                 <h6>
                     object-classes
                     <span class="property-type">array</span>
@@ -1754,8 +1670,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The object classes which are used in the top level LDAP entry  for this suffix.  If no object classes are specified the top level LDAP entry for this suffix must be created manually.  Please note that after the top level LDAP entry has been created it will not be modified if the YAML is modified.  Any subsequent updates to the  top level LDAP entry must be manually applied.<br>
-</p></div>
+            <div class="property-description"><p>The object classes which are used in the top level LDAP entry  for this suffix.  If no object classes are specified the top level LDAP entry for this suffix must be created manually.  Please note that after the top level LDAP entry has been created it will not be modified if the YAML is modified.  Any subsequent updates to the  top level LDAP entry must be manually applied.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -1768,8 +1683,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="attributes-3-f0c8460f">
-            <div class="section-header" onclick="toggleSection('attributes-3-f0c8460f')">
+        <div class="section" id="server_suffixes_attributes">
+            <div class="section-header" onclick="toggleSection('server_suffixes_attributes')">
                 <h6>
                     attributes
                     <span class="property-type">array</span>
@@ -1778,8 +1693,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Any attributes, in addition to the attributes defined in the RDN, which should be set on the top level LDAP entry for this  suffix.  Please note that after the top level LDAP entry has been  created it will not be modified if the YAML is modified.  Any  subsequent updates to the top level LDAP entry must be manually  applied.<br>
-</p></div>
+            <div class="property-description"><p>Any attributes, in addition to the attributes defined in the RDN, which should be set on the top level LDAP entry for this  suffix.  Please note that after the top level LDAP entry has been  created it will not be modified if the YAML is modified.  Any  subsequent updates to the top level LDAP entry must be manually  applied.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -1814,8 +1728,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="change-log-f2443924">
-            <div class="section-header" onclick="toggleSection('change-log-f2443924')">
+        <div class="section" id="server_change_log">
+            <div class="section-header" onclick="toggleSection('server_change_log')">
                 <h4>
                     change-log
                     <span class="property-type">object</span>
@@ -1823,8 +1737,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the change log capability of the server.  The change log records all the directory updates in a  change log database.  When you enable the change log, it significantly  slows down the update performance of a directory server.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the change log capability of the server.  The change log records all the directory updates in a  change log database.  When you enable the change log, it significantly  slows down the update performance of a directory server.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -1834,8 +1747,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>A boolean which is used to indicate whether the change log functionality is enabled or not.  <br>
-</p></div>
+            <div class="property-description"><p>A boolean which is used to indicate whether the change log functionality is enabled or not.  </p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1845,8 +1757,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the maximum number of entries to keep in the change log. A value of 0 means there is no limit on the number of entries.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the maximum number of entries to keep in the change log. A value of 0 means there is no limit on the number of entries.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>1000000</code></div>
         </div>
 
@@ -1856,8 +1767,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies, in days, the maximum amount of time to keep entries in the change log. This is combined with the max-hours entry to specify the maximum age of a change log entry. A value of 0 means that there is no age limit on entries in the  change log.<br>
-</p></div>
+            <div class="property-description"><p>Specifies, in days, the maximum amount of time to keep entries in the change log. This is combined with the max-hours entry to specify the maximum age of a change log entry. A value of 0 means that there is no age limit on entries in the  change log.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -1867,8 +1777,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Specifies, in hours, the maximum amount of time to keep entries in the change log. This is combined with the max-days entry to specify the maximum age of a change log entry.  A value of 0 means that there is no age limit on enries in the change log.<br>
-</p></div>
+            <div class="property-description"><p>Specifies, in hours, the maximum amount of time to keep entries in the change log. This is combined with the max-days entry to specify the maximum age of a change log entry.  A value of 0 means that there is no age limit on enries in the change log.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 </div>
@@ -1890,8 +1799,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="replication-7ddb9625">
-            <div class="section-header" onclick="toggleSection('replication-7ddb9625')">
+        <div class="section" id="server_replication">
+            <div class="section-header" onclick="toggleSection('server_replication')">
                 <h4>
                     replication
                     <span class="property-type">object</span>
@@ -1899,8 +1808,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the replication supplier characteristics.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the replication supplier characteristics.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -1910,8 +1818,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether replication conflict resolution will be performed  for group entries or not.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether replication conflict resolution will be performed  for group entries or not.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1921,8 +1828,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Used to control access to the replication topology entry. If it is  set to true, then only the root admin, local admin group members and  the master DN have access to the replication topology entry,  otherwise, any user with proper ACL settings may have access to the  replication topology entry.<br>
-</p></div>
+            <div class="property-description"><p>Used to control access to the replication topology entry. If it is  set to true, then only the root admin, local admin group members and  the master DN have access to the replication topology entry,  otherwise, any user with proper ACL settings may have access to the  replication topology entry.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -1932,8 +1838,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>If true, member information will be logged in the lost and found  log for group entries involved in a replication conflict. <br>
-</p></div>
+            <div class="property-description"><p>If true, member information will be logged in the lost and found  log for group entries involved in a replication conflict. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -1943,8 +1848,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>The maximum number of pending replication updates or failed updates  to be displayed for any given replication agreement on a supplier  server.<br>
-</p></div>
+            <div class="property-description"><p>The maximum number of pending replication updates or failed updates  to be displayed for any given replication agreement on a supplier  server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>200</code></div>
         </div>
 
@@ -1954,8 +1858,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>The maximum number of updates to retain in the replication context  cache. <br>
-</p></div>
+            <div class="property-description"><p>The maximum number of updates to retain in the replication context  cache. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>100000</code></div>
         </div>
 
@@ -1965,13 +1868,12 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>The limit for allowed errors per replication agreement.  A value of 0 means unlimited errors. <br>
-</p></div>
+            <div class="property-description"><p>The limit for allowed errors per replication agreement.  A value of 0 means unlimited errors. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
-        <div class="section" id="admin-3-f60cf3be">
-            <div class="section-header" onclick="toggleSection('admin-3-f60cf3be')">
+        <div class="section" id="server_replication_admin">
+            <div class="section-header" onclick="toggleSection('server_replication_admin')">
                 <h6>
                     admin
                     <span class="property-type">object</span>
@@ -1980,8 +1882,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The credential information used when replicating.<br>
-</p></div>
+            <div class="property-description"><p>The credential information used when replicating.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -1991,8 +1892,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The DN of the master server.<br>
-</p></div>
+            <div class="property-description"><p>The DN of the master server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>cn=replcred</code></div>
         </div>
 
@@ -2002,8 +1902,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The password of the master server.<br>
-</p></div>
+            <div class="property-description"><p>The password of the master server.</p></div>
         </div>
 
         <div class="property">
@@ -2012,13 +1911,12 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Specifies whether or not the directory server will handle  replication conflict resolution. If it is set to true, then the  server does not try to compare timestamps for replicated entries  in an attempt to resolve conflicts between the entries. However,  conflict resolution does not apply to entry cn=schema which is  always replaced by a replicated cn=schema.<br>
-</p></div>
+            <div class="property-description"><p>Specifies whether or not the directory server will handle  replication conflict resolution. If it is set to true, then the  server does not try to compare timestamps for replicated entries  in an attempt to resolve conflicts between the entries. However,  conflict resolution does not apply to entry cn=schema which is  always replaced by a replicated cn=schema.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
-        <div class="section" id="users-4-b914eb29">
-            <div class="section-header" onclick="toggleSection('users-4-b914eb29')">
+        <div class="section" id="server_replication_admin_users">
+            <div class="section-header" onclick="toggleSection('server_replication_admin_users')">
                 <h6>
                     users
                     <span class="property-type">array</span>
@@ -2027,8 +1925,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Additional pre-suffix replication users for this server.<br>
-</p></div>
+            <div class="property-description"><p>Additional pre-suffix replication users for this server.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -2040,8 +1937,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The DN of the user.<br>
-</p></div>
+            <div class="property-description"><p>The DN of the user.</p></div>
         </div>
 
         <div class="property">
@@ -2050,8 +1946,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The password of the user.  This password must conform to the configured password policy.<br>
-</p></div>
+            <div class="property-description"><p>The password of the user.  This password must conform to the configured password policy.</p></div>
         </div>
 
         <div class="property">
@@ -2060,8 +1955,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">any</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>A DN identifying the top of a replicated subtree.<br>
-</p></div>
+            <div class="property-description"><p>A DN identifying the top of a replicated subtree.</p></div>
         </div>
 </div>
 </div>
@@ -2102,8 +1996,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="pass-through-authentication-7c4fcdb5">
-            <div class="section-header" onclick="toggleSection('pass-through-authentication-7c4fcdb5')">
+        <div class="section" id="server_pass_through_authentication">
+            <div class="section-header" onclick="toggleSection('server_pass_through_authentication')">
                 <h4>
                     pass-through-authentication
                     <span class="property-type">array</span>
@@ -2111,8 +2005,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the pass-through authentication capability of the server.  The pass-through mechanism authenticates a  user on the authenticating server, even if the user entry or password is  on a different server.  Please note that this capability is only  available with a standard or enterprise license.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the pass-through authentication capability of the server.  The pass-through mechanism authenticates a  user on the authenticating server, even if the user entry or password is  on a different server.  Please note that this capability is only  available with a standard or enterprise license.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
@@ -2123,12 +2016,11 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>Specifies the LDAP URL of a pass-through authentication server.  This must be in the form 'ldap://' or 'ldaps://' (to indicate SSL use ldaps) with the port number on which the pass-through directory is configured.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the LDAP URL of a pass-through authentication server.  This must be in the form 'ldap://' or 'ldaps://' (to indicate SSL use ldaps) with the port number on which the pass-through directory is configured.</p></div>
         </div>
 
-        <div class="section" id="subtree-3-25e52a27">
-            <div class="section-header" onclick="toggleSection('subtree-3-25e52a27')">
+        <div class="section" id="server_pass_through_authentication_subtree">
+            <div class="section-header" onclick="toggleSection('server_pass_through_authentication_subtree')">
                 <h6>
                     subtree
                     <span class="property-type">array</span>
@@ -2137,8 +2029,7 @@ Please note that the value is case sensitive.<br>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The subtrees in the directory server instance that is configured for pass-through authentication and validation of the authentication request.<br>
-</p></div>
+            <div class="property-description"><p>The subtrees in the directory server instance that is configured for pass-through authentication and validation of the authentication request.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -2157,8 +2048,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>The maximum number of milliseconds that the pass-through authentication interface waits for a response from the pass-through server. <br>
-</p></div>
+            <div class="property-description"><p>The maximum number of milliseconds that the pass-through authentication interface waits for a response from the pass-through server. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>1000</code></div>
         </div>
 
@@ -2168,8 +2058,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Whether to store the user password in the local directory entry, if the authentication is successful. <br>
-</p></div>
+            <div class="property-description"><p>Whether to store the user password in the local directory entry, if the authentication is successful. </p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 
@@ -2179,8 +2068,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">number</span>
                 
             </div>
-            <div class="property-description"><p>Sets the number of connections for each pass-through server.<br>
-</p></div>
+            <div class="property-description"><p>Sets the number of connections for each pass-through server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>4</code></div>
 <div class="property-enum" style="margin-top: 0.5rem;">
 <div class="property-enum-title">Validation Constraints:</div>
@@ -2197,8 +2085,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the type of pass-through authentication server.<br>
-</p></div>
+            <div class="property-description"><p>Specifies the type of pass-through authentication server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>SecurityDirectoryServer</code></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
@@ -2209,8 +2096,8 @@ Please note that the value is case sensitive.<br>
             </div>
         </div>
 
-        <div class="section" id="attribute-mapping-3-672eaf6a">
-            <div class="section-header" onclick="toggleSection('attribute-mapping-3-672eaf6a')">
+        <div class="section" id="server_pass_through_authentication_attribute_mapping">
+            <div class="section-header" onclick="toggleSection('server_pass_through_authentication_attribute_mapping')">
                 <h6>
                     attribute-mapping
                     <span class="property-type">object</span>
@@ -2228,8 +2115,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The search base in the pass-through server where you want to search for the entry.<br>
-</p></div>
+            <div class="property-description"><p>The search base in the pass-through server where you want to search for the entry.</p></div>
         </div>
 
         <div class="property">
@@ -2238,8 +2124,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The mapping of an attribute in IBM Verify Directory to an attribute in the pass-through server. An example of attribute mapping is 'cn $ uid', which indicates that the cn attribute from IBM Verify Directory is mapped to the uid attribute in the pass-through server.<br>
-</p></div>
+            <div class="property-description"><p>The mapping of an attribute in IBM Verify Directory to an attribute in the pass-through server. An example of attribute mapping is 'cn $ uid', which indicates that the cn attribute from IBM Verify Directory is mapped to the uid attribute in the pass-through server.</p></div>
         </div>
 
         <div class="property">
@@ -2248,8 +2133,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The bind DN that will be used to bind to the pass-through directory when searching for the mapped entry DN.<br>
-</p></div>
+            <div class="property-description"><p>The bind DN that will be used to bind to the pass-through directory when searching for the mapped entry DN.</p></div>
         </div>
 
         <div class="property">
@@ -2258,16 +2142,15 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The bind password that will be used to bind to the pass-through directory when searching for the mapped entry DN.<br>
-</p></div>
+            <div class="property-description"><p>The bind password that will be used to bind to the pass-through directory when searching for the mapped entry DN.</p></div>
         </div>
             </div>
 
             </div>
         </div>
 
-        <div class="section" id="linking-attribute-3-f644bffd">
-            <div class="section-header" onclick="toggleSection('linking-attribute-3-f644bffd')">
+        <div class="section" id="server_pass_through_authentication_linking_attribute">
+            <div class="section-header" onclick="toggleSection('server_pass_through_authentication_linking_attribute')">
                 <h6>
                     linking-attribute
                     <span class="property-type">object</span>
@@ -2285,8 +2168,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The name of the mapping attribute in the pass-through server. For example: 'empNo'.<br>
-</p></div>
+            <div class="property-description"><p>The name of the mapping attribute in the pass-through server. For example: 'empNo'.</p></div>
         </div>
 
         <div class="property">
@@ -2295,8 +2177,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The value that must be used with the linking attribute to search the pass-through server.<br>
-</p></div>
+            <div class="property-description"><p>The value that must be used with the linking attribute to search the pass-through server.</p></div>
         </div>
             </div>
 
@@ -2327,8 +2208,7 @@ Please note that the value is case sensitive.<br>
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>If true, the time stamp that corresponds to the last successful authentication for a user is recorded.  The time stamp will be recorded for users in all suffixes.<br>
-</p></div>
+            <div class="property-description"><p>If true, the time stamp that corresponds to the last successful authentication for a user is recorded.  The time stamp will be recorded for users in all suffixes.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 </div>
@@ -2413,8 +2293,28 @@ advanced:
             const header = section.querySelector('.section-header');
             const content = section.querySelector('.section-content');
             
+            const wasExpanded = header.classList.contains('expanded');
+            
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+            
+            // Update URL when expanding a section
+            if (!wasExpanded && sectionId !== 'configuration') {
+                // Use pushState to update URL without triggering hashchange event
+                history.pushState(null, '', '#' + sectionId);
+            } else if (wasExpanded && window.location.hash === '#' + sectionId) {
+                // When collapsing the section that's in the URL, update to parent section
+                // Extract parent ID by removing the last segment
+                const parts = sectionId.split('_');
+                if (parts.length > 1) {
+                    // Has a parent - update to parent section ID
+                    const parentId = parts.slice(0, -1).join('_');
+                    history.pushState(null, '', '#' + parentId);
+                } else {
+                    // No parent (top-level section) - remove hash
+                    history.pushState(null, '', window.location.pathname);
+                }
+            }
         }
         
         function expandAll() {
@@ -2655,6 +2555,59 @@ advanced:
                 document.getElementById('searchInput').focus();
             }
         });
+        
+        // Handle URL fragments for deep linking
+        function handleUrlFragment() {
+            const hash = window.location.hash;
+            if (hash && hash.length > 1) {
+                const targetId = hash.substring(1); // Remove the '#'
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Find the section that contains this element
+                    let section = targetElement;
+                    if (!section.classList.contains('section')) {
+                        section = targetElement.closest('.section');
+                    }
+                    
+                    if (section) {
+                        // Expand all parent sections
+                        let currentSection = section;
+                        while (currentSection) {
+                            const header = currentSection.querySelector('.section-header');
+                            const content = currentSection.querySelector('.section-content');
+                            if (header && content) {
+                                header.classList.add('expanded');
+                                content.classList.add('expanded');
+                            }
+                            // Move up to parent section if exists
+                            currentSection = currentSection.parentElement.closest('.section');
+                        }
+                        
+                        // Scroll to the target element with a small delay to ensure expansion is complete
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // Add a temporary highlight effect
+                            targetElement.style.transition = 'background-color 0.5s';
+                            const originalBg = window.getComputedStyle(targetElement).backgroundColor;
+                            targetElement.style.backgroundColor = '#fff1c2';
+                            setTimeout(() => {
+                                targetElement.style.backgroundColor = originalBg;
+                                setTimeout(() => {
+                                    targetElement.style.transition = '';
+                                }, 500);
+                            }, 1000);
+                        }, 100);
+                    }
+                }
+            }
+        }
+        
+        // Handle fragment on page load
+        window.addEventListener('DOMContentLoaded', handleUrlFragment);
+        
+        // Handle fragment changes (e.g., when clicking internal links)
+        window.addEventListener('hashchange', handleUrlFragment);
     </script>
 </body>
 </html>

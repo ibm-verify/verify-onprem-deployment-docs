@@ -409,7 +409,7 @@
 <body>
     <div class="header">
         <h1>IBM Verify Directory: Web Administration Tool</h1>
-        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Web Administration Tool container.</p><p>The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).</p><p>In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to set the server port the following environment variable can be set: 'general.ports.https'.<br></p></div>
+        <div class="description"><p>This page documents the YAML schema which can be used to configure a Verify Directory Web Administration Tool container. <br><br> The value of each YAML key entry can be provided in the YAML file as either plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an  environment variable (prefix: '$'), loaded from a local file (prefix: '@'), retrieved from a Kubernetes secret (format: secret:{name}/{field}), or  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}).  <br><br> In addition to this, each of the YAML keys can also be provided as an environment variable, using a normalized value of the key name as the environment variable name.  For example, to set the server port the following environment variable can be set: 'general.ports.https'.</p></div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search properties, descriptions, and types..." oninput="performSearch()" />
             <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">✕</button>
@@ -436,8 +436,8 @@
             </div>
             <div class="section-content expanded">
 
-        <div class="section" id="debug-32faaeca">
-            <div class="section-header" onclick="toggleSection('debug-32faaeca')">
+        <div class="section" id="debug">
+            <div class="section-header" onclick="toggleSection('debug')">
                 <h3>
                     debug
                     <span class="property-type">object</span>
@@ -445,8 +445,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries which can be used to enable debugging within the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
@@ -456,9 +455,8 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be <br>
-  enabled while bootstrapping the container.<br>
-</p></div>
+            <div class="property-description"><p>A boolean which is used to indicate whether debugging should be 
+  enabled while bootstrapping the container.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
 </div>
@@ -466,8 +464,8 @@
             </div>
         </div>
 
-        <div class="section" id="general-dfe2db74">
-            <div class="section-header" onclick="toggleSection('general-dfe2db74')">
+        <div class="section" id="general">
+            <div class="section-header" onclick="toggleSection('general')">
                 <h3>
                     general
                     <span class="property-type">object</span>
@@ -475,13 +473,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The general configuration elements of the container.<br>
-</p></div>
+<div class="property-description"><p>The general configuration elements of the container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="license-2-70d0809e">
-            <div class="section-header" onclick="toggleSection('license-2-70d0809e')">
+        <div class="section" id="general_license">
+            <div class="section-header" onclick="toggleSection('general_license')">
                 <h5>
                     license
                     <span class="property-type">object</span>
@@ -499,8 +496,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The license key, required to run the container.<br>
-</p></div>
+            <div class="property-description"><p>The license key, required to run the container.</p></div>
         </div>
 
         <div class="property">
@@ -509,8 +505,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-webadmin:latest license standard'<br>
-</p></div>
+            <div class="property-description"><p>Which license agreement has been accepted, either 'limited' or 'standard' or 'enterprise'.  To display a license agreement start the container with the 'license' command, for example:  'docker run --rm icr.io/isvd/verify-directory-webadmin:latest license standard'</p></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
                 <div class="property-enum-values">
@@ -525,8 +520,8 @@
             </div>
         </div>
 
-        <div class="section" id="ports-2-c68c9295">
-            <div class="section-header" onclick="toggleSection('ports-2-c68c9295')">
+        <div class="section" id="general_ports">
+            <div class="section-header" onclick="toggleSection('general_ports')">
                 <h5>
                     ports
                     <span class="property-type">object</span>
@@ -535,8 +530,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The ports on which the server will listen for requests.<br>
-</p></div>
+            <div class="property-description"><p>The ports on which the server will listen for requests.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -546,8 +540,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server will listen for HTTP requests.  A value of '0' is used to indicate that the server should not listen for HTTP requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server will listen for HTTP requests.  A value of '0' is used to indicate that the server should not listen for HTTP requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -557,8 +550,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server will listen for HTTPS requests.  A value of '0' is used to indicate that the server should not listen for HTTPS requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server will listen for HTTPS requests.  A value of '0' is used to indicate that the server should not listen for HTTPS requests.  Please note that the server can listen on ports lower than 1024, but in order to do so the container infrastructure must grant the container the necessary permissions.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>9443</code></div>
         </div>
             </div>
@@ -566,8 +558,8 @@
             </div>
         </div>
 
-        <div class="section" id="ssl-2-4065e7c3">
-            <div class="section-header" onclick="toggleSection('ssl-2-4065e7c3')">
+        <div class="section" id="general_ssl">
+            <div class="section-header" onclick="toggleSection('general_ssl')">
                 <h5>
                     ssl
                     <span class="property-type">object</span>
@@ -576,8 +568,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>SSL configuration details for the server.<br>
-</p></div>
+            <div class="property-description"><p>SSL configuration details for the server.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -587,12 +578,11 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The label that identifies the servers Personal Certificate in  the key database file.  If the field is not specified the default certificate from the key file will be used by the server  for SSL connections.<br>
-</p></div>
+            <div class="property-description"><p>The label that identifies the servers Personal Certificate in  the key database file.  If the field is not specified the default certificate from the key file will be used by the server  for SSL connections.</p></div>
         </div>
 
-        <div class="section" id="protocols-3-4add3d13">
-            <div class="section-header" onclick="toggleSection('protocols-3-4add3d13')">
+        <div class="section" id="general_ssl_protocols">
+            <div class="section-header" onclick="toggleSection('general_ssl_protocols')">
                 <h6>
                     protocols
                     <span class="property-type">array</span>
@@ -601,8 +591,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The TLS protocol versions to enable for the connection.  The options include: <ul> <li>TLS10: Transport Layer Security version 1.0.</li> <li>TLS11: Transport Layer Security version 1.1.</li> <li>TLS12: Transport Layer Security version 1.2.</li> <li>TLS13: Transport Layer Security version 1.3.</li> </ul> Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The TLS protocol versions to enable for the connection.  The options include: <ul> <li>TLS10: Transport Layer Security version 1.0.</li> <li>TLS11: Transport Layer Security version 1.1.</li> <li>TLS12: Transport Layer Security version 1.2.</li> <li>TLS13: Transport Layer Security version 1.3.</li> </ul> Please note that the value is case sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>TLS12, TLS13</code></div>
             <div class="nested-section">
 <div class="array-items-container">
@@ -622,8 +611,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>This boolean value controls whether the hostname contained within the certificate which is received from a remote LDAP server is validated against the name of the host which is used to connect to the remote LDAP server.  If validation is enabled, a connection will not be established with a server if the server  hostname does not match the hostname (SANS or CN) found in the  certificate.<br>
-</p></div>
+            <div class="property-description"><p>This boolean value controls whether the hostname contained within the certificate which is received from a remote LDAP server is validated against the name of the host which is used to connect to the remote LDAP server.  If validation is enabled, a connection will not be established with a server if the server  hostname does not match the hostname (SANS or CN) found in the  certificate.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
             </div>
@@ -637,8 +625,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.  <br>
-</p></div>
+            <div class="property-description"><p>Whether the logging and auditing messages should be formatted in  JSON or not.  </p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 </div>
@@ -661,8 +648,8 @@
             </div>
         </div>
 
-        <div class="section" id="keyfile-1460c58c">
-            <div class="section-header" onclick="toggleSection('keyfile-1460c58c')">
+        <div class="section" id="keyfile">
+            <div class="section-header" onclick="toggleSection('keyfile')">
                 <h3>
                     keyfile
                     <span class="property-type">object</span>
@@ -670,13 +657,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration elements associated with the SSL key file.  This will include any keys used by the server, along with any trusted certificates. A self-signed certificate will be created as the default certificate in the key file, with the label: 'self-signed-server'.<br>
-</p></div>
+<div class="property-description"><p>The configuration elements associated with the SSL key file.  This will include any keys used by the server, along with any trusted certificates. A self-signed certificate will be created as the default certificate in the key file, with the label: 'self-signed-server'.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="keys-2-828152b0">
-            <div class="section-header" onclick="toggleSection('keys-2-828152b0')">
+        <div class="section" id="keyfile_keys">
+            <div class="section-header" onclick="toggleSection('keyfile_keys')">
                 <h5>
                     keys
                     <span class="property-type">array</span>
@@ -685,8 +671,10 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Any private keys used by the server.  The private key and associated certificate should be combined into a single configuration entry in PEM format, and the private key should not be protected by  a password.  By way of example, to create a private key using OpenSSL the following command can be executed: <br>
-  'openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365`</p><p>The key and certificate can then be concatenated into a single file.</p><p>If this key is to be used as the main certificate served by the server the general.ssl.cert-label configuration entry must be set to the name of the label for the key.<br></p></div>
+            <div class="property-description"><p>Any private keys used by the server.  The private key and associated certificate should be combined into a single configuration entry in PEM format, and the private key should not be protected by  a password.  By way of example, to create a private key using OpenSSL the following command can be executed: 
+  'openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365`</p>
+<p>The key and certificate can then be concatenated into a single file.</p>
+<p>If this key is to be used as the main certificate served by the server the general.ssl.cert-label configuration entry must be set to the name of the label for the key.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
@@ -698,8 +686,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The PEM encoded private key and public certificate.<br>
-</p></div>
+            <div class="property-description"><p>The PEM encoded private key and public certificate.</p></div>
         </div>
 
         <div class="property">
@@ -708,8 +695,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The label which will be associated with this key.<br>
-</p></div>
+            <div class="property-description"><p>The label which will be associated with this key.</p></div>
         </div>
 </div>
 </div>
@@ -718,8 +704,8 @@
             </div>
         </div>
 
-        <div class="section" id="trusted-certificates-2-4b938dbd">
-            <div class="section-header" onclick="toggleSection('trusted-certificates-2-4b938dbd')">
+        <div class="section" id="keyfile_trusted_certificates">
+            <div class="section-header" onclick="toggleSection('keyfile_trusted_certificates')">
                 <h5>
                     trusted-certificates
                     <span class="property-type">array</span>
@@ -728,15 +714,13 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Any certificates which should be trusted by the server, in PEM format.<br>
-</p></div>
+            <div class="property-description"><p>Any certificates which should be trusted by the server, in PEM format.</p></div>
             <div class="nested-section">
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>A certificate which is to be trusted by the server, in PEM format.<br>
-</p></div>
+<div class="property-description"><p>A certificate which is to be trusted by the server, in PEM format.</p></div>
 </div>
 </div>
             </div>
@@ -762,8 +746,8 @@
             </div>
         </div>
 
-        <div class="section" id="webadmin-30e0c5f0">
-            <div class="section-header" onclick="toggleSection('webadmin-30e0c5f0')">
+        <div class="section" id="webadmin">
+            <div class="section-header" onclick="toggleSection('webadmin')">
                 <h3>
                     webadmin
                     <span class="property-type">object</span>
@@ -771,13 +755,12 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the Web Administration Tool container.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the Web Administration Tool container.</p></div>
 <div class="nested-section">
 <div class="properties-header">⚙️ Properties</div>
 
-        <div class="section" id="servers-642f03e0">
-            <div class="section-header" onclick="toggleSection('servers-642f03e0')">
+        <div class="section" id="webadmin_servers">
+            <div class="section-header" onclick="toggleSection('webadmin_servers')">
                 <h4>
                     servers
                     <span class="property-type">array</span>
@@ -785,8 +768,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-<div class="property-description"><p>The configuration entries associated with the servers which are being managed by the Web Administration Tool container.<br>
-</p></div>
+<div class="property-description"><p>The configuration entries associated with the servers which are being managed by the Web Administration Tool container.</p></div>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
@@ -797,8 +779,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>A label which is given to the server.  If the label is missing the host field will be used as the label.<br>
-</p></div>
+            <div class="property-description"><p>A label which is given to the server.  If the label is missing the host field will be used as the label.</p></div>
         </div>
 
         <div class="property">
@@ -807,8 +788,7 @@
                 <span class="property-type">string</span>
                 <span class="property-required">required</span>
             </div>
-            <div class="property-description"><p>The hostname or IP address of the server.<br>
-</p></div>
+            <div class="property-description"><p>The hostname or IP address of the server.</p></div>
         </div>
 
         <div class="property">
@@ -817,8 +797,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server is listening for requests.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server is listening for requests.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>636</code></div>
         </div>
 
@@ -828,8 +807,7 @@
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>Whether LDAPS will be used to communicate with the server.<br>
-</p></div>
+            <div class="property-description"><p>Whether LDAPS will be used to communicate with the server.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>True</code></div>
         </div>
 
@@ -839,8 +817,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The port on which the server is listening for administrative  requests.  If a value of 0 is specified the server is not considered to be running the administrative service.<br>
-</p></div>
+            <div class="property-description"><p>The port on which the server is listening for administrative  requests.  If a value of 0 is specified the server is not considered to be running the administrative service.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>3538</code></div>
         </div>
 </div>
@@ -864,8 +841,8 @@
             </div>
         </div>
 
-        <div class="section" id="searches-2-9006aa50">
-            <div class="section-header" onclick="toggleSection('searches-2-9006aa50')">
+        <div class="section" id="webadmin_searches">
+            <div class="section-header" onclick="toggleSection('webadmin_searches')">
                 <h5>
                     searches
                     <span class="property-type">object</span>
@@ -874,8 +851,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>Search configuration details for the application.<br>
-</p></div>
+            <div class="property-description"><p>Search configuration details for the application.</p></div>
             <div class="nested-section">
             <div class="properties-header">⚙️ Properties</div>
 
@@ -885,8 +861,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The maximum number of attributes to be returned for an entry.  A value of 0 indicates that an unlimited number of attributes will be returned.<br>
-</p></div>
+            <div class="property-description"><p>The maximum number of attributes to be returned for an entry.  A value of 0 indicates that an unlimited number of attributes will be returned.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
 
@@ -896,8 +871,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The maximum number of values to be returned for an attribute.   A value of 0 indicates that an unlimited number of values will  be returned.<br>
-</p></div>
+            <div class="property-description"><p>The maximum number of values to be returned for an attribute.   A value of 0 indicates that an unlimited number of values will  be returned.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>0</code></div>
         </div>
             </div>
@@ -911,8 +885,7 @@
                 <span class="property-type">integer</span>
                 
             </div>
-            <div class="property-description"><p>The lifetime of an authenticated session, in minutes.<br>
-</p></div>
+            <div class="property-description"><p>The lifetime of an authenticated session, in minutes.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>60</code></div>
         </div>
 
@@ -922,8 +895,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>This entry is used to indicate the HTTP 'host' header which is  expected for all requests.  The server will return an error if a  HTTP request is received containing a different HTTP 'host' header. If this configuration entry is blank the server will accept all HTTP 'host' headers.<br>
-</p></div>
+            <div class="property-description"><p>This entry is used to indicate the HTTP 'host' header which is  expected for all requests.  The server will return an error if a  HTTP request is received containing a different HTTP 'host' header. If this configuration entry is blank the server will accept all HTTP 'host' headers.</p></div>
         </div>
 
         <div class="property">
@@ -932,8 +904,7 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The SSL or TLS protocol version to be used when contacting an LDAP  server.  Please note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The SSL or TLS protocol version to be used when contacting an LDAP  server.  Please note that the value is case sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>TLS12</code></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
@@ -948,8 +919,8 @@
             </div>
         </div>
 
-        <div class="section" id="components-2-6fe91aa6">
-            <div class="section-header" onclick="toggleSection('components-2-6fe91aa6')">
+        <div class="section" id="webadmin_components">
+            <div class="section-header" onclick="toggleSection('webadmin_components')">
                 <h5>
                     components
                     <span class="property-type">array</span>
@@ -958,8 +929,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
-            <div class="property-description"><p>The components which have been enabled in the application.  Please  note that the value is case sensitive.<br>
-</p></div>
+            <div class="property-description"><p>The components which have been enabled in the application.  Please  note that the value is case sensitive.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>all components</code></div>
             <div class="nested-section">
 <div class="array-items-container">
@@ -1036,8 +1006,28 @@ webadmin:
             const header = section.querySelector('.section-header');
             const content = section.querySelector('.section-content');
             
+            const wasExpanded = header.classList.contains('expanded');
+            
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+            
+            // Update URL when expanding a section
+            if (!wasExpanded && sectionId !== 'configuration') {
+                // Use pushState to update URL without triggering hashchange event
+                history.pushState(null, '', '#' + sectionId);
+            } else if (wasExpanded && window.location.hash === '#' + sectionId) {
+                // When collapsing the section that's in the URL, update to parent section
+                // Extract parent ID by removing the last segment
+                const parts = sectionId.split('_');
+                if (parts.length > 1) {
+                    // Has a parent - update to parent section ID
+                    const parentId = parts.slice(0, -1).join('_');
+                    history.pushState(null, '', '#' + parentId);
+                } else {
+                    // No parent (top-level section) - remove hash
+                    history.pushState(null, '', window.location.pathname);
+                }
+            }
         }
         
         function expandAll() {
@@ -1278,6 +1268,59 @@ webadmin:
                 document.getElementById('searchInput').focus();
             }
         });
+        
+        // Handle URL fragments for deep linking
+        function handleUrlFragment() {
+            const hash = window.location.hash;
+            if (hash && hash.length > 1) {
+                const targetId = hash.substring(1); // Remove the '#'
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Find the section that contains this element
+                    let section = targetElement;
+                    if (!section.classList.contains('section')) {
+                        section = targetElement.closest('.section');
+                    }
+                    
+                    if (section) {
+                        // Expand all parent sections
+                        let currentSection = section;
+                        while (currentSection) {
+                            const header = currentSection.querySelector('.section-header');
+                            const content = currentSection.querySelector('.section-content');
+                            if (header && content) {
+                                header.classList.add('expanded');
+                                content.classList.add('expanded');
+                            }
+                            // Move up to parent section if exists
+                            currentSection = currentSection.parentElement.closest('.section');
+                        }
+                        
+                        // Scroll to the target element with a small delay to ensure expansion is complete
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // Add a temporary highlight effect
+                            targetElement.style.transition = 'background-color 0.5s';
+                            const originalBg = window.getComputedStyle(targetElement).backgroundColor;
+                            targetElement.style.backgroundColor = '#fff1c2';
+                            setTimeout(() => {
+                                targetElement.style.backgroundColor = originalBg;
+                                setTimeout(() => {
+                                    targetElement.style.transition = '';
+                                }, 500);
+                            }, 1000);
+                        }, 100);
+                    }
+                }
+            }
+        }
+        
+        // Handle fragment on page load
+        window.addEventListener('DOMContentLoaded', handleUrlFragment);
+        
+        // Handle fragment changes (e.g., when clicking internal links)
+        window.addEventListener('hashchange', handleUrlFragment);
     </script>
 </body>
 </html>
