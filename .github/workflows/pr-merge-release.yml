@@ -20,7 +20,7 @@ jobs:
     if: github.event.pull_request.merged == true
     permissions:
       contents: write
-      pull-requests: read
+      pull-requests: write
     
     steps:
       - name: Check if documentation regeneration is requested
