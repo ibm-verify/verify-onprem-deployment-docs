@@ -1360,13 +1360,22 @@ class SchemaDocGenerator:
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
             
-            // Update URL when expanding a section (but not when collapsing)
+            // Update URL when expanding a section
             if (!wasExpanded && sectionId !== 'configuration') {{
                 // Use pushState to update URL without triggering hashchange event
                 history.pushState(null, '', '#' + sectionId);
             }} else if (wasExpanded && window.location.hash === '#' + sectionId) {{
-                // When collapsing the section that's in the URL, remove the hash
-                history.pushState(null, '', window.location.pathname);
+                // When collapsing the section that's in the URL, update to parent section
+                // Extract parent ID by removing the last segment
+                const parts = sectionId.split('_');
+                if (parts.length > 1) {{
+                    // Has a parent - update to parent section ID
+                    const parentId = parts.slice(0, -1).join('_');
+                    history.pushState(null, '', '#' + parentId);
+                }} else {{
+                    // No parent (top-level section) - remove hash
+                    history.pushState(null, '', window.location.pathname);
+                }}
             }}
         }}
         
