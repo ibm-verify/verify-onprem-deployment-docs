@@ -83,6 +83,7 @@ class SchemaDocGenerator:
         self.schema_version = None
         self.ref_stack = []  # Track reference resolution stack to detect circular refs
         self.expanded_refs = {}  # Track which refs have been expanded and their section IDs
+        self.path_stack = []  # Track the hierarchical path for ID generation
         
     def load_schema(self, path: Path) -> Dict[str, Any]:
         """Load a schema file (YAML or JSON) and detect schema version."""
@@ -680,12 +681,15 @@ class SchemaDocGenerator:
             logger.warning(f"Maximum recursion depth ({self.MAX_RECURSION_DEPTH}) exceeded for definition '{name}'. Stopping recursion.")
             return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description"><em>⚠️ Circular reference detected - recursion limit reached</em></div></div>\n'
         
-        section_id = self._generate_id(name)
-        description = schema.get('description', '')
-        examples = schema.get('examples', [])
-        prop_type = schema.get('type', '')
-        
-        html = f'''
+        # Push name onto path stack for hierarchical ID generation
+        self.path_stack.append(name)
+        try:
+            section_id = self._generate_id()
+            description = schema.get('description', '')
+            examples = schema.get('examples', [])
+            prop_type = schema.get('type', '')
+            
+            html = f'''
         <div class="section" id="{section_id}">
             <div class="section-header" onclick="toggleSection('{section_id}')">
                 <h{2 + level}>
@@ -696,41 +700,44 @@ class SchemaDocGenerator:
             </div>
             <div class="section-content">
 '''
-        
-        if description:
-            html += f'<div class="property-description">{self._format_description(description)}</div>\n'
-        
-        # Handle $ref
-        if '$ref' in schema:
-            ref_schema, _ = self.resolve_ref(schema['$ref'], self.schema_path)
-            # Merge examples from both schemas
-            ref_examples = ref_schema.get('examples', [])
-            if ref_examples and not examples:
-                examples = ref_examples
-            html += self._generate_schema_content(ref_schema, level + 1, depth + 1)
-        elif 'properties' in schema:
-            # Add properties container with header if there's a description
+            
             if description:
-                html += '<div class="nested-section">\n'
-                html += '<div class="properties-header">⚙️ Properties</div>\n'
-            html += self._generate_properties(schema, level + 1, depth + 1)
-            if description:
-                html += '</div>\n'
-        elif schema.get('type') == 'array' and 'items' in schema:
-            html += self._generate_array_items(schema['items'], level + 1, depth + 1)
-        else:
-            # For simple schemas (enum, type only, etc.), display as a property
-            html += self._generate_simple_schema_display(schema)
-        
-        # Add examples for this definition if present
-        if examples:
-            html += self._generate_inline_examples(examples)
-        
-        html += '''
+                html += f'<div class="property-description">{self._format_description(description)}</div>\n'
+            
+            # Handle $ref
+            if '$ref' in schema:
+                ref_schema, _ = self.resolve_ref(schema['$ref'], self.schema_path)
+                # Merge examples from both schemas
+                ref_examples = ref_schema.get('examples', [])
+                if ref_examples and not examples:
+                    examples = ref_examples
+                html += self._generate_schema_content(ref_schema, level + 1, depth + 1)
+            elif 'properties' in schema:
+                # Add properties container with header if there's a description
+                if description:
+                    html += '<div class="nested-section">\n'
+                    html += '<div class="properties-header">⚙️ Properties</div>\n'
+                html += self._generate_properties(schema, level + 1, depth + 1)
+                if description:
+                    html += '</div>\n'
+            elif schema.get('type') == 'array' and 'items' in schema:
+                html += self._generate_array_items(schema['items'], level + 1, depth + 1)
+            else:
+                # For simple schemas (enum, type only, etc.), display as a property
+                html += self._generate_simple_schema_display(schema)
+            
+            # Add examples for this definition if present
+            if examples:
+                html += self._generate_inline_examples(examples)
+            
+            html += '''
             </div>
         </div>
 '''
-        return html
+            return html
+        finally:
+            # Pop name from path stack
+            self.path_stack.pop()
     
     def _generate_properties(self, schema: Dict[str, Any], level: int = 0, depth: int = 0) -> str:
         """Generate HTML for schema properties."""
@@ -787,7 +794,11 @@ class SchemaDocGenerator:
                 return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
             
             # First time seeing this ref - expand it inline and track it
-            section_id = self._generate_id(name)
+            # Push name onto path stack before generating ID
+            self.path_stack.append(name)
+            section_id = self._generate_id()
+            self.path_stack.pop()
+            
             self.expanded_refs[ref] = section_id
             self.ref_stack.append(ref)
             try:
@@ -832,7 +843,11 @@ class SchemaDocGenerator:
                 return f'<div class="property"><div class="property-name">{self._escape_html(name)}</div><div class="property-description">{desc_html}</div></div>\n'
             
             # First time seeing this ref - expand it inline and track it
-            section_id = self._generate_id(name)
+            # Push name onto path stack before generating ID
+            self.path_stack.append(name)
+            section_id = self._generate_id()
+            self.path_stack.pop()
+            
             self.expanded_refs[ref] = section_id
             self.ref_stack.append(ref)
             try:
@@ -856,9 +871,12 @@ class SchemaDocGenerator:
         
         # If it's a nested object or array with items, make it collapsible
         if has_nested_properties or has_array_items or has_dependent_schemas or has_unevaluated:
-            section_id = self._generate_id(f"{name}-{level}")
-            
-            html = f'''
+            # Push name onto path stack for hierarchical ID generation
+            self.path_stack.append(name)
+            try:
+                section_id = self._generate_id()
+                
+                html = f'''
         <div class="section" id="{section_id}">
             <div class="section-header" onclick="toggleSection('{section_id}')">
                 <h{min(3 + level, 6)}>
@@ -870,54 +888,57 @@ class SchemaDocGenerator:
             </div>
             <div class="section-content">
 '''
-            
-            if description:
-                html += f'            <div class="property-description">{self._format_description(description)}</div>\n'
-            
-            if default is not None:
-                html += f'            <div class="property-default"><strong>Default:</strong> <code>{self._escape_html(str(default))}</code></div>\n'
-            
-            if const_value is not None:
-                html += f'            <div class="property-default"><strong>Constant Value:</strong> <code>{self._escape_html(str(const_value))}</code></div>\n'
-            
-            # Handle examples (standard JSON Schema keyword) and x-examples (custom extension)
-            if 'examples' in schema:
-                html += self._generate_inline_examples(schema['examples'])
-            elif 'x-examples' in schema:
-                html += self._generate_inline_examples(schema['x-examples'])
-            
-            # Handle nested objects
-            if has_nested_properties:
-                html += '            <div class="nested-section">\n'
-                html += '            <div class="properties-header">⚙️ Properties</div>\n'
-                html += self._generate_properties(schema, level + 1, depth + 1)
-                html += '            </div>\n'
-            
-            # Handle arrays with items
-            if has_array_items:
-                html += '            <div class="nested-section">\n'
-                if 'items' in schema:
-                    html += self._generate_array_items(schema['items'], level + 1, depth + 1)
-                if 'prefixItems' in schema:
-                    html += self._generate_prefix_items(schema['prefixItems'], level + 1, depth + 1)
-                html += '            </div>\n'
-            
-            # Handle dependentSchemas (JSON Schema 2019-09+)
-            if has_dependent_schemas:
-                html += self._generate_dependent_schemas(schema['dependentSchemas'], level + 1, depth + 1)
-            
-            # Handle unevaluatedProperties (JSON Schema 2019-09+)
-            if 'unevaluatedProperties' in schema:
-                html += self._generate_unevaluated_info('unevaluatedProperties', schema['unevaluatedProperties'])
-            
-            if 'unevaluatedItems' in schema:
-                html += self._generate_unevaluated_info('unevaluatedItems', schema['unevaluatedItems'])
-            
-            html += '''
+                
+                if description:
+                    html += f'            <div class="property-description">{self._format_description(description)}</div>\n'
+                
+                if default is not None:
+                    html += f'            <div class="property-default"><strong>Default:</strong> <code>{self._escape_html(str(default))}</code></div>\n'
+                
+                if const_value is not None:
+                    html += f'            <div class="property-default"><strong>Constant Value:</strong> <code>{self._escape_html(str(const_value))}</code></div>\n'
+                
+                # Handle examples (standard JSON Schema keyword) and x-examples (custom extension)
+                if 'examples' in schema:
+                    html += self._generate_inline_examples(schema['examples'])
+                elif 'x-examples' in schema:
+                    html += self._generate_inline_examples(schema['x-examples'])
+                
+                # Handle nested objects
+                if has_nested_properties:
+                    html += '            <div class="nested-section">\n'
+                    html += '            <div class="properties-header">⚙️ Properties</div>\n'
+                    html += self._generate_properties(schema, level + 1, depth + 1)
+                    html += '            </div>\n'
+                
+                # Handle arrays with items
+                if has_array_items:
+                    html += '            <div class="nested-section">\n'
+                    if 'items' in schema:
+                        html += self._generate_array_items(schema['items'], level + 1, depth + 1)
+                    if 'prefixItems' in schema:
+                        html += self._generate_prefix_items(schema['prefixItems'], level + 1, depth + 1)
+                    html += '            </div>\n'
+                
+                # Handle dependentSchemas (JSON Schema 2019-09+)
+                if has_dependent_schemas:
+                    html += self._generate_dependent_schemas(schema['dependentSchemas'], level + 1, depth + 1)
+                
+                # Handle unevaluatedProperties (JSON Schema 2019-09+)
+                if 'unevaluatedProperties' in schema:
+                    html += self._generate_unevaluated_info('unevaluatedProperties', schema['unevaluatedProperties'])
+                
+                if 'unevaluatedItems' in schema:
+                    html += self._generate_unevaluated_info('unevaluatedItems', schema['unevaluatedItems'])
+                
+                html += '''
             </div>
         </div>
 '''
-            return html
+                return html
+            finally:
+                # Pop name from path stack
+                self.path_stack.pop()
         
         # For simple properties (not nested objects/arrays), use the original format
         html = f'''
@@ -1334,8 +1355,28 @@ class SchemaDocGenerator:
             const header = section.querySelector('.section-header');
             const content = section.querySelector('.section-content');
             
+            const wasExpanded = header.classList.contains('expanded');
+            
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+            
+            // Update URL when expanding a section
+            if (!wasExpanded && sectionId !== 'configuration') {{
+                // Use pushState to update URL without triggering hashchange event
+                history.pushState(null, '', '#' + sectionId);
+            }} else if (wasExpanded && window.location.hash === '#' + sectionId) {{
+                // When collapsing the section that's in the URL, update to parent section
+                // Extract parent ID by removing the last segment
+                const parts = sectionId.split('_');
+                if (parts.length > 1) {{
+                    // Has a parent - update to parent section ID
+                    const parentId = parts.slice(0, -1).join('_');
+                    history.pushState(null, '', '#' + parentId);
+                }} else {{
+                    // No parent (top-level section) - remove hash
+                    history.pushState(null, '', window.location.pathname);
+                }}
+            }}
         }}
         
         function expandAll() {{
@@ -1576,6 +1617,59 @@ class SchemaDocGenerator:
                 document.getElementById('searchInput').focus();
             }}
         }});
+        
+        // Handle URL fragments for deep linking
+        function handleUrlFragment() {{
+            const hash = window.location.hash;
+            if (hash && hash.length > 1) {{
+                const targetId = hash.substring(1); // Remove the '#'
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {{
+                    // Find the section that contains this element
+                    let section = targetElement;
+                    if (!section.classList.contains('section')) {{
+                        section = targetElement.closest('.section');
+                    }}
+                    
+                    if (section) {{
+                        // Expand all parent sections
+                        let currentSection = section;
+                        while (currentSection) {{
+                            const header = currentSection.querySelector('.section-header');
+                            const content = currentSection.querySelector('.section-content');
+                            if (header && content) {{
+                                header.classList.add('expanded');
+                                content.classList.add('expanded');
+                            }}
+                            // Move up to parent section if exists
+                            currentSection = currentSection.parentElement.closest('.section');
+                        }}
+                        
+                        // Scroll to the target element with a small delay to ensure expansion is complete
+                        setTimeout(() => {{
+                            targetElement.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                            // Add a temporary highlight effect
+                            targetElement.style.transition = 'background-color 0.5s';
+                            const originalBg = window.getComputedStyle(targetElement).backgroundColor;
+                            targetElement.style.backgroundColor = '#fff1c2';
+                            setTimeout(() => {{
+                                targetElement.style.backgroundColor = originalBg;
+                                setTimeout(() => {{
+                                    targetElement.style.transition = '';
+                                }}, 500);
+                            }}, 1000);
+                        }}, 100);
+                    }}
+                }}
+            }}
+        }}
+        
+        // Handle fragment on page load
+        window.addEventListener('DOMContentLoaded', handleUrlFragment);
+        
+        // Handle fragment changes (e.g., when clicking internal links)
+        window.addEventListener('hashchange', handleUrlFragment);
     </script>
 </body>
 </html>
@@ -1713,8 +1807,33 @@ class SchemaDocGenerator:
         
         return description
     
-    def _generate_id(self, name: str) -> str:
-        """Generate a valid, collision-resistant HTML ID from a name."""
+    def _generate_id(self, name: Optional[str] = None) -> str:
+        """Generate a hierarchical HTML ID from the current path stack.
+        
+        Args:
+            name: Optional name to append to path. If None, uses path_stack as-is.
+        """
+        # Build the full path
+        if name:
+            full_path = self.path_stack + [name]
+        else:
+            full_path = self.path_stack
+        
+        # Convert to a valid HTML ID: join with underscores and sanitize
+        id_parts = []
+        for part in full_path:
+            # Convert to lowercase and replace non-alphanumeric with underscores
+            sanitized = re.sub(r'[^a-zA-Z0-9]+', '_', part.lower()).strip('_')
+            if sanitized:
+                id_parts.append(sanitized)
+        
+        if not id_parts:
+            return 'section'
+        
+        return '_'.join(id_parts)
+    
+    def _generate_id_legacy(self, name: str) -> str:
+        """Generate a valid, collision-resistant HTML ID from a name (legacy method)."""
         slug = re.sub(r'[^a-zA-Z0-9]+', '-', name.lower()).strip('-')
         if not slug:
             slug = 'section'

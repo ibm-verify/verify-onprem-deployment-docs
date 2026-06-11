@@ -372,6 +372,7 @@ After the pull request is reviewed and merged:
 - **OpenAPI 3.0 Support** - Convert and document OpenAPI specifications
 - **Schema Reference Resolution** - Automatically resolves `$ref` and `$dynamicRef` references (both internal and external)
 - **Collapsible Sections** - Expandable/collapsible sections for easy navigation of large schemas
+- **Deep Linking** - Hierarchical URL fragments for direct linking to specific sections with automatic URL updates
 - **Validation Constraints** - Displays all validation rules (min/max, patterns, formats, etc.)
 - **Examples Support** - Displays configuration examples in YAML format at both top-level and inline
 - **Markdown Support** - Renders markdown in descriptions with proper formatting
@@ -770,6 +771,69 @@ The generated HTML documentation includes:
 ### 4. Footer
 - Copyright information
 - Generation timestamp
+
+## Deep Linking
+
+The generated documentation includes powerful deep linking capabilities that make it easy to share and navigate to specific sections.
+
+### Hierarchical URL Fragments
+
+Each section in the documentation has a unique, hierarchical ID that reflects its position in the schema structure:
+
+- `#server` - Links to the server section
+- `#server_protocols` - Links to server/protocols
+- `#server_ssl_front_end` - Links to server/ssl/front-end
+- `#server_ssl_front_end_certificate` - Links to server/ssl/front-end/certificate
+
+### Features
+
+**Automatic URL Updates:**
+- When you expand a section, the browser URL automatically updates with that section's ID
+- When you collapse a section, the URL hash is removed if it matches that section
+- This makes it easy to copy and share URLs that point to specific sections
+
+**Deep Link Navigation:**
+- Opening a URL with a fragment (e.g., `openapi.html#server_protocols`) automatically:
+  - Expands all parent sections
+  - Scrolls smoothly to the target section
+  - Highlights the target section briefly (yellow background for 1 second)
+
+**Browser Integration:**
+- Works with browser back/forward buttons
+- Bookmarkable - save links to specific sections
+- Shareable - send exact section URLs to colleagues
+
+### Usage Examples
+
+**Direct linking to a section:**
+```
+https://example.com/pages/iag/25.12/openapi.html#server_protocols
+```
+
+**Sharing a nested configuration:**
+```
+https://example.com/pages/iag/25.12/openapi.html#server_ssl_front_end_certificate
+```
+
+**Interactive navigation:**
+1. Open a documentation page
+2. Click to expand sections you're interested in
+3. The URL updates automatically
+4. Copy the URL to share the exact view with others
+
+### ID Structure
+
+IDs are generated hierarchically using underscores to separate levels:
+- Single level: `section_name`
+- Two levels: `parent_child`
+- Three levels: `parent_child_grandchild`
+- And so on...
+
+All IDs are:
+- **Consistent** - Same structure always generates the same ID
+- **Human-readable** - Easy to construct manually
+- **Hierarchical** - Reflects the actual schema structure
+- **URL-safe** - Only contains alphanumeric characters and underscores
 
 ## Styling and Design
 
