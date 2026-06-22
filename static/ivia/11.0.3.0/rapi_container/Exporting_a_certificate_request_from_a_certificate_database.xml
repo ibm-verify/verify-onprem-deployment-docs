@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="RAPI.xsl"?>
+<application>
+  <doc>Exporting a certificate request from a certificate database</doc>
+  <resources base="">
+    <resource path="https://{appliance_hostname}/isam/ssl_certificates/{kdb_id}/cert_request/{cert_id}?export">
+      <param type="path" name="kdb_id">
+        <doc>Name of the certificate database.</doc>
+      </param>
+      <param type="path" name="cert_id">
+        <doc>Name of the certificate request to export.</doc>
+      </param>
+      <param type="query" name="export">
+        <doc>An indication that this operation is to retrieve the entire file not just a snippet. This parameter is required.</doc>
+      </param>
+      <method name="GET" id="Export a certificate request">
+        <doc>     To export a certificate request from a certificate database with the RESTful web service,                       issue an HTTP GET command and include the export parameter on the SSL Certificates certificate request resource URI.                      The export parameter is what differentiates the retrieve operation and the export operation.                       The difference is that the export response is the text of the certificate request,                       while the retrieve response is the certificate request text in JSON format. </doc>
+        <request>
+          <doc>
+ GET https://{appliance_hostname}/isam/ssl_certificates/{kdb_id}/cert_request/{cert_id}?export
+ </doc>
+        </request>
+        <response status="200">
+          <doc>The request was successful.</doc>
+          <doc>
+ 200 ok
+ 
+ "The certificate text"
+ </doc>
+        </response>
+      </method>
+    </resource>
+  </resources>
+</application>
