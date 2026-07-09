@@ -1,0 +1,250 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$ref": "#/definitions/VerifyDirectoryProxy"
+title: "IBM Verify Directory: Proxy"
+description: >
+  This page documents the YAML schema which can be used to configure
+  a Verify Directory Proxy container for version 10.0.1. <br><br>
+  The value of each YAML key entry can be provided in the YAML file as either
+  plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an 
+  environment variable (prefix: '$'), loaded from a local file (prefix: '@'),
+  retrieved from a Kubernetes secret (format: secret:{name}/{field}), or 
+  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}). 
+  <br><br>
+  In addition to this, each of the YAML keys can also be provided as an
+  environment variable, using a normalized value of the key name as the
+  environment variable name.  For example, to set the server port the following
+  environment variable can be set: 'server.port'.
+
+examples:
+  - { "general": { "license": { "key": "insert-license-key-here", "accept": "standard" }, "admin": { "pwd": "passw0rd1" } }, "proxy": { "suffixes": [ { "name": "dc=ibm.com", "base": "dc=ibm.com", "servers": [ { "name": "server_a" } ] } ], "server-groups": [ { "name": "group_a", "servers": [ { "name": "server_a", "id": "server_a", "target": "ldaps://server_a.ibm.com:636", "user": { "dn": "cn=root", "password": "ldap__secret" } } ] } ] } }
+  - { "general": { "id": "test-proxy", "license": { "key": "insert-license-key-here", "accept": "standard" }, "ports": { "ldap": 0, "ldaps": 9636 }, "admin": { "pwd": "passw0rd1" }, "audit": { "enabled": true } }, "proxy": { "suffixes": [ { "name": "dc=ibm.com", "num-partitions": 1, "base": "dc=ibm.com", "servers": [ { "name": "server_a", "role": "primarywrite", "index": 1 } ] } ], "server-groups": [ { "name": "group_a", "servers": [ { "name": "server_a", "id": "server_a", "target": "ldaps://server_a.ibm.com:636", "bind-method": "Simple", "user": { "dn": "cn=root", "password": "ldap__secret" } } ] } ] }, "keyfile": { "keys": [ { "label": "proxy-key", "key": "@/var/isvd/config/proxy.key" } ] } }
+
+definitions:
+  VerifyDirectoryProxy:
+    type: object
+    properties:
+      general:
+        "$ref": "#/definitions/general"
+      proxy:
+        "$ref": "#/definitions/proxy"
+      keyfile:
+        "$ref": "#/definitions/keyfile"
+    required:
+    - general
+    - proxy
+    title: VerifyDirectoryProxy
+
+  general:
+    description: >
+      The general configuration elements of the container.
+    type: object
+    properties:
+      admin:
+        type: object
+        description: >
+          The credential information of the proxy.
+        properties:
+          pwd:
+            type: string
+            description: >
+              The password of the user which can be used to authenticate to the proxy.
+        required:
+        - pwd
+      audit:
+        type: object
+        description: >
+          The configuration entries associated with the auditing of operations.
+        properties:
+          enabled:
+            type: boolean
+            default: false
+            description: >
+              Enable or disable the audit service.
+      id:
+        type: string
+        description: >
+          The identifier of the proxy.  If no identifier is specified the
+          hostname of the container will be used as the identifier.
+      license:
+        type: object
+        description: >
+          License configuration for the proxy.
+        properties:
+          key:
+            type: string
+            description: >
+              The license key, required to run the container.
+          accept:
+            type: string
+            description: >
+              Which license agreement has been accepted, either 'limited' or
+              'standard' or 'enterprise'.
+            enum:
+            - limited
+            - standard
+            - enterprise
+        required:
+        - key
+        - accept
+      ports:
+        type: object
+        description: >
+          The ports on which the proxy will listen for requests.
+        properties:
+          ldap:
+            type: integer
+            description: >
+              The port on which the proxy will listen for LDAP requests.  A
+              value of '0' is used to indicate that the proxy should not
+              listen for LDAP requests.
+            default: 0
+          ldaps:
+            type: integer
+            description: >
+              The port on which the proxy will listen for LDAPS requests.  A
+              value of '0' is used to indicate that the proxy should not
+              listen for LDAPS requests.
+            default: 9636
+    required:
+    - license
+    - admin
+
+  proxy:
+    description: >
+      The configuration entries associated with the proxy.
+    type: object
+    properties:
+      suffixes:
+        type: array
+        description: >
+          The suffixes which will be proxied by this server.
+        items:
+          type: object
+          required:
+          - name
+          - base
+          - servers
+          properties:
+            name:
+              type: string
+              description: >
+                The name of the suffix.
+            base:
+              type: string
+              description: >
+                The base DN of the suffix.
+            num-partitions:
+              type: integer
+              description: >
+                The number of partitions for this suffix.
+              default: 1
+            servers:
+              type: array
+              description: >
+                The servers associated with this suffix.
+              items:
+                type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: string
+                    description: >
+                      The name of the server.
+                  role:
+                    type: string
+                    description: >
+                      The role of the server (e.g., 'primarywrite').
+                  index:
+                    type: integer
+                    description: >
+                      The index of the server.
+      server-groups:
+        type: array
+        description: >
+          The server groups which define backend server connections.
+        items:
+          type: object
+          required:
+          - name
+          - servers
+          properties:
+            name:
+              type: string
+              description: >
+                The name of the server group.
+            servers:
+              type: array
+              description: >
+                The servers in this group.
+              items:
+                type: object
+                required:
+                - name
+                - id
+                - target
+                - user
+                properties:
+                  name:
+                    type: string
+                    description: >
+                      The name of the server.
+                  id:
+                    type: string
+                    description: >
+                      The identifier of the server.
+                  target:
+                    type: string
+                    description: >
+                      The LDAP URL of the backend server (e.g., 'ldaps://server.ibm.com:636').
+                  bind-method:
+                    type: string
+                    description: >
+                      The bind method to use (e.g., 'Simple').
+                    default: "Simple"
+                  user:
+                    type: object
+                    description: >
+                      The credentials to use when connecting to the backend server.
+                    required:
+                    - dn
+                    - password
+                    properties:
+                      dn:
+                        type: string
+                        description: >
+                          The DN to use when binding to the backend server.
+                      password:
+                        type: string
+                        description: >
+                          The password to use when binding to the backend server.
+    required:
+    - suffixes
+    - server-groups
+
+  keyfile:
+    description: >
+      The configuration elements associated with the SSL key file.
+    type: object
+    properties:
+      keys:
+        type: array
+        description: >
+          Any private keys used by the proxy.
+        items:
+          type: object
+          required:
+          - label
+          - key
+          properties:
+            label:
+              type: string
+              description: >
+                The label which will be associated with this key.
+            key:
+              type: string
+              description: >
+                The PEM encoded private key and public certificate.
+
+# Made with Bob
