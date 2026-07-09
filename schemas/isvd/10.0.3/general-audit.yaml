@@ -1,0 +1,114 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  audit:
+    type: object
+    description: >
+      The configuration entries associated with the auditing of operations.
+    properties:
+      enabled:
+        type: boolean
+        description: >
+          Enable or disable the audit service.
+        default: false
+      log-to-file:
+        type: boolean
+        description: >
+          If enabled, the audit records will be sent to the 
+          '/var/isvd/logs/audit.log' file, otherwise the audit records will
+          be sent to the console of the container.
+        default: false
+      json-format:
+        type: boolean
+        description: >
+          If enabled, the audit records will be formatted as JSON, otherwise
+          the audit records will created in the legacy auditing format.
+        default: true
+      failure-only:
+        type: boolean
+        description: >
+          Specifies whether to log all failures.
+        default: true
+      groups-control:
+        type: boolean
+        description: >
+          Specifies whether to log the groups sent on a group control. 
+        default: false
+      group-eval:
+        type: boolean
+        description: >
+          Specifies whether to log the attributes sent on a group 
+          evaluation extended operation.
+        default: false
+      performance:
+        type: boolean
+        description: >
+          Specifies whether to collect and log performance data in audit 
+          logs.
+        default: false
+      pta-bind-info:
+        type: boolean
+        description: >
+          Specifies whether to log pass-through authentication information 
+          related to bind operations.
+        default: true
+      operation:
+        type: object
+        description: >
+          The operations which can be audited.
+        properties:
+          add:
+            type: boolean
+            description: >
+              Specifies whether to log the Add operation.
+            default: false
+          bind:
+            type: boolean
+            description: >
+              Specifies whether to log the Bind operation.
+            default: true
+          compare:
+            type: boolean
+            description: >
+              Specifies whether to log the Compare operation.
+            default: false
+          delete:
+            type: boolean
+            description: >
+              Specifies whether to log the Delete operation.
+            default: false
+          extended-op:
+            type: boolean
+            description: >
+              Specifies whether to log the Extended operation.
+            default: false
+          extended-op-event:
+            type: boolean
+            description: >
+              Specifies whether to log the Extended operation event.
+            default: false
+          modify:
+            type: boolean
+            description: >
+              Specifies whether to log the Modify operation.
+            default: false
+          modify-dn:
+            type: boolean
+            description: >
+              Specifies whether to log the ModifyRDN operation.
+            default: false
+          search:
+            type: boolean
+            description: >
+              Specifies whether to log the Search operation.
+            default: false
+          unbind:
+            type: boolean
+            description: >
+              Specifies whether to log the Unbind operation.
+            default: true
+    examples:
+    - { "general": { "audit": { "enabled": true, "log-to-file": false, "json-format": true, "failure-only": true, "groups-control": true, "performance": true, "pta-bind-info": true, "operation": { "add": true, "group-eval": true, "bind": true, "compare": true, "delete": true, "extended-op": true, "extended-op-event": true, "modify": true, "modify-dn": true, "search": true, "unbind": true } } } }
+    title: Audit
+

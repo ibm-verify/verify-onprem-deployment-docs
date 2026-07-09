@@ -1,0 +1,78 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  general:
+    description: >
+      The general configuration elements of the container.
+    type: object
+    properties:
+      admin:
+        type: object
+        description: >
+          The credential information of the server.  This object is only used
+          when the seed container is performing a migration of data and is
+          ignored if the seed container is copying replica data.
+        properties:
+          dn:
+            type: string
+            description: >
+              The distinguished name of the user for the created LDAP instance.
+            default: "cn=root"
+          pwd:
+            type: string
+            description: >
+              The password of the user for the created LDAP instance.  This
+              field is only required when using the seed container to migrate
+              data.
+      key-stash:
+        type: string
+        description: >
+          The contents of the key stash file (.ksf) which is used to protect
+          data.  This file should be provided if the seed container is being
+          used to migrate data and cryptographic synchronisation
+          is required.  The key stash can either be obtained from a software
+          based directory server installation, or a new one can be generated
+          by starting this image with the 'keystash' argument.  For example:
+          'docker run --rm icr.io/isvd/verify-directory-seed:latest keystash'.
+          Please note that this will send a base-64 encoded version of the
+          key stash to the console of the container.
+      license:
+        type: object
+        properties:
+          key:
+            type: string
+            description: >
+              The license key, required to run the container.
+          accept:
+            type: string
+            description: >
+              Which license agreement has been accepted, either 'limited' or
+              'standard' or 'enterprise'.  To display a license agreement start the
+              container with the 'license' command, for example: 
+              'docker run --rm icr.io/isvd/verify-directory-seed:latest license standard'
+            enum:
+            - limited
+            - standard
+            - enterprise
+        required:
+        - key
+        - accept
+      json-logging:
+        type: boolean
+        description: >
+          Whether the logging and auditing messages should be formatted in 
+          JSON or not.  Note that debug messages will not be formatted in
+          JSON.
+        default: false
+      pwd-policy:
+        "$ref": "general-pwd-policy.yaml#/definitions/pwd-policy"
+      schemas:
+        "$ref": "general-schemas.yaml#/definitions/schemas"
+    title: General
+    examples:
+    - { "general": { "license": { "key": "VGVzdDotMTowOjCCAaQG...", "accept": "standard" }, "key-stash": "B64:GAAAAHM1Q2lqMC...", "admin": { "pwd": "passw0rd1" } } }
+    required:
+    - license
+
+

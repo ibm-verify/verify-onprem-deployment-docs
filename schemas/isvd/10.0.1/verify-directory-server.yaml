@@ -1,0 +1,188 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$ref": "#/definitions/VerifyDirectoryServer"
+title: "IBM Verify Directory: Server"
+description: >
+  This page documents the YAML schema which can be used to configure
+  a Verify Directory Server container for version 10.0.1. <br><br>
+  The value of each YAML key entry can be provided in the YAML file as either
+  plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an 
+  environment variable (prefix: '$'), loaded from a local file (prefix: '@'),
+  retrieved from a Kubernetes secret (format: secret:{name}/{field}), or 
+  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}). 
+  <br><br>
+  In addition to this, each of the YAML keys can also be provided as an
+  environment variable, using a normalized value of the key name as the
+  environment variable name.  For example, to set the server port the following
+  environment variable can be set: 'server.port'.
+
+examples:
+  - { "general": { "license": { "key": "insert-license-key-here", "accept": "standard" }, "admin": { "pwd": "passw0rd1" } }, "server": { "suffixes": [ { "dn": "dc=ibm.com" } ] } }
+  - { "general": { "ports": { "ldap": 0, "ldaps": 9636 }, "id": "test-server", "license": { "key": "insert-license-key-here", "accept": "standard" }, "admin": { "dn": "cn=root", "pwd": "passw0rd1" }, "audit": { "enabled": true } }, "server": { "suffixes": [ { "dn": "dc=ibm.com" } ], "change-log": { "enabled": true, "max-days": 56, "max-entries": 99999, "max-hours": 12 } }, "keyfile": { "keys": [ { "label": "server-key", "key": "@/var/isvd/config/server.key" } ] } }
+
+definitions:
+  VerifyDirectoryServer:
+    type: object
+    properties:
+      general:
+        "$ref": "#/definitions/general"
+      server:
+        "$ref": "#/definitions/server"
+      keyfile:
+        "$ref": "#/definitions/keyfile"
+    required:
+    - general
+    - server
+    title: VerifyDirectoryServer
+
+  general:
+    description: >
+      The general configuration elements of the container.
+    type: object
+    properties:
+      admin:
+        type: object
+        description: >
+          The credential information of the server.
+        properties:
+          dn:
+            type: string
+            description: >
+              The distinguished name of the user which can be used to authenticate to the server.
+            default: "cn=root"
+          pwd:
+            type: string
+            description: >
+              The password of the user which can be used to authenticate to the server.
+        required:
+        - pwd
+      audit:
+        type: object
+        description: >
+          The configuration entries associated with the auditing of operations.
+        properties:
+          enabled:
+            type: boolean
+            default: false
+            description: >
+              Enable or disable the audit service.
+      id:
+        type: string
+        description: >
+          The identifier of the server.  If no identifier is specified the
+          hostname of the container will be used as the identifier.
+      license:
+        type: object
+        description: >
+          License configuration for the server.
+        properties:
+          key:
+            type: string
+            description: >
+              The license key, required to run the container.
+          accept:
+            type: string
+            description: >
+              Which license agreement has been accepted, either 'limited' or
+              'standard' or 'enterprise'.
+            enum:
+            - limited
+            - standard
+            - enterprise
+        required:
+        - key
+        - accept
+      ports:
+        type: object
+        description: >
+          The ports on which the server will listen for requests.
+        properties:
+          ldap:
+            type: integer
+            description: >
+              The port on which the server will listen for LDAP requests.  A
+              value of '0' is used to indicate that the server should not
+              listen for LDAP requests.
+            default: 0
+          ldaps:
+            type: integer
+            description: >
+              The port on which the server will listen for LDAPS requests.  A
+              value of '0' is used to indicate that the server should not
+              listen for LDAPS requests.
+            default: 9636
+    required:
+    - license
+    - admin
+
+  server:
+    description: >
+      The configuration entries associated with the IVD server.
+    type: object
+    properties:
+      suffixes:
+        type: array
+        description: >
+          The suffixes which will be hosted by this server.
+        items:
+          type: object
+          required:
+          - dn
+          properties:
+            dn:
+              type: string
+              description: >
+                The DN of the suffix.
+      change-log:
+        type: object
+        description: >
+          The configuration entries associated with the change log capability of the server.
+        properties:
+          enabled:
+            type: boolean
+            default: false
+            description: >
+              A boolean which is used to indicate whether the change log functionality is enabled or not.
+          max-entries:
+            type: number
+            default: 1000000
+            description: >
+              Specifies the maximum number of entries to keep in the change log.
+          max-days:
+            type: number
+            default: 0
+            description: >
+              Specifies, in days, the maximum amount of time to keep entries in the change log.
+          max-hours:
+            type: number
+            default: 0
+            description: >
+              Specifies, in hours, the maximum amount of time to keep entries in the change log.
+    required:
+    - suffixes
+
+  keyfile:
+    description: >
+      The configuration elements associated with the SSL key file.
+    type: object
+    properties:
+      keys:
+        type: array
+        description: >
+          Any private keys used by the server.
+        items:
+          type: object
+          required:
+          - label
+          - key
+          properties:
+            label:
+              type: string
+              description: >
+                The label which will be associated with this key.
+            key:
+              type: string
+              description: >
+                The PEM encoded private key and public certificate.
+
+# Made with Bob

@@ -1,0 +1,35 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$ref": "#/definitions/Welcome10"
+title: "IBM Verify Directory: Seed"
+description: >
+  This page documents the YAML schema which can be used to configure
+  a Verify Directory Seed container. <br><br>
+  The value of each YAML key entry can be provided in the YAML file as either
+  plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an 
+  environment variable (prefix: '$'), loaded from a local file (prefix: '@'),
+  retrieved from a Kubernetes secret (format: secret:{name}/{field}), or 
+  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}). 
+  <br><br>
+  In addition to this, each of the YAML keys can also be provided as an
+  environment variable, using a normalized value of the key name as the
+  environment variable name.  For example, to skip the creation of indexes
+  during a migration operation the following environment variable can be
+  set: 'seed.migrate.skip-index'.
+
+examples:
+  - { "general": { "license": { "key": "VGVzdDotMTowOjCCAaQG...", "accept": "standard" } }, "seed": { "migrate": { "suffixes": [ "dc=com" ] } } }
+    
+definitions:
+  Welcome10:
+    type: object
+    properties:
+      debug:
+        "$ref": "debug.yaml#/definitions/debug"
+      general:
+        "$ref": "general-seed.yaml#/definitions/general"
+      seed:
+        "$ref": "seed.yaml#/definitions/seed"
+    required:
+    - general
+    title: Welcome10
