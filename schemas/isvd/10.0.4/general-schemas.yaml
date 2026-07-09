@@ -1,0 +1,22 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  schemas:
+    type: array
+    description: >
+      Any additional schema files (.ot or .at) which will be added to the
+      server.  The schema files specified here can also be used to replace
+      the IBM Verify Directory standard schema files.  Please note
+      however that if you supply a schema file in the YAML this schema should
+      not be subsequently modified using an LDAP modify operation, otherwise
+      the updates will be lost when the container next starts.
+    items:
+      type: string
+      description: >
+        The name of a schema file (.ot or .at).  The file must exist within the
+        container file system.
+    examples:
+    - { "general": { "schemas": [ "/volume/data/custom.at", "/volume/data/custom.oc", "/volume/data/V3.ibm.at" ] } }
+    title: Schemas
+
