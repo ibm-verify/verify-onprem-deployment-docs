@@ -1,0 +1,265 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$ref": "#/definitions/VerifyDirectoryVirtualDir"
+title: "IBM Verify Directory: Virtual Directory"
+description: >
+  This page documents the YAML schema which can be used to configure
+  a Verify Directory Virtual Directory container for version 10.0.1. <br><br>
+  The value of each YAML key entry can be provided in the YAML file as either
+  plain text, base-64 encoded text (prefix: 'B64:'), retrieved from an 
+  environment variable (prefix: '$'), loaded from a local file (prefix: '@'),
+  retrieved from a Kubernetes secret (format: secret:{name}/{field}), or 
+  retrieved from a Kubernetes ConfigMap (format: configmap:{name}/{field}). 
+  <br><br>
+  In addition to this, each of the YAML keys can also be provided as an
+  environment variable, using a normalized value of the key name as the
+  environment variable name.
+
+examples:
+  - { "general": { "license": { "key": "insert-standard-license-key-here", "accept": "standard" }, "admin": { "pwd": "passw0rd1", "users": [ { "dn": "o=sample", "pwd": "passw0rd1", "role": "Administrator" } ] } }, "virtual-dir": { "clusters": [ { "suffix": "o=sample", "endpoint-suffix": "o=sample", "servers": [ { "target": "ldap://directory.ibm.com:9389", "role": "Any", "user": { "dn": "cn=root", "password": "passw0rd1" } } ], "attr-mapping": [ { "attr": "cn", "endpoint-attr": "cn", "class": "Normal" } ] } ] } }
+  - { "general": { "id": "test-virtualdir", "license": { "key": "insert-standard-license-key-here", "accept": "standard" }, "ports": { "ldaps": 9636 }, "admin": { "pwd": "passw0rd1", "users": [ { "dn": "o=sample", "pwd": "passw0rd1", "role": "Administrator" } ] }, "ssl": { "cert-label": "my-server" }, "audit": { "enabled": true } }, "virtual-dir": { "view": { "suffix": "o=view", "attr": "cn" }, "clusters": [ { "suffix": "o=sample", "endpoint-suffix": "o=sample", "servers": [ { "target": "ldaps://directory.ibm.com:9636", "role": "Any", "user": { "dn": "cn=root", "password": "passw0rd1" } } ], "attr-mapping": [ { "attr": "cn", "endpoint-attr": "cn", "class": "Normal" }, { "attr": "sn", "endpoint-attr": "sn", "class": "Normal" }, { "attr": "ou", "endpoint-attr": "ou", "class": "Normal" }, { "attr": "description", "endpoint-attr": "description", "class": "Normal" }, { "attr": "member", "endpoint-attr": "member", "class": "Normal" } ] } ] }, "keyfile": { "keys": [ { "label": "my-server", "key": "@/var/isvd/config/liberty-server.pem" } ], "trusted-certificates": [ "@/var/isvd/config/ca.crt" ] } }
+
+definitions:
+  VerifyDirectoryVirtualDir:
+    type: object
+    properties:
+      general:
+        "$ref": "#/definitions/general"
+      virtual-dir:
+        "$ref": "#/definitions/virtual-dir"
+      keyfile:
+        "$ref": "#/definitions/keyfile"
+    required:
+    - general
+    - virtual-dir
+    title: VerifyDirectoryVirtualDir
+
+  general:
+    description: >
+      The general configuration elements of the container.
+    type: object
+    properties:
+      admin:
+        type: object
+        description: >
+          The credential information of the virtual directory.
+        properties:
+          pwd:
+            type: string
+            description: >
+              The password of the admin user.
+          users:
+            type: array
+            description: >
+              Additional administrative users for this virtual directory.
+            items:
+              type: object
+              required:
+              - dn
+              - pwd
+              - role
+              properties:
+                dn:
+                  type: string
+                  description: >
+                    The DN of the user.
+                pwd:
+                  type: string
+                  description: >
+                    The password of the user.
+                role:
+                  type: string
+                  description: >
+                    The role assigned to the user (e.g., 'Administrator').
+        required:
+        - pwd
+      audit:
+        type: object
+        description: >
+          The configuration entries associated with the auditing of operations.
+        properties:
+          enabled:
+            type: boolean
+            default: false
+            description: >
+              Enable or disable the audit service.
+      id:
+        type: string
+        description: >
+          The identifier of the virtual directory.  If no identifier is specified the
+          hostname of the container will be used as the identifier.
+      license:
+        type: object
+        description: >
+          License configuration for the virtual directory.
+        properties:
+          key:
+            type: string
+            description: >
+              The license key, required to run the container. Note: Virtual Directory requires a standard or enterprise license.
+          accept:
+            type: string
+            description: >
+              Which license agreement has been accepted, either 'standard' or 'enterprise'.
+            enum:
+            - standard
+            - enterprise
+        required:
+        - key
+        - accept
+      ports:
+        type: object
+        description: >
+          The ports on which the virtual directory will listen for requests.
+        properties:
+          ldaps:
+            type: integer
+            description: >
+              The port on which the virtual directory will listen for LDAPS requests.
+            default: 9636
+      ssl:
+        type: object
+        description: >
+          SSL configuration details for the virtual directory.
+        properties:
+          cert-label:
+            type: string
+            description: >
+              The label that identifies the servers Personal Certificate in 
+              the key database file.
+    required:
+    - license
+    - admin
+
+  virtual-dir:
+    description: >
+      The configuration entries associated with the virtual directory.
+    type: object
+    properties:
+      view:
+        type: object
+        description: >
+          Configuration for the virtual directory view.
+        properties:
+          suffix:
+            type: string
+            description: >
+              The suffix for the view (e.g., 'o=view').
+          attr:
+            type: string
+            description: >
+              The attribute to use for the view (e.g., 'cn').
+      clusters:
+        type: array
+        description: >
+          The backend clusters that the virtual directory will proxy to.
+        items:
+          type: object
+          required:
+          - suffix
+          - endpoint-suffix
+          - servers
+          - attr-mapping
+          properties:
+            suffix:
+              type: string
+              description: >
+                The suffix for this cluster (e.g., 'o=sample').
+            endpoint-suffix:
+              type: string
+              description: >
+                The endpoint suffix for this cluster (e.g., 'o=sample').
+            servers:
+              type: array
+              description: >
+                The backend servers in this cluster.
+              items:
+                type: object
+                required:
+                - target
+                - role
+                - user
+                properties:
+                  target:
+                    type: string
+                    description: >
+                      The LDAP URL of the backend server (e.g., 'ldap://directory.ibm.com:9389' or 'ldaps://directory.ibm.com:9636').
+                  role:
+                    type: string
+                    description: >
+                      The role of the server (e.g., 'Any').
+                  user:
+                    type: object
+                    description: >
+                      The credentials to use when connecting to the backend server.
+                    required:
+                    - dn
+                    - password
+                    properties:
+                      dn:
+                        type: string
+                        description: >
+                          The DN to use when binding to the backend server.
+                      password:
+                        type: string
+                        description: >
+                          The password to use when binding to the backend server.
+            attr-mapping:
+              type: array
+              description: >
+                The attribute mappings between the virtual directory and the backend server.
+              items:
+                type: object
+                required:
+                - attr
+                - endpoint-attr
+                - class
+                properties:
+                  attr:
+                    type: string
+                    description: >
+                      The attribute name in the virtual directory.
+                  endpoint-attr:
+                    type: string
+                    description: >
+                      The attribute name in the backend server.
+                  class:
+                    type: string
+                    description: >
+                      The class of the attribute mapping (e.g., 'Normal').
+    required:
+    - clusters
+
+  keyfile:
+    description: >
+      The configuration elements associated with the SSL key file.
+    type: object
+    properties:
+      keys:
+        type: array
+        description: >
+          Any private keys used by the virtual directory.
+        items:
+          type: object
+          required:
+          - label
+          - key
+          properties:
+            label:
+              type: string
+              description: >
+                The label which will be associated with this key.
+            key:
+              type: string
+              description: >
+                The PEM encoded private key and public certificate.
+      trusted-certificates:
+        type: array
+        description: >
+          Any certificates which should be trusted by the virtual directory, in PEM format.
+        items:
+          type: string
+          description: >
+            A certificate which is to be trusted by the virtual directory, in PEM format.
+
+# Made with Bob
