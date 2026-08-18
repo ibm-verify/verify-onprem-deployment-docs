@@ -1,0 +1,84 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  suffixes:
+    type: array
+    description: >
+      An array of objects which are used to define the various suffixes which are proxied by this server.  The 'cn=ibmpolicies' suffix is mandatory and if it is not present it will be automatically created using the definition of the first suffix as a template.
+    items:
+      type: object
+      properties:
+        auto-fail-back:
+          type: boolean
+          description: >
+            The flag that indicates if auto failback is enabled.
+          default: true
+        base:
+          type: string
+          description: >
+            The suffix base.
+        failback-based-on-queue:
+          type: boolean
+          description: >
+            Determines if autofailback is done based on the replication queue threshold.
+          default: true
+        failback-queue-threshold:
+          type: number
+          description: >
+            The maximum replication queue size allowed between current write server and server to failback for autofailback.
+          default: 5
+        high-consistency:
+          type: boolean
+          description: >
+           Enable or disable High Consistency on a per suffix basis. 
+        name:
+          type: string
+          description: >
+            The name which will be given to the suffix.
+        num-partitions:
+          type: number
+          description: >
+            Specifies the number of servers a given container is split between.
+          default: 1
+        servers:
+          type: array
+          description: >
+            The servers which belong to this group.
+          items:
+            type: object
+            properties:
+              index:
+                type: number
+                description: >
+                  The unique index a given server is assigned in a suffix container.  The value here must be <= the corresponding num-partitions value.  The first value begins at 1.
+                default: 1
+              name:
+                type: string
+                description: >
+                  The name of the server.  This name should match a defined proxied server name.
+              role:
+                type: string
+                description: >
+                  The role that a backend server plays within the distributed directory.
+                default: primarywrite
+                enum:
+                - primarywrite
+                - any
+              tier:
+                type: number
+                description: >
+                  Used for storing the priority of a backend server for a given split. Priority ranges from 1-5, 1 being the maximum priority.
+                default: 1
+                minimum: 1
+                maximum: 5
+            required:
+            - name
+      required:
+      - name
+      - base
+      - servers
+    examples:
+    - { "proxy": { "suffixes": [ { "name": "split_a", "num-partitions": 1, "base": "o=sample.com", "servers": [ { "name": "server_a", "role": "primarywrite", "index": 1 } ] } ] } }
+    title: Suffixes
+

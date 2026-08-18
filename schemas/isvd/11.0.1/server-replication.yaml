@@ -1,0 +1,104 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  replication:
+    type: object
+    description: >
+      The configuration entries associated with the replication supplier
+      characteristics.
+    properties:
+      enable-conflict-resolution-for-groups:
+        type: boolean
+        description: >
+          Specifies whether replication conflict resolution will be performed 
+          for group entries or not.
+        default: false
+      restricted-access:
+        type: boolean
+        description: >
+          Used to control access to the replication topology entry. If it is 
+          set to true, then only the root admin, local admin group members and 
+          the master DN have access to the replication topology entry, 
+          otherwise, any user with proper ACL settings may have access to the 
+          replication topology entry.
+        default: false
+      log-members:
+        type: boolean
+        description: >
+          If true, member information will be logged in the lost and found 
+          log for group entries involved in a replication conflict. 
+        default: true
+      max-pending-changes-displayed:
+        type: number
+        description: >
+          The maximum number of pending replication updates or failed updates 
+          to be displayed for any given replication agreement on a supplier 
+          server.
+        default: 200
+      context-cache-size:
+        type: number
+        description: >
+          The maximum number of updates to retain in the replication context 
+          cache. 
+        default: 100000
+      max-errors:
+        type: number
+        description: >
+          The limit for allowed errors per replication agreement.  A value
+          of 0 means unlimited errors. 
+        default: 0 
+      admin:
+        type: object
+        description: >
+          The credential information used when replicating.
+        properties:
+          dn:
+            type: string
+            description: >
+              The DN of the master server.
+            default: "cn=replcred"
+          pwd:
+            type: string
+            description: >
+              The password of the master server.
+          no-conflict-resolution:
+            type: boolean
+            description: >
+              Specifies whether or not the directory server will handle 
+              replication conflict resolution. If it is set to true, then the 
+              server does not try to compare timestamps for replicated entries 
+              in an attempt to resolve conflicts between the entries. However, 
+              conflict resolution does not apply to entry cn=schema which is 
+              always replaced by a replicated cn=schema.
+            default: true
+          users:
+            type: array
+            description: >
+              Additional pre-suffix replication users for this server.
+            items:
+              type: object
+              properties:
+                dn:
+                  description: >
+                    The DN of the user.
+                  type: string
+                pwd:
+                  description: >
+                    The password of the user.  This password must conform
+                    to the configured password policy.
+                  type: string
+                suffix:
+                  description: >
+                    A DN identifying the top of a replicated subtree.
+              required:
+              - dn
+              - pwd
+              - suffix
+        required:
+        - pwd
+
+    examples:
+    - { "server": { "replication": { "enable-conflict-resolution-for-groups": false, "restricted-access": true, "log-members": true, "max-pending-changes-displayed": 200, "context-cache-size": 100000, "max-errors": 0, "admin": { "dn": "cn=replcred", "pwd": "passw0rd", "no-conflict-resolution": true, "users": [ { "dn": "cn=replcred1", "pwd": "passw0rd", "suffix": "o=sample" } ] } } } }
+
+    title: Replication

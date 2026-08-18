@@ -1,0 +1,79 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  webadmin:
+    type: object
+    description: >
+      The configuration entries associated with the Web Administration Tool container.
+    properties:
+      servers:
+        "$ref": "webadmin-servers.yaml#/definitions/servers"
+      searches:
+        type: object
+        description: >
+          Search configuration details for the application.
+        properties:
+          max-attrs:
+            type: integer
+            description: >
+              The maximum number of attributes to be returned for
+              an entry.  A value of 0 indicates that an unlimited number
+              of attributes will be returned.
+            default: 0
+          max-attr-values:
+            type: integer
+            description: >
+              The maximum number of values to be returned for an attribute.  
+              A value of 0 indicates that an unlimited number of values will 
+              be returned.
+            default: 0
+      session-lifetime:
+        type: integer
+        description: >
+          The lifetime of an authenticated session, in minutes.
+        default: 60
+      expected-host:
+        type: string
+        description: >
+          This entry is used to indicate the HTTP 'host' header which is 
+          expected for all requests.  The server will return an error if a 
+          HTTP request is received containing a different HTTP 'host' header.
+          If this configuration entry is blank the server will accept all HTTP
+          'host' headers.
+      security-protocol:
+        type: string
+        description: >
+          The SSL or TLS protocol version to be used when contacting an LDAP 
+          server.  Please note that the value is case sensitive.
+        enum:
+        - SSL_TLS
+        - SSLV3
+        - TLS10
+        - TLS11
+        - TLS12
+        - TLS13
+        default: TLS12
+      components:
+        type: array
+        description: >
+          The components which have been enabled in the application.  Please 
+          note that the value is case sensitive.
+        items:
+          type: string
+          enum:
+          - User properties
+          - Server administration
+          - Proxy administration
+          - Schema management
+          - Directory management
+          - Replication management
+          - Realms and templates
+          - Users and groups
+        default: all components
+    required:
+    - servers
+    examples:
+    - { "webadmin": { "servers": [ { "label": "test-ldap", "host": "test-ldap.ibm.com", "port": 9389, "secure": false, "admin-port": 3538 } ], "session-lifetime": 60 } }
+    title: WebAdmin
+
