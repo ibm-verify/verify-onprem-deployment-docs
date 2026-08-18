@@ -1,0 +1,24 @@
+$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  view:
+    type: object
+    description: >
+      The virtual view is a feature of Virtual Directory that provides a common searchable namespace across multiple backend directories. 
+    properties:
+      suffix:
+        type: string
+        description: >
+          The suffix to be used for the virtual view.
+      attr:
+        type: string
+        description: >
+          The unique attribute that will be used as the search filter for identity correlation.
+    required:
+    - suffix
+    - attr
+    examples:
+    - { "virtual-dir": { "view": { "suffix": "o=virtualview", "attr": "uid" } } }
+    title: View
+

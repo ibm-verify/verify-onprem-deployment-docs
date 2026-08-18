@@ -1,0 +1,94 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  pass-through-authentication:
+    type: array
+    description: >
+      The configuration entries associated with the pass-through authentication
+      capability of the server.  The pass-through mechanism authenticates a 
+      user on the authenticating server, even if the user entry or password is 
+      on a different server.  Please note that this capability is only 
+      available with a standard or enterprise license.
+    items:
+      type: object
+      properties:
+        url:
+          type: string
+          description: >
+            Specifies the LDAP URL of a pass-through authentication server.  This must be in the form 'ldap://' or 'ldaps://' (to indicate SSL use ldaps) with the port number on which the pass-through directory is configured.
+        subtree:
+          type: array
+          description: >
+            The subtrees in the directory server instance that is configured for pass-through authentication and validation of the authentication request.
+          items:
+            type: string
+        result-timeout:
+          type: number
+          description: >
+            The maximum number of milliseconds that the pass-through authentication interface waits for a response from the pass-through server. 
+          default: 1000
+        migrate-pwd:
+          type: boolean
+          description: >
+            Whether to store the user password in the local directory entry, if the authentication is successful. 
+          default: false
+        connection-pool-size:
+          type: number
+          description: >
+            Sets the number of connections for each pass-through server.
+          default: 4
+          minimum: 2
+          maximum: 15
+        server-type:
+          type: string
+          description: >
+            Specifies the type of pass-through authentication server.
+          enum:
+          - ActiveDirectory
+          - SecurityDirectoryServer
+          default: SecurityDirectoryServer
+        attribute-mapping:
+          type: object
+          properties:
+            search-base:
+              type: string
+              description: >
+                The search base in the pass-through server where you want to search for the entry.
+            mapping:
+              type: string
+              description: >
+                The mapping of an attribute in IBM Verify Directory to an attribute in the pass-through server. An example of attribute mapping is 'cn $ uid', which indicates that the cn attribute from IBM Verify Directory is mapped to the uid attribute in the pass-through server.
+            bind-dn:
+              type: string
+              description: >
+                The bind DN that will be used to bind to the pass-through directory when searching for the mapped entry DN.
+            bind-pwd:
+              type: string
+              description: >
+                The bind password that will be used to bind to the pass-through directory when searching for the mapped entry DN.
+          required:
+          - search-base
+          - mapping
+          - bind-dn
+          - bind-pwd
+        linking-attribute:
+          type: object
+          properties:
+            name:
+              type: string
+              description: >
+                The name of the mapping attribute in the pass-through server. For example: 'empNo'.
+            value:
+              type: string
+              description: >
+                The value that must be used with the linking attribute to search the pass-through server.
+          required:
+          - name
+          - value
+      required:
+      - url
+      - subtree
+    examples:
+    - { "server": { "pass-through-authentication": [ { "url": "ldaps://ldap.ibm.com",  "subtree": [ "o=sample" ] } ] } }
+    title: Pass-Through Authentication

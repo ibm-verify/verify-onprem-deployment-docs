@@ -1,0 +1,45 @@
+"$schema": http://json-schema.org/draft-07/schema#
+type: object
+
+definitions:
+  proxy:
+    type: object
+    description: >
+      The configuration entries associated with the proxy server, used to define what data is proxied.
+    properties:
+      allow-distributed-group-evaluation:
+        type: boolean
+        description: >
+          Enable or disable the evaluation of all groups by the proxy server 
+          in a distributed directory environment.
+        default: true
+      allow-dynamic-group-evaluation:
+        type: boolean
+        description: >
+          Determines whether the proxy allows dynamic group evaluation.
+        default: true
+      allow-non-admin:
+        type: boolean
+        description: >
+          Whether or not the server should allow non-Administrator bind for 
+          paged results requests on a search request.  If the value is set 
+          to true, the server will process any client request, including those 
+          submitted by a user binding anonymously.  If the value is set to 
+          false, the server will process only those client requests submitted 
+          by a user with Administrator authority.  If a client requests paged 
+          results with a criticality of true or false for a search operation, 
+          does not have Administrator authority, and the value is set to false,
+          the server will return to the client with a return code  of
+          insufficientAccessRights - no searching or paging will be performed.
+        default: true
+      server-groups:
+        "$ref": "proxy-server-groups.yaml#/definitions/server-groups"
+      suffixes:
+        "$ref": "proxy-suffixes.yaml#/definitions/suffixes"
+    required:
+    - server-groups
+    - suffixes
+    examples:
+    - { "proxy": { "allow-non-admin": true, "allow-dynamic-group-evaluation": false, "allow-distributed-group-evaluation": false, "server-groups": [ { "name": "group_a", "servers": [ { "name": "server_a", "id": "server_a", "target": "ldap://10.10.10.200:389", "bind-method": "Simple", "user": { "dn": "cn=root", "password": "passw0rd" } } ] } ], "suffixes": [ { "name": "split_a", "num-partitions": 1, "base": "dc=ibm.com", "servers": [ { "name": "server_a", "role": "primarywrite", "index": 1 } ] } ] } }
+    title: Proxy
+
