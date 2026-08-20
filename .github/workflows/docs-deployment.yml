@@ -6,6 +6,10 @@
 
 name: Documentation Deployment
 
+concurrency:
+  group: docs-deployment-pages
+  cancel-in-progress: false
+
 on:
   push:
     tags:
