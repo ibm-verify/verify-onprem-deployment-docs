@@ -404,6 +404,41 @@
         .expand-collapse-btn:hover {
             background-color: #525252;
         }
+        
+        .anchor-link {
+            opacity: 0;
+            margin-left: 0.5rem;
+            color: #8d8d8d;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            transition: opacity 0.15s;
+            vertical-align: middle;
+        }
+        
+        .section-header:hover .anchor-link {
+            opacity: 1;
+        }
+        
+        .property-description h3:hover .anchor-link,
+        .property-description h4:hover .anchor-link,
+        .property-description h5:hover .anchor-link {
+            opacity: 1;
+        }
+        
+        .property-description h3,
+        .property-description h4,
+        .property-description h5 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--cds-text-01);
+        }
+        
+        .anchor-link:hover {
+            color: #0f62fe;
+        }
     </style>
 </head>
 <body>
@@ -441,6 +476,7 @@
                 <h3>
                     version
                     <span class="property-type">string</span>
+                    <a class="anchor-link" href="#version" onclick="event.stopPropagation(); navigateToSection('version')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -485,6 +521,7 @@
                 <h3>
                     secrets
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#secrets" onclick="event.stopPropagation(); navigateToSection('secrets')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -499,9 +536,9 @@
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies an obfuscation key which is used to decrypt the <code>OBF:&amp;lt;data&amp;gt;</code> type entries.</p>
+            <div class="property-description"><p>Specifies an obfuscation key which is used to decrypt the <code>OBF:&lt;data&gt;</code> type entries.</p>
 <p>The obfuscation key is a passphrase which can be used to perform key derivation to generate the key used to decrypt obfuscated entries.</p>
-<h3>Example Steps:</h3>
+<h3 id="secrets-example-steps">Example Steps:<a class="anchor-link" href="#secrets-example-steps" title="Link to this section">#</a></h3>
 <p>An obfuscated entry can be generated with the following command which requires OpenSSL 1.1.1 or newer:</p>
 <pre><code class="language-shell">echo -n &quot;&lt;configuration entry&gt;&quot; | openssl enc -aes256
     -pbkdf2 -pass pass:&quot;&lt;obfuscation key&gt;&quot; -md sha512
@@ -531,10 +568,10 @@ identity:
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies an encryption key which is used to decrypt the <code>ENC:&amp;lt;data&amp;gt;</code> type entries.</p>
+            <div class="property-description"><p>Specifies an encryption key which is used to decrypt the <code>ENC:&lt;data&gt;</code> type entries.</p>
 <p>The encryption key is an RSA private key which can be used to decrypt entries which were encrypted using the corresponding RSA public key.</p>
 <p>This entry must be a PEM representation of an RSA private key, beginning with <code>-----BEGIN RSA PRIVATE KEY-----</code> and ending with <code>-----END RSA PRIVATE KEY-----</code>.</p>
-<h3>Example Steps:</h3>
+<h3 id="secrets-example-steps">Example Steps:<a class="anchor-link" href="#secrets-example-steps" title="Link to this section">#</a></h3>
 <p>An RSA key pair can be created with the following commands:</p>
 <p>Generate the RSA private key:</p>
 <pre><code class="language-shell">openssl genrsa -out private.pem 2048
@@ -573,6 +610,7 @@ identity:
                 <h3>
                     server
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#server" onclick="event.stopPropagation(); navigateToSection('server')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -587,6 +625,7 @@ identity:
                     protocols
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_protocols" onclick="event.stopPropagation(); navigateToSection('server_protocols')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -658,12 +697,13 @@ identity:
                     client_ip_rules
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_client_ip_rules" onclick="event.stopPropagation(); navigateToSection('server_client_ip_rules')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>The rules which define whether a client is allowed to connect to this server. The rule is of the format:</p>
-<p><code>[+|-]&amp;lt;client-ip&amp;gt;</code></p>
+<p><code>[+|-]&lt;client-ip&gt;</code></p>
 <p>where:</p>
 <table>
 <thead>
@@ -711,6 +751,7 @@ identity:
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_ssl" onclick="event.stopPropagation(); navigateToSection('server_ssl')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -725,6 +766,7 @@ identity:
                     front_end
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_ssl_front_end" onclick="event.stopPropagation(); navigateToSection('server_ssl_front_end')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -779,6 +821,7 @@ identity:
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_front_end_certificate" onclick="event.stopPropagation(); navigateToSection('server_ssl_front_end_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -843,6 +886,7 @@ If a certificate is not provided, the gateway will generate a self-signed certif
                     sni
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_front_end_sni" onclick="event.stopPropagation(); navigateToSection('server_ssl_front_end_sni')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -859,6 +903,7 @@ If a certificate is not provided, the gateway will generate a self-signed certif
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_front_end_sni_certificate" onclick="event.stopPropagation(); navigateToSection('server_ssl_front_end_sni_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -917,12 +962,13 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
                     supported_groups
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_front_end_supported_groups" onclick="event.stopPropagation(); navigateToSection('server_ssl_front_end_supported_groups')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Control which named groups to allow in the TLSv1.2 and  TLSv1.3 key agreement. It is only used when <code>key_agreement</code> is set to <code>custom</code>.</p>
-<h3>Supported Groups</h3>
+<h3 id="server_ssl_front_end_supported_groups-supported-groups">Supported Groups<a class="anchor-link" href="#server_ssl_front_end_supported_groups-supported-groups" title="Link to this section">#</a></h3>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
 <li><code>ECDHE_X25519</code></li>
@@ -935,7 +981,7 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
 <li><code>MLKEM768</code></li>
 <li><code>MLKEM1024</code></li>
 </ul>
-<h3>Supported Groups for TLSv1.3</h3>
+<h3 id="server_ssl_front_end_supported_groups-supported-groups-for-tlsv13">Supported Groups for TLSv1.3<a class="anchor-link" href="#server_ssl_front_end_supported_groups-supported-groups-for-tlsv13" title="Link to this section">#</a></h3>
 <p>The following groups can only be configured when TLSv1.3 is enabled:</p>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
@@ -970,6 +1016,7 @@ For a list of valid ciphers, see:
                     applications
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_ssl_applications" onclick="event.stopPropagation(); navigateToSection('server_ssl_applications')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1056,12 +1103,13 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
                     supported_groups
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_applications_supported_groups" onclick="event.stopPropagation(); navigateToSection('server_ssl_applications_supported_groups')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Control which named groups to allow in the TLSv1.2 and  TLSv1.3 key agreement. It is only used when <code>key_agreement</code> is set to <code>custom</code>.</p>
-<h3>Supported Groups</h3>
+<h3 id="server_ssl_applications_supported_groups-supported-groups">Supported Groups<a class="anchor-link" href="#server_ssl_applications_supported_groups-supported-groups" title="Link to this section">#</a></h3>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
 <li><code>ECDHE_X25519</code></li>
@@ -1074,7 +1122,7 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
 <li><code>MLKEM768</code></li>
 <li><code>MLKEM1024</code></li>
 </ul>
-<h3>Supported Groups for TLSv1.3</h3>
+<h3 id="server_ssl_applications_supported_groups-supported-groups-for-tlsv13">Supported Groups for TLSv1.3<a class="anchor-link" href="#server_ssl_applications_supported_groups-supported-groups-for-tlsv13" title="Link to this section">#</a></h3>
 <p>The following groups can only be configured when TLSv1.3 is enabled:</p>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
@@ -1109,13 +1157,14 @@ For a list of valid ciphers, see:
                     ciphers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_ciphers" onclick="event.stopPropagation(); navigateToSection('server_ssl_ciphers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Specifies the ciphers and cipher suites which will be permitted for all secure communications.</p>
 <p>The following tables show the list of available ciphers.</p>
-<h3>Supported Cipher Names</h3>
+<h3 id="server_ssl_ciphers-supported-cipher-names">Supported Cipher Names<a class="anchor-link" href="#server_ssl_ciphers-supported-cipher-names" title="Link to this section">#</a></h3>
 <ul>
 <li><code>TLS_DHE_PSK_WITH_AES_128_CCM_8</code></li>
 <li><code>TLS_DHE_PSK_WITH_AES_128_CCM</code></li>
@@ -1173,7 +1222,7 @@ For a list of valid ciphers, see:
 <li><code>TLS_ECDHE_ECDSA_WITH_NULL_SHA</code></li>
 <li><code>TLS_ECDHE_RSA_WITH_NULL_SHA</code></li>
 </ul>
-<h3>Supported TLSv1.3 Cipher Names</h3>
+<h3 id="server_ssl_ciphers-supported-tlsv13-cipher-names">Supported TLSv1.3 Cipher Names<a class="anchor-link" href="#server_ssl_ciphers-supported-tlsv13-cipher-names" title="Link to this section">#</a></h3>
 <ul>
 <li><code>TLS_AES_128_GCM_SHA256</code></li>
 <li><code>TLS_AES_256_GCM_SHA384</code></li>
@@ -1216,6 +1265,7 @@ For a list of valid ciphers, see:
                     trust_certificates
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_ssl_trust_certificates" onclick="event.stopPropagation(); navigateToSection('server_ssl_trust_certificates')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1258,6 +1308,7 @@ For a list of valid ciphers, see:
                     failover
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_failover" onclick="event.stopPropagation(); navigateToSection('server_failover')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1317,6 +1368,7 @@ For a list of valid ciphers, see:
                     session
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_session" onclick="event.stopPropagation(); navigateToSection('server_session')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1428,6 +1480,7 @@ For a list of valid ciphers, see:
                     redis
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_session_redis" onclick="event.stopPropagation(); navigateToSection('server_session_redis')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1469,6 +1522,7 @@ Redis collections are defined using the services/redis[] entry.</p></div>
                     concurrent_sessions
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_session_redis_concurrent_sessions" onclick="event.stopPropagation(); navigateToSection('server_session_redis_concurrent_sessions')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1538,6 +1592,7 @@ Redis collections are defined using the services/redis[] entry.</p></div>
                     reauth
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_session_reauth" onclick="event.stopPropagation(); navigateToSection('server_session_reauth')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1652,6 +1707,7 @@ By default, the login_time_window is set to zero, which means that every request
                     websocket
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_websocket" onclick="event.stopPropagation(); navigateToSection('server_websocket')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1686,6 +1742,7 @@ By default, the login_time_window is set to zero, which means that every request
                     worker_threads
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_websocket_worker_threads" onclick="event.stopPropagation(); navigateToSection('server_websocket_worker_threads')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1738,6 +1795,7 @@ By default, the login_time_window is set to zero, which means that every request
                     timeouts
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_websocket_timeouts" onclick="event.stopPropagation(); navigateToSection('server_websocket_timeouts')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1752,6 +1810,7 @@ By default, the login_time_window is set to zero, which means that every request
                     applications
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_websocket_timeouts_applications" onclick="event.stopPropagation(); navigateToSection('server_websocket_timeouts_applications')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1804,6 +1863,7 @@ By default, the login_time_window is set to zero, which means that every request
                     front_end
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_websocket_timeouts_front_end" onclick="event.stopPropagation(); navigateToSection('server_websocket_timeouts_front_end')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1864,12 +1924,13 @@ By default, the login_time_window is set to zero, which means that every request
                     local_pages
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_local_pages" onclick="event.stopPropagation(); navigateToSection('server_local_pages')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Defines static assets which are served from the default <code>/</code> path of the reverse proxy. This entry must be either a zip file or a path which is relative to the <code>/var/iag/config</code> directory of the container. The provided contents will completely replace the default set of pages served from the <code>/</code> path of the IAG.</p>
-<h4>Defaults</h4>
+<h4 id="server_local_pages-defaults">Defaults<a class="anchor-link" href="#server_local_pages-defaults" title="Link to this section">#</a></h4>
 <p>If no value is specified here, the default set of pages will be used. The default set of pages, <code>local_pages.zip</code>, can be downloaded from GitHub (https://github.com/IBM-Security/ibm-application-gateway-resources/tree/master/pages) and used as a starting point for creating custom pages.</p></div>
 <div style="margin-top: 1.5rem;">
 <div class="property-enum-title">Examples:</div>
@@ -1921,6 +1982,7 @@ By default, the login_time_window is set to zero, which means that every request
                     management_pages
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_management_pages" onclick="event.stopPropagation(); navigateToSection('server_management_pages')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1930,9 +1992,9 @@ This entry must be either a zip file or a path which is relative to the <code>/v
 The provided contents will completely replace the default set of management pages served by the IAG.</p>
 <p>The pages which are provided should conform to the directory structure and file name syntax explained below.
 The directory structure is:</p>
-<p><code>&amp;lt;language_code&amp;gt;/&amp;lt;page_name&amp;gt;.&amp;lt;response_code&amp;gt;.&amp;lt;mime_type&amp;gt;</code></p>
-<h4>language_code</h4>
-<p><code>&amp;lt;language_code&amp;gt;</code> is a directory containing all the pages which will be presented to clients which prefer that language.
+<p><code>&lt;language_code&gt;/&lt;page_name&gt;.&lt;response_code&gt;.&lt;mime_type&gt;</code></p>
+<h4 id="server_management_pages-language_code">language_code<a class="anchor-link" href="#server_management_pages-language_code" title="Link to this section">#</a></h4>
+<p><code>&lt;language_code&gt;</code> is a directory containing all the pages which will be presented to clients which prefer that language.
 If you do not wish to ever return pages to clients in a specific language, the corresponding language_code directory can be omitted.
 The reverse proxy will use the container language (set via the <code>LANG</code> environment variable) if a page is requested in a language which is not provided.</p>
 <p>For example, to only ever return management pages in English and French, include only the <code>C</code> and <code>fr</code> directories in the zip file and run the container with <code>LANG=C</code>.
@@ -2003,8 +2065,8 @@ When a language other than English or French is requested, the page will fall ba
 </tr>
 </tbody>
 </table>
-<h4>page_name</h4>
-<p><code>&amp;lt;page_name&amp;gt;</code> corresponds to the specific event which the page is returned for.
+<h4 id="server_management_pages-page_name">page_name<a class="anchor-link" href="#server_management_pages-page_name" title="Link to this section">#</a></h4>
+<p><code>&lt;page_name&gt;</code> corresponds to the specific event which the page is returned for.
 The list of valid page_names are:</p>
 <table>
 <thead>
@@ -2036,14 +2098,14 @@ The list of valid page_names are:</p>
 </tr>
 </tbody>
 </table>
-<h4>response_code</h4>
-<p><code>&amp;lt;response_code&amp;gt;</code> can be used to control the HTTP status code which the reverse proxy presents when it serves the page.
+<h4 id="server_management_pages-response_code">response_code<a class="anchor-link" href="#server_management_pages-response_code" title="Link to this section">#</a></h4>
+<p><code>&lt;response_code&gt;</code> can be used to control the HTTP status code which the reverse proxy presents when it serves the page.
 This part of filename is optional and 200 will be used if no response_code is indicated.</p>
-<h4>mime_type</h4>
-<p><code>&amp;lt;mime_type&amp;gt;</code> corresponds to the mime sub-type which this page will be returned for.
+<h4 id="server_management_pages-mime_type">mime_type<a class="anchor-link" href="#server_management_pages-mime_type" title="Link to this section">#</a></h4>
+<p><code>&lt;mime_type&gt;</code> corresponds to the mime sub-type which this page will be returned for.
 For example, if a client request contains the <code>accept</code> header <code>text/html</code>, <code>html</code> is the mime sub-type and should be used for the file extension.
 If an <code>accept</code> header is not present, the reverse proxy will also consider the <code>content-type</code> header.</p>
-<h4>Examples</h4>
+<h4 id="server_management_pages-examples">Examples<a class="anchor-link" href="#server_management_pages-examples" title="Link to this section">#</a></h4>
 <p>For example, to customise:</p>
 <ul>
 <li>the <code>ratelimit</code> management response</li>
@@ -2053,7 +2115,7 @@ If an <code>accept</code> header is not present, the reverse proxy will also con
 </ul>
 <p>Create the following file in the zip file of management response pages:</p>
 <p><code>C/ratelimit.500.html</code></p>
-<h4>Defaults</h4>
+<h4 id="server_management_pages-defaults">Defaults<a class="anchor-link" href="#server_management_pages-defaults" title="Link to this section">#</a></h4>
 <p>If no value is specified here, the default set of pages will be used.
 The default set of pages, <code>management_pages.zip</code>, can be downloaded from GitHub (https://github.com/IBM-Security/ibm-application-gateway-resources/tree/master/pages) and used as a starting point for creating custom management pages.</p></div>
 <div style="margin-top: 1.5rem;">
@@ -2106,6 +2168,7 @@ The default set of pages, <code>management_pages.zip</code>, can be downloaded f
                     error_pages
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_error_pages" onclick="event.stopPropagation(); navigateToSection('server_error_pages')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2115,9 +2178,9 @@ This entry must be either a zip file or a path which is relative to the <code>/v
 The provided contents will completely replace the default set of error pages served by the IAG.</p>
 <p>The pages which are provided should conform to the directory structure and file name syntax explained below.
 The directory structure is:</p>
-<p><code>&amp;lt;language_code&amp;gt;/&amp;lt;error_code&amp;gt;.&amp;lt;response_code&amp;gt;.&amp;lt;mime_type&amp;gt;</code></p>
-<h4>language_code</h4>
-<p><code>&amp;lt;language_code&amp;gt;</code> is a directory containing all the pages which will be presented to clients which prefer that language.
+<p><code>&lt;language_code&gt;/&lt;error_code&gt;.&lt;response_code&gt;.&lt;mime_type&gt;</code></p>
+<h4 id="server_error_pages-language_code">language_code<a class="anchor-link" href="#server_error_pages-language_code" title="Link to this section">#</a></h4>
+<p><code>&lt;language_code&gt;</code> is a directory containing all the pages which will be presented to clients which prefer that language.
 If you do not wish to ever return pages to clients in a specific language, the corresponding language_code directory can be omitted.
 The reverse proxy will use the container language (set via the <code>LANG</code> environment variable) if a page is requested in a language which is not provided.</p>
 <p>For example, to only ever return error pages in English and French, include only the <code>C</code> and <code>fr</code> directories in the zip file and run the container with <code>LANG=C</code>.
@@ -2188,11 +2251,11 @@ When a language other than English or French is requested, the page will fall ba
 </tr>
 </tbody>
 </table>
-<h4>error_code</h4>
-<p><code>&amp;lt;error_code&amp;gt;</code> corresponds to a specific error code in hexadecimal format.
+<h4 id="server_error_pages-error_code">error_code<a class="anchor-link" href="#server_error_pages-error_code" title="Link to this section">#</a></h4>
+<p><code>&lt;error_code&gt;</code> corresponds to a specific error code in hexadecimal format.
 The special error code of <code>default</code> can also be used to configure a default page which is used for any error codes which do not have a specific page.</p>
-<h4>response_code</h4>
-<p><code>&amp;lt;response_code&amp;gt;</code> can be used to control the HTTP status code which the reverse proxy presents when it serves the page.
+<h4 id="server_error_pages-response_code">response_code<a class="anchor-link" href="#server_error_pages-response_code" title="Link to this section">#</a></h4>
+<p><code>&lt;response_code&gt;</code> can be used to control the HTTP status code which the reverse proxy presents when it serves the page.
 This part of filename is optional and the default value will be used if no response_code is indicated.</p>
 <table>
 <thead>
@@ -2245,11 +2308,11 @@ This part of filename is optional and the default value will be used if no respo
 </tr>
 </tbody>
 </table>
-<h4>mime_type</h4>
-<p><code>&amp;lt;mime_type&amp;gt;</code> corresponds to the mime sub-type which this page will be returned for.
+<h4 id="server_error_pages-mime_type">mime_type<a class="anchor-link" href="#server_error_pages-mime_type" title="Link to this section">#</a></h4>
+<p><code>&lt;mime_type&gt;</code> corresponds to the mime sub-type which this page will be returned for.
 For example, if a client request contains the <code>accept</code> header <code>text/html</code>, <code>html</code> is the mime sub-type and should be used for the file extension.
 If an <code>accept</code> header is not present, the reverse proxy will also consider the <code>content-type</code> header.</p>
-<h4>Examples</h4>
+<h4 id="server_error_pages-examples">Examples<a class="anchor-link" href="#server_error_pages-examples" title="Link to this section">#</a></h4>
 <p>For example, to customise:</p>
 <ul>
 <li>the <code>forbidden</code> error response (error code <code>38cf0427</code>)</li>
@@ -2259,7 +2322,7 @@ If an <code>accept</code> header is not present, the reverse proxy will also con
 </ul>
 <p>Create the following file in the zip file of error response pages:</p>
 <p><code>ko/38cf0427.500.json</code></p>
-<h4>Defaults</h4>
+<h4 id="server_error_pages-defaults">Defaults<a class="anchor-link" href="#server_error_pages-defaults" title="Link to this section">#</a></h4>
 <p>If no value is specified here, the default set of pages will be used.
 The default set of pages, <code>error_pages.zip</code>, can be downloaded from GitHub (https://github.com/IBM-Security/ibm-application-gateway-resources/tree/master/pages) and used as a starting point for creating custom error pages.</p></div>
 <div style="margin-top: 1.5rem;">
@@ -2312,13 +2375,14 @@ The default set of pages, <code>error_pages.zip</code>, can be downloaded from G
                     public_assets
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_public_assets" onclick="event.stopPropagation(); navigateToSection('server_public_assets')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>This entry overloads the default assets used in server generated error and management response pages.
 These assets are served by the application gateway on the configured path segment (default <code>pkmspublic</code>) and are suitable for embedding in server generated responses such as error or management pages.</p>
-<h4>Defaults</h4>
+<h4 id="server_public_assets-defaults">Defaults<a class="anchor-link" href="#server_public_assets-defaults" title="Link to this section">#</a></h4>
 <p>If no value is specified here, the default set of assets will be used.
 The default set of assets, used by the default error and management pages, <code>public_assets.zip</code>, can be downloaded from GitHub (https://github.com/IBM-Security/ibm-application-gateway-resources/tree/master/pages).</p></div>
 <div style="margin-top: 1.5rem;">
@@ -2382,6 +2446,7 @@ The default set of assets, used by the default error and management pages, <code
                     enabled_languages
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_enabled_languages" onclick="event.stopPropagation(); navigateToSection('server_enabled_languages')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2389,7 +2454,7 @@ The default set of assets, used by the default error and management pages, <code
             <div class="property-description"><p>The language(s) which will be permitted when the application gateway generates error and management response pages. The accept-language HTTP header from the request is used to determine the language used when generating responses.</p>
 <p>The first language in the list will be treated as the default language. The default language will be used if none of the languages contained in the accept-language HTTP header have been enabled.</p>
 <p>If this entry is not defined, all languages will be enabled with English (C) set as the default.</p>
-<h4>language codes</h4>
+<h4 id="server_enabled_languages-language-codes">language codes<a class="anchor-link" href="#server_enabled_languages-language-codes" title="Link to this section">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2487,6 +2552,7 @@ The default set of assets, used by the default error and management pages, <code
                     credential_service_cache
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_credential_service_cache" onclick="event.stopPropagation(); navigateToSection('server_credential_service_cache')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2591,6 +2657,7 @@ The default set of assets, used by the default error and management pages, <code
                     local_applications
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_local_applications" onclick="event.stopPropagation(); navigateToSection('server_local_applications')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2605,6 +2672,7 @@ The default set of assets, used by the default error and management pages, <code
                     cred_viewer
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_local_applications_cred_viewer" onclick="event.stopPropagation(); navigateToSection('server_local_applications_cred_viewer')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2612,10 +2680,10 @@ The default set of assets, used by the default error and management pages, <code
             <div class="property-description"><p>Specifies the configuration information related to the embedded credential viewer application.
 The credential viewer application can be used to display information about the credential associated with the current user session.</p>
 <p>Note: The credential viewer application is not accessible through a virtual host junction. This is because, in the case of a virtual host junction, the back-end server is mounted at the root of the object space. As a result, any attempt to access local applications results in trying to source the application from the back-end server instead of locally.</p>
-<h3>Attributes Format</h3>
+<h3 id="server_local_applications_cred_viewer-attributes-format">Attributes Format<a class="anchor-link" href="#server_local_applications_cred_viewer-attributes-format" title="Link to this section">#</a></h3>
 <p>The rules which define the credential attributes which will be included in the response data.
 The format of the configuration entry is:</p>
-<p><code>[+|-]&amp;lt;attribute-name&amp;gt;</code></p>
+<p><code>[+|-]&lt;attribute-name&gt;</code></p>
 <p>where:</p>
 <table>
 <thead>
@@ -2681,6 +2749,7 @@ If only a single attribute-rule configuration entry is defined, and the entry do
                     attributes
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_local_applications_cred_viewer_attributes" onclick="event.stopPropagation(); navigateToSection('server_local_applications_cred_viewer_attributes')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2708,6 +2777,7 @@ If only a single attribute-rule configuration entry is defined, and the entry do
                     azn_decision
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_local_applications_azn_decision" onclick="event.stopPropagation(); navigateToSection('server_local_applications_azn_decision')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2783,6 +2853,7 @@ If only a single attribute-rule configuration entry is defined, and the entry do
                     jwks
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_local_applications_jwks" onclick="event.stopPropagation(); navigateToSection('server_local_applications_jwks')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2826,6 +2897,7 @@ If only a single attribute-rule configuration entry is defined, and the entry do
                     rate_limiting
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_rate_limiting" onclick="event.stopPropagation(); navigateToSection('server_rate_limiting')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -2895,6 +2967,7 @@ If only a single attribute-rule configuration entry is defined, and the entry do
                     redis
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#server_rate_limiting_redis" onclick="event.stopPropagation(); navigateToSection('server_rate_limiting_redis')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3008,6 +3081,7 @@ By default, the rate limiting response headers are disabled.</p></div>
                     response_headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#server_response_headers" onclick="event.stopPropagation(); navigateToSection('server_response_headers')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3034,6 +3108,7 @@ For each entry, only one of <code>macro</code>, <code>attribute</code> or <code>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
+<div class="property-description"><p>Each entry corresponds to a single HTTP header. </p></div>
 
         <div class="property">
             <div class="property-name">
@@ -3094,6 +3169,7 @@ Valid macro values are:</p>
                 <h3>
                     identity
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#identity" onclick="event.stopPropagation(); navigateToSection('identity')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3108,6 +3184,7 @@ Valid macro values are:</p>
                     auth_challenge_redirect
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_auth_challenge_redirect" onclick="event.stopPropagation(); navigateToSection('identity_auth_challenge_redirect')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3153,6 +3230,7 @@ If an OIDC identity source is configured, this entry will default to the OIDC au
                     parameters
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_auth_challenge_redirect_parameters" onclick="event.stopPropagation(); navigateToSection('identity_auth_challenge_redirect_parameters')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3208,8 +3286,8 @@ When using the <code>macro</code> type source, valid values are:</p>
             <div class="property-description"><p>The name which should be used to name the parameter inserted into the redirect URL. If this value is not specified, the parameter will be named accordingly:</p>
 <ul>
 <li>For <code>macro</code> sources, the name will be used verbatim.</li>
-<li>For <code>header</code> sources, the name will be of the format <code>HTTPHDR_&amp;lt;name&amp;gt;</code></li>
-<li>For <code>credential</code> sources, the name will be of the format <code>CREDATTR_&amp;lt;name&amp;gt;</code></li>
+<li>For <code>header</code> sources, the name will be of the format <code>HTTPHDR_&lt;name&gt;</code></li>
+<li>For <code>credential</code> sources, the name will be of the format <code>CREDATTR_&lt;name&gt;</code></li>
 </ul></div>
         </div>
 </div>
@@ -3229,6 +3307,7 @@ When using the <code>macro</code> type source, valid values are:</p>
                     auth_complete_redirect
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_auth_complete_redirect" onclick="event.stopPropagation(); navigateToSection('identity_auth_complete_redirect')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3273,6 +3352,7 @@ When using the <code>macro</code> type source, valid values are:</p>
                     parameters
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_auth_complete_redirect_parameters" onclick="event.stopPropagation(); navigateToSection('identity_auth_complete_redirect_parameters')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3325,8 +3405,8 @@ When using the <code>macro</code> type source, valid values are:</p>
             <div class="property-description"><p>The name which should be used to name the parameter inserted into the redirect URL. If this value is not specified, the parameter will be named accordingly:</p>
 <ul>
 <li>For <code>macro</code> sources, the name will be used verbatim.</li>
-<li>For <code>header</code> sources, the name will be of the format <code>HTTPHDR_&amp;lt;name&amp;gt;</code></li>
-<li>For <code>credential</code> sources, the name will be of the format <code>CREDATTR_&amp;lt;name&amp;gt;</code></li>
+<li>For <code>header</code> sources, the name will be of the format <code>HTTPHDR_&lt;name&gt;</code></li>
+<li>For <code>credential</code> sources, the name will be of the format <code>CREDATTR_&lt;name&gt;</code></li>
 </ul></div>
         </div>
 </div>
@@ -3346,6 +3426,7 @@ When using the <code>macro</code> type source, valid values are:</p>
                     oidc
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc" onclick="event.stopPropagation(); navigateToSection('identity_oidc')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3354,6 +3435,61 @@ When using the <code>macro</code> type source, valid values are:</p>
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
+<div class="property-description"><p>The configuration entries in this section allow the reverse proxy to act as an OIDC relying party.
+IBM Security Verify, IBM Security Verify Access and IBM Security Access Manager 9.0.7.0+ are supported as OIDC identity providers.</p>
+<h3 id="identity_oidc-"><a class="anchor-link" href="#identity_oidc-" title="Link to this section">#</a></h3>
+<p>Response Type Values
+Name | Description
+---- | -----------
+code | The authorization code flow will be used to retrieve both an access token and identity token.
+id_token | The implicit flow will be used to retrieve the identity token.
+token | The implicit flow will be used to retrieve both an access token and identity token.</p>
+<h3 id="identity_oidc-bearer-token-attrs-format">Bearer Token Attrs Format<a class="anchor-link" href="#identity_oidc-bearer-token-attrs-format" title="Link to this section">#</a></h3>
+<p>A JSON data element from the bearer token response which should be included or excluded in the credential as an extended attribute.
+The format of the configuration entry is:</p>
+<p><code>[+|-]&lt;json-data&gt;</code></p>
+<p>where:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For example the value "-access_token" indicates that the access_token should not be added to the credential.</p>
+<p>When a bearer token is received each JSON data element will be evaluated against each rule in sequence until a match is found.
+The corresponding code (+|-) will then be used to determine whether the JSON data will be added to the credential or not.
+If the JSON data name does not match a configured rule it will by default be added to the credential.</p>
+<h3 id="identity_oidc-id-token-attrs-format">ID Token Attrs Format<a class="anchor-link" href="#identity_oidc-id-token-attrs-format" title="Link to this section">#</a></h3>
+<p>A claim from the ID token response which should be included or excluded in the credential as an extended attribute.
+The format of the configuration entry is:</p>
+<p><code>[+|-]&lt;claim&gt;</code></p>
+<p>where:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For example the value "-email" indicates that the email claim should not be added to the credential.</p>
+<p>When an ID token is received each claim will be evaluated against each rule in sequence until a match is found.
+The corresponding code (+|-) will then be used to determine whether the claim will be added to the credential or not.
+If the claim name does not match a configured rule it will by default be added to the credential.</p></div>
 
         <div class="property">
             <div class="property-name">
@@ -3362,7 +3498,7 @@ When using the <code>macro</code> type source, valid values are:</p>
                 
             </div>
             <div class="property-description"><p>The name of this provider. This field is optional and if not supplied the name "default" will be used.
-The name field is used to determine the kick-off URL for this OIDC provider. The format of the kick-off URL is <code>/pkmsoidc?iss=&amp;lt;name&amp;gt;</code>.
+The name field is used to determine the kick-off URL for this OIDC provider. The format of the kick-off URL is <code>/pkmsoidc?iss=&lt;name&gt;</code>.
 Note that each OIDC provider must have a unique name.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>default</code></div>
         </div>
@@ -3374,8 +3510,8 @@ Note that each OIDC provider must have a unique name.</p></div>
                 
             </div>
             <div class="property-description"><p>The fully qualified discovery endpoint for the OIDC OP.
-For IBM Security Verify, this URL is usually in the format: <code>https://&amp;lt;verify-hostname&amp;gt;/oidc/endpoint/default/.well-known/openid-configuration</code>
-For IBM Security Verify Access, this URL is usually in the format: <code>https://&amp;lt;verify-access-hostname&amp;gt;/&amp;lt;junction&amp;gt;/sps/oauth/oauth20/metadata/&amp;lt;definition_name&amp;gt;</code></p></div>
+For IBM Security Verify, this URL is usually in the format: <code>https://&lt;verify-hostname&gt;/oidc/endpoint/default/.well-known/openid-configuration</code>
+For IBM Security Verify Access, this URL is usually in the format: <code>https://&lt;verify-access-hostname&gt;/&lt;junction&gt;/sps/oauth/oauth20/metadata/&lt;definition_name&gt;</code></p></div>
         </div>
 
         <div class="property">
@@ -3411,6 +3547,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_ssl" onclick="event.stopPropagation(); navigateToSection('identity_oidc_ssl')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3425,6 +3562,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_ssl_certificate" onclick="event.stopPropagation(); navigateToSection('identity_oidc_ssl_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3464,7 +3602,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>This is the host which is used in the redirect URI registered with the OIDC OP. If no redirect URI host is configured the host header from the request will be used. The format of the redirect URI will be: <code>http[s]://&amp;lt;host&amp;gt;/pkmsoidc</code>.</p></div>
+            <div class="property-description"><p>This is the host which is used in the redirect URI registered with the OIDC OP. If no redirect URI host is configured the host header from the request will be used. The format of the redirect URI will be: <code>http[s]://&lt;host&gt;/pkmsoidc</code>.</p></div>
         </div>
 
         <div class="property">
@@ -3508,7 +3646,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach the identity provider. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&amp;lt;address&amp;gt;:&amp;lt;port&amp;gt;</code></p></div>
+            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach the identity provider. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&lt;address&gt;:&lt;port&gt;</code></p></div>
         </div>
 
         <div class="section" id="identity_oidc_scopes">
@@ -3517,6 +3655,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     scopes
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_scopes" onclick="event.stopPropagation(); navigateToSection('identity_oidc_scopes')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3540,6 +3679,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     allowed_query_args
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_allowed_query_args" onclick="event.stopPropagation(); navigateToSection('identity_oidc_allowed_query_args')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3563,6 +3703,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     bearer_token_attrs
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_bearer_token_attrs" onclick="event.stopPropagation(); navigateToSection('identity_oidc_bearer_token_attrs')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3586,6 +3727,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     id_token_attrs
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oidc_id_token_attrs" onclick="event.stopPropagation(); navigateToSection('identity_oidc_id_token_attrs')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3615,6 +3757,7 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
                     oauth
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oauth" onclick="event.stopPropagation(); navigateToSection('identity_oauth')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3622,10 +3765,10 @@ For IBM Security Verify Access, this URL is usually in the format: <code>https:/
             <div class="property-description"><p>The configuration entries in this section allow the reverse proxy to accept an OAuth bearer token and use the configured OAuth introspection endpoints to validate the token and create an authenticated session.
 IBM Security Verify, IBM Security Verify Access and IBM Security Access Manager 9.0.7.0+ provide supported OAuth introspection endpoints.
 Multiple introspection endpoints may be different so that different providers can be enabled for different resource servers.</p>
-<h3>Attributes Format</h3>
+<h3 id="identity_oauth-attributes-format">Attributes Format<a class="anchor-link" href="#identity_oauth-attributes-format" title="Link to this section">#</a></h3>
 <p>A JSON data element from the introspection response token which should be included or excluded in the credential as an extended attribute.
 The format of the configuration entry is:</p>
-<p><code>[+|-]&amp;lt;json-data&amp;gt;</code></p>
+<p><code>[+|-]&lt;json-data&gt;</code></p>
 <p>where:</p>
 <table>
 <thead>
@@ -3715,9 +3858,9 @@ If the JSON data name does not match a configured rule it will by default be add
             </div>
             <div class="property-description"><p>The fully qualified introspection endpoint for the OAuth provider.</p>
 <p>For IBM Security Verify, this URL is usually in the format:<br/>
-<code>https://&amp;lt;verify-hostname&amp;gt;/v1.0/endpoint/default/introspect</code></p>
+<code>https://&lt;verify-hostname&gt;/v1.0/endpoint/default/introspect</code></p>
 <p>For IBM Security Verify Access, this URL is usually in the format:<br/>
-<code>https://&amp;lt;verify-access-hostname&amp;gt;/&amp;lt;junction&amp;gt;/sps/oauth/oauth20/introspect</code></p></div>
+<code>https://&lt;verify-access-hostname&gt;/&lt;junction&gt;/sps/oauth/oauth20/introspect</code></p></div>
         </div>
 
         <div class="property">
@@ -3780,6 +3923,7 @@ If the JSON data name does not match a configured rule it will by default be add
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_oauth_ssl" onclick="event.stopPropagation(); navigateToSection('identity_oauth_ssl')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3794,6 +3938,7 @@ If the JSON data name does not match a configured rule it will by default be add
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oauth_ssl_certificate" onclick="event.stopPropagation(); navigateToSection('identity_oauth_ssl_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3833,7 +3978,7 @@ If the JSON data name does not match a configured rule it will by default be add
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach the OAuth provider. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&amp;lt;address&amp;gt;:&amp;lt;port&amp;gt;</code></p></div>
+            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach the OAuth provider. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&lt;address&gt;:&lt;port&gt;</code></p></div>
         </div>
 
         <div class="section" id="identity_oauth_attributes">
@@ -3842,6 +3987,7 @@ If the JSON data name does not match a configured rule it will by default be add
                     attributes
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oauth_attributes" onclick="event.stopPropagation(); navigateToSection('identity_oauth_attributes')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3875,6 +4021,7 @@ If the JSON data name does not match a configured rule it will by default be add
                     headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_oauth_headers" onclick="event.stopPropagation(); navigateToSection('identity_oauth_headers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3939,14 +4086,15 @@ For the <code>text</code> type, this is the string literal which will be used as
                     eai
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_eai" onclick="event.stopPropagation(); navigateToSection('identity_eai')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>External Authentication Interface, which allows an application to assert client identity information to the IBM Application Gateway container.
 Please note that an access policy which allows unauthenticated access to this resource must be created. The URL string patterns are case-sensitive and may contain wild card patterns.</p>
-<p>The format for a regular path-based application is: <code>&amp;lt;URL pattern&amp;gt;</code>
-The format for a Virtual Host application is: <code>http[s]://virtual-host-name[:port]/&amp;lt;URL pattern&amp;gt;</code>
+<p>The format for a regular path-based application is: <code>&lt;URL pattern&gt;</code>
+The format for a Virtual Host application is: <code>http[s]://virtual-host-name[:port]/&lt;URL pattern&gt;</code>
 For Virtual Host applications to match a trigger they must also have the same protocol (http[s] = TCP/SSL) and have the same <code>virtual-host-name</code> and <code>port</code> as the trigger.</p></div>
 <div style="margin-top: 1.5rem;">
 <div class="property-enum-title">Examples:</div>
@@ -3972,6 +4120,7 @@ For Virtual Host applications to match a trigger they must also have the same pr
                     triggers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_eai_triggers" onclick="event.stopPropagation(); navigateToSection('identity_eai_triggers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -3999,16 +4148,17 @@ For Virtual Host applications to match a trigger they must also have the same pr
                     ci_oidc
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#identity_ci_oidc" onclick="event.stopPropagation(); navigateToSection('identity_ci_oidc')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>The configuration entries in this section allow the reverse proxy to act as an OIDC relying party to IBM Security Verify.</p>
-<h3>Notice of Deprecation</h3>
+<h3 id="identity_ci_oidc-notice-of-deprecation">Notice of Deprecation<a class="anchor-link" href="#identity_ci_oidc-notice-of-deprecation" title="Link to this section">#</a></h3>
 <p>This identity module is no longer preferred and will be removed in a future version. Use the <a href="../../yaml-identity/oidc">OIDC</a> identity module.</p>
 <p>When using the OIDC identity module, <code>discovery_endpoint</code> is given rather than <code>hostname</code>.</p>
 <p>The format for an IBM Security Verify <code>discovery_endpoint</code> is:</p>
-<p><code>https://&amp;lt;hostname&amp;gt;/oidc/endpoint/default/.well-known/openid-configuration</code></p>
+<p><code>https://&lt;hostname&gt;/oidc/endpoint/default/.well-known/openid-configuration</code></p>
 <p>For example, refer to the IBM Security Verify OIDC configuration below:</p>
 <pre><code class="language-yaml">  identity:
     ci_oidc:
@@ -4023,17 +4173,17 @@ For Virtual Host applications to match a trigger they must also have the same pr
       client_id: 11111111-2222-3333-4444-5a5a5a5a5a5a5a
       # ...
 </code></pre>
-<h3></h3>
+<h3 id="identity_ci_oidc-"><a class="anchor-link" href="#identity_ci_oidc-" title="Link to this section">#</a></h3>
 <p>Response Type Values
 Name | Description
 ---- | -----------
 code | The authorization code flow will be used to retrieve both an access token and identity token.
 id_token | The implicit flow will be used to retrieve the identity token.
 token | The implicit flow will be used to retrieve both an access token and identity token.</p>
-<h3>Bearer Token Attrs Format</h3>
+<h3 id="identity_ci_oidc-bearer-token-attrs-format">Bearer Token Attrs Format<a class="anchor-link" href="#identity_ci_oidc-bearer-token-attrs-format" title="Link to this section">#</a></h3>
 <p>A JSON data element from the bearer token response which should be included or excluded in the credential as an extended attribute.
 The format of the configuration entry is:</p>
-<p><code>[+|-]&amp;lt;json-data&amp;gt;</code></p>
+<p><code>[+|-]&lt;json-data&gt;</code></p>
 <p>where:</p>
 <table>
 <thead>
@@ -4053,10 +4203,10 @@ The format of the configuration entry is:</p>
 <p>When a bearer token is received each JSON data element will be evaluated against each rule in sequence until a match is found.
 The corresponding code (+|-) will then be used to determine whether the JSON data will be added to the credential or not.
 If the JSON data name does not match a configured rule it will by default be added to the credential.</p>
-<h3>ID Token Attrs Format</h3>
+<h3 id="identity_ci_oidc-id-token-attrs-format">ID Token Attrs Format<a class="anchor-link" href="#identity_ci_oidc-id-token-attrs-format" title="Link to this section">#</a></h3>
 <p>A claim from the ID token response which should be included or excluded in the credential as an extended attribute.
 The format of the configuration entry is:</p>
-<p><code>[+|-]&amp;lt;claim&amp;gt;</code></p>
+<p><code>[+|-]&lt;claim&gt;</code></p>
 <p>where:</p>
 <table>
 <thead>
@@ -4151,7 +4301,7 @@ If the claim name does not match a configured rule it will by default be added t
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>This is the host which is used in the redirect URI registered with the OIDC OP. If no redirect URI host is configured the host header from the request will be used. The format of the redirect URI will be: <code>http[s]://&amp;lt;host&amp;gt;/pkmsoidc</code>.</p></div>
+            <div class="property-description"><p>This is the host which is used in the redirect URI registered with the OIDC OP. If no redirect URI host is configured the host header from the request will be used. The format of the redirect URI will be: <code>http[s]://&lt;host&gt;/pkmsoidc</code>.</p></div>
         </div>
 
         <div class="property">
@@ -4195,7 +4345,7 @@ If the claim name does not match a configured rule it will by default be added t
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach IBM Security Verify. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&amp;lt;address&amp;gt;:&amp;lt;port&amp;gt;</code></p></div>
+            <div class="property-description"><p>Specifies the proxy, if any, which is used to reach IBM Security Verify. The proxy configuration entry should be in URL format. Eg: <code>http[s]://&lt;address&gt;:&lt;port&gt;</code></p></div>
         </div>
 
         <div class="section" id="identity_ci_oidc_scopes">
@@ -4204,6 +4354,7 @@ If the claim name does not match a configured rule it will by default be added t
                     scopes
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_ci_oidc_scopes" onclick="event.stopPropagation(); navigateToSection('identity_ci_oidc_scopes')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4227,6 +4378,7 @@ If the claim name does not match a configured rule it will by default be added t
                     allowed_query_args
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_ci_oidc_allowed_query_args" onclick="event.stopPropagation(); navigateToSection('identity_ci_oidc_allowed_query_args')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4250,6 +4402,7 @@ If the claim name does not match a configured rule it will by default be added t
                     bearer_token_attrs
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_ci_oidc_bearer_token_attrs" onclick="event.stopPropagation(); navigateToSection('identity_ci_oidc_bearer_token_attrs')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4273,6 +4426,7 @@ If the claim name does not match a configured rule it will by default be added t
                     id_token_attrs
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#identity_ci_oidc_id_token_attrs" onclick="event.stopPropagation(); navigateToSection('identity_ci_oidc_id_token_attrs')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4303,6 +4457,7 @@ If the claim name does not match a configured rule it will by default be added t
                 <h3>
                     resource_servers
                     <span class="property-type">array</span>
+                    <a class="anchor-link" href="#resource_servers" onclick="event.stopPropagation(); navigateToSection('resource_servers')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4311,6 +4466,7 @@ If the claim name does not match a configured rule it will by default be added t
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
+<div class="property-description"><p>The definition for a single resource server which provides content for the gateway.</p></div>
 
         <div class="property">
             <div class="property-name">
@@ -4428,6 +4584,7 @@ It is not valid to have both <code>path</code> and <code>virtual_host</code> ent
                     http2
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_http2" onclick="event.stopPropagation(); navigateToSection('resource_servers_http2')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4489,12 +4646,13 @@ It is not valid to have both <code>path</code> and <code>virtual_host</code> ent
                     identity_headers
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Specifies the configuration information associated with the provision of identity information to the resource server.</p>
-<h3></h3>
+<h3 id="resource_servers_identity_headers-"><a class="anchor-link" href="#resource_servers_identity_headers-" title="Link to this section">#</a></h3>
 <p>Encoding
 Type | Description
 ---- | -----------
@@ -4502,7 +4660,7 @@ utf8_bin | Unencoded UTF-8 data. This setting allows data to be transmitted with
 utf8_uri | URI encoded UTF-8 data. All white space and non-ASCII bytes are encoded %XY, where X and Y are hex values (0-F).
 lcp_bin | Unencoded local code page data. Data loss can potentially occur with this mode. Use with caution.
 lcp_uri | URI encoded local code page data. Any UTF-8 characters that cannot be converted to a local code page are converted to question marks (?).</p>
-<h3>Basic Authentication Modes</h3>
+<h3 id="resource_servers_identity_headers-basic-authentication-modes">Basic Authentication Modes<a class="anchor-link" href="#resource_servers_identity_headers-basic-authentication-modes" title="Link to this section">#</a></h3>
 <table>
 <thead>
 <tr>
@@ -4585,6 +4743,7 @@ lcp_uri | URI encoded local code page data. Any UTF-8 characters that cannot be 
                     kerberos
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_kerberos" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_kerberos')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4618,6 +4777,7 @@ lcp_uri | URI encoded local code page data. Any UTF-8 characters that cannot be 
                     user_identity
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_kerberos_user_identity" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_kerberos_user_identity')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4677,6 +4837,7 @@ lcp_uri | URI encoded local code page data. Any UTF-8 characters that cannot be 
                     basic_auth
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_basic_auth" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_basic_auth')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4772,6 +4933,7 @@ Note that some modes require additional parameters:
                     attributes
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_attributes" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_attributes')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4822,6 +4984,7 @@ Note that some modes require additional parameters:
                     jwt
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_jwt" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_jwt')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4836,6 +4999,7 @@ Note that some modes require additional parameters:
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_jwt_certificate" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_jwt_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4869,6 +5033,7 @@ Note that some modes require additional parameters:
                     claims
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_jwt_claims" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_jwt_claims')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -4950,6 +5115,7 @@ Note that some modes require additional parameters:
                     ltpa
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity_headers_ltpa" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity_headers_ltpa')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5007,6 +5173,7 @@ Note that some modes require additional parameters:
                     cookies
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_cookies" onclick="event.stopPropagation(); navigateToSection('resource_servers_cookies')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5037,13 +5204,14 @@ Note that some modes require additional parameters:
                     junction_cookie
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_cookies_junction_cookie" onclick="event.stopPropagation(); navigateToSection('resource_servers_cookies_junction_cookie')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>The reverse proxy can set a "junction cookie" in returned HTML pages indicating which resource server the page was served from.
 This is useful for resource servers which dynamically generate URLs that may not be aware or capable of generating URLs containing the path which the reverse proxy served them from.</p>
-<h3>Junction Cookie Positions</h3>
+<h3 id="resource_servers_cookies_junction_cookie-junction-cookie-positions">Junction Cookie Positions<a class="anchor-link" href="#resource_servers_cookies_junction_cookie-junction-cookie-positions" title="Link to this section">#</a></h3>
 <table>
 <thead>
 <tr>
@@ -5054,7 +5222,7 @@ This is useful for resource servers which dynamically generate URLs that may not
 <tbody>
 <tr>
 <td><strong>inhead</strong></td>
-<td>The junction cookie is set in a JavaScript block within the <code>&amp;lt;head&amp;gt;</code> <code>&amp;lt;/head&amp;gt;</code> tags of the page. This is required for HTML 4.01 compliance.</td>
+<td>The junction cookie is set in a JavaScript block within the <code>&lt;head&gt;</code> <code>&lt;/head&gt;</code> tags of the page. This is required for HTML 4.01 compliance.</td>
 </tr>
 <tr>
 <td><strong>trailer</strong></td>
@@ -5066,7 +5234,7 @@ This is useful for resource servers which dynamically generate URLs that may not
 </tr>
 </tbody>
 </table>
-<h3>Junction Cookie Versions</h3>
+<h3 id="resource_servers_cookies_junction_cookie-junction-cookie-versions">Junction Cookie Versions<a class="anchor-link" href="#resource_servers_cookies_junction_cookie-junction-cookie-versions" title="Link to this section">#</a></h3>
 <table>
 <thead>
 <tr>
@@ -5094,7 +5262,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>Controls the position in which the <code>&amp;lt;script&amp;gt;</code> block will be inserted. Refer to the  <a href="#junction-cookie-positions">Junction Cookie Positions</a> table  above for an explanation of these values.</p></div>
+            <div class="property-description"><p>Controls the position in which the <code>&lt;script&gt;</code> block will be inserted. Refer to the  <a href="#junction-cookie-positions">Junction Cookie Positions</a> table  above for an explanation of these values.</p></div>
             <div class="property-enum">
                 <div class="property-enum-title">Allowed values:</div>
                 <div class="property-enum-values">
@@ -5137,7 +5305,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                 <span class="property-type">boolean</span>
                 
             </div>
-            <div class="property-description"><p>A boolean flag indicating whether or not to preserve the original cookie name. When set to <code>false</code>, non-domain cookies are renamed <code>AMWEBJCT!&amp;lt;path&amp;gt;</code>.</p></div>
+            <div class="property-description"><p>A boolean flag indicating whether or not to preserve the original cookie name. When set to <code>false</code>, non-domain cookies are renamed <code>AMWEBJCT!&lt;path&gt;</code>.</p></div>
             <div class="property-default"><strong>Default:</strong> <code>False</code></div>
         </div>
             </div>
@@ -5155,6 +5323,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     mutual_auth
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_mutual_auth" onclick="event.stopPropagation(); navigateToSection('resource_servers_mutual_auth')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5187,6 +5356,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     basic_auth
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_mutual_auth_basic_auth" onclick="event.stopPropagation(); navigateToSection('resource_servers_mutual_auth_basic_auth')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5223,6 +5393,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     certificate_auth
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_mutual_auth_certificate_auth" onclick="event.stopPropagation(); navigateToSection('resource_servers_mutual_auth_certificate_auth')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5237,6 +5408,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_mutual_auth_certificate_auth_certificate" onclick="event.stopPropagation(); navigateToSection('resource_servers_mutual_auth_certificate_auth_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5268,6 +5440,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     servers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_servers" onclick="event.stopPropagation(); navigateToSection('resource_servers_servers')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5340,6 +5513,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_servers_ssl" onclick="event.stopPropagation(); navigateToSection('resource_servers_servers_ssl')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5354,6 +5528,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_servers_ssl_certificate" onclick="event.stopPropagation(); navigateToSection('resource_servers_servers_ssl_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5390,6 +5565,7 @@ This is useful for resource servers which dynamically generate URLs that may not
                     url_style
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_servers_url_style" onclick="event.stopPropagation(); navigateToSection('resource_servers_servers_url_style')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5461,6 +5637,7 @@ The UUID only needs to be manually set when multiple instances  of IAG are handl
                     aliases
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_aliases" onclick="event.stopPropagation(); navigateToSection('resource_servers_aliases')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5486,7 +5663,7 @@ Multiple aliases can be specified for a resource server.</p></div>
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
 <div class="property-description"><strong>Type:</strong> <code>string</code></div>
-<div class="property-description"><p>The format of the alias should be: <code>&amp;lt;host&amp;gt;:&amp;lt;port&amp;gt;</code>. Note that the port is required even if the default HTTP or HTTPS ports are used.</p></div>
+<div class="property-description"><p>The format of the alias should be: <code>&lt;host&gt;:&lt;port&gt;</code>. Note that the port is required even if the default HTTP or HTTPS ports are used.</p></div>
 </div>
 </div>
             </div>
@@ -5500,12 +5677,13 @@ Multiple aliases can be specified for a resource server.</p></div>
                     forms_login
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_forms_login" onclick="event.stopPropagation(); navigateToSection('resource_servers_forms_login')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Specifies the configuration information used for performing form-based single sign-on to the protected application.</p>
-<h4>Login Form Field Types</h4>
+<h4 id="resource_servers_forms_login-login-form-field-types">Login Form Field Types<a class="anchor-link" href="#resource_servers_forms_login-login-form-field-types" title="Link to this section">#</a></h4>
 <p>Login form fields can be populated with data from three possible sources, indicated by the <code>source</code> field:</p>
 <table>
 <thead>
@@ -5529,7 +5707,7 @@ Multiple aliases can be specified for a resource server.</p></div>
 </tr>
 </tbody>
 </table>
-<h4>Login Form Field Values</h4>
+<h4 id="resource_servers_forms_login-login-form-field-values">Login Form Field Values<a class="anchor-link" href="#resource_servers_forms_login-login-form-field-values" title="Link to this section">#</a></h4>
 <p>Depending on the type of <code>source</code> used, the usage of the <code>value</code> can differ.</p>
 <table>
 <thead>
@@ -5555,7 +5733,7 @@ Multiple aliases can be specified for a resource server.</p></div>
 </table>
 <p>In the below example:
 - Forms login will be attempted automatically on requests to the URL <code>authenticate/login</code>
-- On the page, the HTML form with <code>action=&quot;login.jsp&quot;</code> will be detected as the login form
+- On the page, the HTML form with <code>action="login.jsp"</code> will be detected as the login form
 - Credentials will be retrieved from the service named <code>testCredentialService</code> service provided in the <code>services/credential</code> YAML.
   When requests are made to this service, the <code>{resource}</code> token will be substituted with <code>jspApp</code>.
 - To complete the login, IAG will send a forms POST to the URL indicated by the HTML form, containing the fields:
@@ -5622,6 +5800,7 @@ Multiple aliases can be specified for a resource server.</p></div>
                     login_resources
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_forms_login_login_resources" onclick="event.stopPropagation(); navigateToSection('resource_servers_forms_login_login_resources')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5648,7 +5827,7 @@ The page will then be intercepted to begin the forms-login sign-on process. The 
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>This entry specifies a pattern that identifies which form contained in the intercepted page is the login form. The matching is performed based on the <code>action</code> attribute of the HTML <code>&amp;lt;form&amp;gt;</code> node.</p></div>
+            <div class="property-description"><p>This entry specifies a pattern that identifies which form contained in the intercepted page is the login form. The matching is performed based on the <code>action</code> attribute of the HTML <code>&lt;form&gt;</code> node.</p></div>
         </div>
 
         <div class="property">
@@ -5684,6 +5863,7 @@ The page will then be intercepted to begin the forms-login sign-on process. The 
                     fields
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_forms_login_login_resources_fields" onclick="event.stopPropagation(); navigateToSection('resource_servers_forms_login_login_resources_fields')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5743,6 +5923,7 @@ See the  <a href="#login-form-field-values">Login Form Field Values</a> table fo
                     response_rules
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_forms_login_login_resources_response_rules" onclick="event.stopPropagation(); navigateToSection('resource_servers_forms_login_login_resources_response_rules')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5778,6 +5959,7 @@ See the  <a href="#login-form-field-values">Login Form Field Values</a> table fo
                     headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_forms_login_login_resources_response_rules_headers" onclick="event.stopPropagation(); navigateToSection('resource_servers_forms_login_login_resources_response_rules_headers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5836,6 +6018,7 @@ Header values are case sensitive.</p></div>
                     health
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health" onclick="event.stopPropagation(); navigateToSection('resource_servers_health')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5877,6 +6060,7 @@ Header values are case sensitive.</p></div>
                     ping
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health_ping" onclick="event.stopPropagation(); navigateToSection('resource_servers_health_ping')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5909,6 +6093,7 @@ Header values are case sensitive.</p></div>
                     policy
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health_ping_policy" onclick="event.stopPropagation(); navigateToSection('resource_servers_health_ping_policy')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -5973,6 +6158,7 @@ Header values are case sensitive.</p></div>
                     recovery
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health_ping_policy_recovery" onclick="event.stopPropagation(); navigateToSection('resource_servers_health_ping_policy_recovery')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6024,6 +6210,7 @@ Header values are case sensitive.</p></div>
                     rule
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health_ping_policy_rule" onclick="event.stopPropagation(); navigateToSection('resource_servers_health_ping_policy_rule')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6051,6 +6238,7 @@ Header values are case sensitive.</p></div>
                     rule
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_health_ping_rule" onclick="event.stopPropagation(); navigateToSection('resource_servers_health_ping_rule')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6082,6 +6270,7 @@ Header values are case sensitive.</p></div>
                     worker_threads
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_worker_threads" onclick="event.stopPropagation(); navigateToSection('resource_servers_worker_threads')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6147,6 +6336,7 @@ Header values are case sensitive.</p></div>
                     persistent_connections
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_persistent_connections" onclick="event.stopPropagation(); navigateToSection('resource_servers_persistent_connections')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6212,6 +6402,7 @@ Header values are case sensitive.</p></div>
                     identity
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#resource_servers_identity" onclick="event.stopPropagation(); navigateToSection('resource_servers_identity')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6251,6 +6442,7 @@ Header values are case sensitive.</p></div>
                     request_headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#resource_servers_request_headers" onclick="event.stopPropagation(); navigateToSection('resource_servers_request_headers')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6279,6 +6471,7 @@ For each entry, only one of <code>request_property</code>, <code>credential_attr
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
+<div class="property-description"><p>Each entry corresponds to a single HTTP header. </p></div>
 
         <div class="property">
             <div class="property-name">
@@ -6364,6 +6557,7 @@ The default is to overwrite any existing value.</p></div>
                 <h3>
                     policies
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#policies" onclick="event.stopPropagation(); navigateToSection('policies')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6378,6 +6572,7 @@ The default is to overwrite any existing value.</p></div>
                     http_transformations
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6392,6 +6587,7 @@ The default is to overwrite any existing value.</p></div>
                     request
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_request" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_request')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6443,6 +6639,7 @@ The default is to overwrite any existing value.</p></div>
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_request_paths" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_request_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6490,6 +6687,7 @@ The default is to overwrite any existing value.</p></div>
                     preazn
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_preazn" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_preazn')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6541,6 +6739,7 @@ The default is to overwrite any existing value.</p></div>
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_preazn_paths" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_preazn_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6588,6 +6787,7 @@ The default is to overwrite any existing value.</p></div>
                     postazn
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_postazn" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_postazn')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6639,6 +6839,7 @@ The default is to overwrite any existing value.</p></div>
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_postazn_paths" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_postazn_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6686,6 +6887,7 @@ The default is to overwrite any existing value.</p></div>
                     postauthn
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_postauthn" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_postauthn')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6736,6 +6938,7 @@ The default is to overwrite any existing value.</p></div>
                     authentication_mechanisms
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_postauthn_authentication_mechanisms" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_postauthn_authentication_mechanisms')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6775,6 +6978,7 @@ The name of the authentication mechanism is located within the AZN_CRED_AUTH_MET
                     response
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_response" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_response')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6835,6 +7039,7 @@ The name of the authentication mechanism is located within the AZN_CRED_AUTH_MET
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_response_paths" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_response_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6882,6 +7087,7 @@ The name of the authentication mechanism is located within the AZN_CRED_AUTH_MET
                     secrets
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_secrets" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_secrets')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -6889,7 +7095,7 @@ The name of the authentication mechanism is located within the AZN_CRED_AUTH_MET
             <div class="property-description"><p>This node contains secrets which can be loaded in Lua HTTP Transformation rules.
 The secret values can be loaded using the <code>Control.getConfig</code> method, passing a nil value for the first parameter and the secret name for the second parameter.
 For example, the following Lua snippet loads the value of a secret named "serviceApiKey":
-<code>value = Control.getConfig(nil, &quot;serviceApiKey&quot;)</code></p></div>
+<code>value = Control.getConfig(nil, "serviceApiKey")</code></p></div>
 <div style="margin-top: 1.5rem;">
 <div class="property-enum-title">Examples:</div>
 
@@ -6940,13 +7146,14 @@ For example, the following Lua snippet loads the value of a secret named "servic
                     utilities
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_http_transformations_utilities" onclick="event.stopPropagation(); navigateToSection('policies_http_transformations_utilities')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>This node contains utility Lua scripts that can be included and reused across multiple HTTP transformation rules. These scripts are not executed directly but can be loaded using the <code>require</code> function within any transformation rule.
 For example, if you define a utility script named "common_utils", you can include it in your transformation rules with:
-<code>local utils = require(&quot;common_utils&quot;)</code></p></div>
+<code>local utils = require("common_utils")</code></p></div>
 <div style="margin-top: 1.5rem;">
 <div class="property-enum-title">Examples:</div>
 
@@ -7002,6 +7209,7 @@ For example, if you define a utility script named "common_utils", you can includ
                     cors
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors" onclick="event.stopPropagation(); navigateToSection('policies_cors')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7073,6 +7281,7 @@ Each defined policy must at a minimum contain:
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors_paths" onclick="event.stopPropagation(); navigateToSection('policies_cors_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7105,6 +7314,7 @@ Each defined policy must at a minimum contain:
                     policy
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_cors_policy" onclick="event.stopPropagation(); navigateToSection('policies_cors_policy')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7119,6 +7329,7 @@ Each defined policy must at a minimum contain:
                     allow_origins
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors_policy_allow_origins" onclick="event.stopPropagation(); navigateToSection('policies_cors_policy_allow_origins')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7152,6 +7363,7 @@ Each defined policy must at a minimum contain:
                     allow_headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors_policy_allow_headers" onclick="event.stopPropagation(); navigateToSection('policies_cors_policy_allow_headers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7192,6 +7404,7 @@ Each defined policy must at a minimum contain:
                     allow_methods
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors_policy_allow_methods" onclick="event.stopPropagation(); navigateToSection('policies_cors_policy_allow_methods')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7225,6 +7438,7 @@ Each defined policy must at a minimum contain:
                     expose_headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_cors_policy_expose_headers" onclick="event.stopPropagation(); navigateToSection('policies_cors_policy_expose_headers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7258,6 +7472,7 @@ Each defined policy must at a minimum contain:
                     rate_limiting
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_rate_limiting" onclick="event.stopPropagation(); navigateToSection('policies_rate_limiting')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7310,6 +7525,7 @@ This entry is an array and can be used to define multiple policies.</p></div>
                     methods
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_rate_limiting_methods" onclick="event.stopPropagation(); navigateToSection('policies_rate_limiting_methods')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7333,6 +7549,7 @@ This entry is an array and can be used to define multiple policies.</p></div>
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_rate_limiting_paths" onclick="event.stopPropagation(); navigateToSection('policies_rate_limiting_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7371,6 +7588,7 @@ This entry is an array and can be used to define multiple policies.</p></div>
                     content_injection
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_content_injection" onclick="event.stopPropagation(); navigateToSection('policies_content_injection')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7419,6 +7637,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_content_injection_paths" onclick="event.stopPropagation(); navigateToSection('policies_content_injection_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7486,6 +7705,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     authorization
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_authorization" onclick="event.stopPropagation(); navigateToSection('policies_authorization')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7586,6 +7806,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     paths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_authorization_paths" onclick="event.stopPropagation(); navigateToSection('policies_authorization_paths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7619,6 +7840,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     methods
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_authorization_methods" onclick="event.stopPropagation(); navigateToSection('policies_authorization_methods')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7669,6 +7891,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     obligation
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_authorization_obligation" onclick="event.stopPropagation(); navigateToSection('policies_authorization_obligation')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7676,7 +7899,7 @@ This entry is an array and can define multiple content injection points.</p></di
             <div class="property-description"><p>If the action for this rule is obligate or reauth, this obligation can be used to indicate that authentication should take place again with specific parameters.</p>
 <p>This parameter is required for policies with the 'obligation' action, and is optional for policies with the 'reauth' action.</p>
 <p>Note that a policy can only contain one obligated action, that is, this entry must contain <code>oidc</code> or <code>redirect_url</code>.</p>
-<h3>Redirect URL Macros</h3>
+<h3 id="policies_authorization_obligation-redirect-url-macros">Redirect URL Macros<a class="anchor-link" href="#policies_authorization_obligation-redirect-url-macros" title="Link to this section">#</a></h3>
 <p>The following macros are available:</p>
 <table>
 <thead>
@@ -7701,6 +7924,7 @@ This entry is an array and can define multiple content injection points.</p></di
                     oidc
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_authorization_obligation_oidc" onclick="event.stopPropagation(); navigateToSection('policies_authorization_obligation_oidc')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7769,6 +7993,7 @@ This URL can contain embedded macros to include contextual information about the
                     waf
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_waf" onclick="event.stopPropagation(); navigateToSection('policies_waf')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7817,6 +8042,7 @@ The Web Application Firewall policy must at a minimum contain:
                     configuration
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_waf_configuration" onclick="event.stopPropagation(); navigateToSection('policies_waf_configuration')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7860,6 +8086,7 @@ The Web Application Firewall policy must at a minimum contain:
                     rules
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_waf_rules" onclick="event.stopPropagation(); navigateToSection('policies_waf_rules')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7903,6 +8130,7 @@ The Web Application Firewall policy must at a minimum contain:
                     request_match
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_waf_request_match" onclick="event.stopPropagation(); navigateToSection('policies_waf_request_match')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -7950,6 +8178,7 @@ Each defined request match must contain at least:
                     phases
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#policies_waf_request_match_phases" onclick="event.stopPropagation(); navigateToSection('policies_waf_request_match_phases')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8028,6 +8257,7 @@ Each defined request match must contain at least:
                     request_headers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#policies_request_headers" onclick="event.stopPropagation(); navigateToSection('policies_request_headers')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8055,6 +8285,7 @@ For each entry, only one of <code>request_property</code>, <code>credential_attr
 <div class="array-items-container">
 <div class="array-items-header">📋 Array Items</div>
 <div class="array-items-content">
+<div class="property-description"><p>Each entry corresponds to a single HTTP header. </p></div>
 
         <div class="property">
             <div class="property-name">
@@ -8139,6 +8370,7 @@ The default is to overwrite any existing value.</p></div>
                 <h3>
                     authorization
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#authorization" onclick="event.stopPropagation(); navigateToSection('authorization')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8163,6 +8395,7 @@ The default is to overwrite any existing value.</p></div>
                     rules
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#authorization_rules" onclick="event.stopPropagation(); navigateToSection('authorization_rules')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8172,7 +8405,7 @@ The default is to overwrite any existing value.</p></div>
   * Defined here in the authorization section and reference by name in a policies:authorization entry.</p>
 <p>This entry defines authorization rules which can be referred to by name in a policies/authorization entry.</p>
 <p>This entry is an array and can be used to specify multiple rules.</p>
-<h3>Rule Format</h3>
+<h3 id="authorization_rules-rule-format">Rule Format<a class="anchor-link" href="#authorization_rules-rule-format" title="Link to this section">#</a></h3>
 <p>Authorization rules are composed of credential attributes and the following operators:</p>
 <table>
 <thead>
@@ -8266,6 +8499,7 @@ The default is to overwrite any existing value.</p></div>
                 <h3>
                     services
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#services" onclick="event.stopPropagation(); navigateToSection('services')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8280,6 +8514,7 @@ The default is to overwrite any existing value.</p></div>
                     credential
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_credential" onclick="event.stopPropagation(); navigateToSection('services_credential')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8358,7 +8593,7 @@ Each credential service must contain:
                 <span class="property-type">string</span>
                 
             </div>
-            <div class="property-description"><p>The proxy server which will be used when connecting to the credential service. The configuration entry should be of the form: <code>&amp;lt;server&amp;gt;:&amp;lt;port&amp;gt;</code></p></div>
+            <div class="property-description"><p>The proxy server which will be used when connecting to the credential service. The configuration entry should be of the form: <code>&lt;server&gt;:&lt;port&gt;</code></p></div>
         </div>
 
         <div class="property">
@@ -8414,6 +8649,7 @@ Each credential service must contain:
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_credential_ssl" onclick="event.stopPropagation(); navigateToSection('services_credential_ssl')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8428,6 +8664,7 @@ Each credential service must contain:
                     certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_credential_ssl_certificate" onclick="event.stopPropagation(); navigateToSection('services_credential_ssl_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8473,6 +8710,7 @@ Each credential service must contain:
                     authentication
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_credential_authentication" onclick="event.stopPropagation(); navigateToSection('services_credential_authentication')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8487,6 +8725,7 @@ Each credential service must contain:
                     sso
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_credential_authentication_sso" onclick="event.stopPropagation(); navigateToSection('services_credential_authentication_sso')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8552,6 +8791,7 @@ The endpoint should conform to the OAuth client credential flow (OAuth 2.0 RFC 6
                     access_token
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_credential_authentication_access_token" onclick="event.stopPropagation(); navigateToSection('services_credential_authentication_access_token')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8580,6 +8820,7 @@ Alternatively, if surrounded by {}, this field can name a credential attribute f
                     ba
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_credential_authentication_ba" onclick="event.stopPropagation(); navigateToSection('services_credential_authentication_ba')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8626,6 +8867,7 @@ Alternatively, if surrounded by {}, this field can name a credential attribute f
                     kerberos
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_kerberos" onclick="event.stopPropagation(); navigateToSection('services_kerberos')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8686,6 +8928,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     realms
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_realms" onclick="event.stopPropagation(); navigateToSection('services_kerberos_realms')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8720,6 +8963,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     properties
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_realms_properties" onclick="event.stopPropagation(); navigateToSection('services_kerberos_realms_properties')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8775,6 +9019,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     libdefaults
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_libdefaults" onclick="event.stopPropagation(); navigateToSection('services_kerberos_libdefaults')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8789,6 +9034,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     properties
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_libdefaults_properties" onclick="event.stopPropagation(); navigateToSection('services_kerberos_libdefaults_properties')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8833,6 +9079,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     capaths
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_capaths" onclick="event.stopPropagation(); navigateToSection('services_kerberos_capaths')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8858,6 +9105,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     realms
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_kerberos_capaths_realms" onclick="event.stopPropagation(); navigateToSection('services_kerberos_capaths_realms')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8908,6 +9156,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     redis
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_redis" onclick="event.stopPropagation(); navigateToSection('services_redis')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -8987,6 +9236,7 @@ This entry is an object and can be used to specify a single kerberos service.</p
                     collections
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections" onclick="event.stopPropagation(); navigateToSection('services_redis_collections')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9107,6 +9357,7 @@ This entry is only applicable to Redis collections being used  for storing sessi
                     cross_domain_support
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_cross_domain_support" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_cross_domain_support')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9152,6 +9403,7 @@ These entries are only applicable to Redis collections being used  for storing s
                     servers
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_servers" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_servers')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9221,6 +9473,7 @@ These entries are only applicable to Redis collections being used  for storing s
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_servers_ssl" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_servers_ssl')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9235,6 +9488,7 @@ These entries are only applicable to Redis collections being used  for storing s
                     trust_certificates
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_servers_ssl_trust_certificates" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_servers_ssl_trust_certificates')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9258,6 +9512,7 @@ These entries are only applicable to Redis collections being used  for storing s
                     client_certificate
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_servers_ssl_client_certificate" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_servers_ssl_client_certificate')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9310,12 +9565,13 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
                     supported_groups
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#services_redis_collections_servers_ssl_supported_groups" onclick="event.stopPropagation(); navigateToSection('services_redis_collections_servers_ssl_supported_groups')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Control which named groups to allow in the TLSv1.2 and  TLSv1.3 key agreement. It is only used when <code>key_agreement</code> is set to <code>custom</code>.</p>
-<h3>Supported Groups</h3>
+<h3 id="services_redis_collections_servers_ssl_supported_groups-supported-groups">Supported Groups<a class="anchor-link" href="#services_redis_collections_servers_ssl_supported_groups-supported-groups" title="Link to this section">#</a></h3>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
 <li><code>ECDHE_X25519</code></li>
@@ -9328,7 +9584,7 @@ If custom is specified, the <code>supported_groups</code> configuration  must sp
 <li><code>MLKEM768</code></li>
 <li><code>MLKEM1024</code></li>
 </ul>
-<h3>Supported Groups for TLSv1.3</h3>
+<h3 id="services_redis_collections_servers_ssl_supported_groups-supported-groups-for-tlsv13">Supported Groups for TLSv1.3<a class="anchor-link" href="#services_redis_collections_servers_ssl_supported_groups-supported-groups-for-tlsv13" title="Link to this section">#</a></h3>
 <p>The following groups can only be configured when TLSv1.3 is enabled:</p>
 <ul>
 <li><code>ECDHE_X25519MLKEM768</code></li>
@@ -9382,6 +9638,7 @@ For a list of valid ciphers, see:
                 <h3>
                     logging
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#logging" onclick="event.stopPropagation(); navigateToSection('logging')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9521,6 +9778,7 @@ For a list of valid ciphers, see:
                     components
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#logging_components" onclick="event.stopPropagation(); navigateToSection('logging_components')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9557,12 +9815,13 @@ For a list of valid ciphers, see:
                     request_log
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#logging_request_log" onclick="event.stopPropagation(); navigateToSection('logging_request_log')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
             <div class="property-description"><p>Defines and enables request logging.</p>
-<h3>Log Format</h3>
+<h3 id="logging_request_log-log-format">Log Format<a class="anchor-link" href="#logging_request_log-log-format" title="Link to this section">#</a></h3>
 <p>The following directives can be added to the format property to customize the log format:</p>
 <table>
 <thead>
@@ -9600,6 +9859,7 @@ For a list of valid ciphers, see:
                     file
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#logging_request_log_file" onclick="event.stopPropagation(); navigateToSection('logging_request_log_file')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9685,6 +9945,7 @@ For a list of valid ciphers, see:
                     tracing
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#logging_tracing" onclick="event.stopPropagation(); navigateToSection('logging_tracing')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9805,6 +10066,7 @@ For a list of valid ciphers, see:
                     transaction
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#logging_transaction" onclick="event.stopPropagation(); navigateToSection('logging_transaction')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9890,6 +10152,7 @@ For a list of valid ciphers, see:
                     statistics
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#logging_statistics" onclick="event.stopPropagation(); navigateToSection('logging_statistics')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9962,6 +10225,7 @@ For a list of valid ciphers, see:
                     components
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#logging_statistics_components" onclick="event.stopPropagation(); navigateToSection('logging_statistics_components')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -9992,6 +10256,7 @@ For a list of valid ciphers, see:
                 <h3>
                     advanced
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#advanced" onclick="event.stopPropagation(); navigateToSection('advanced')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -10006,6 +10271,7 @@ For a list of valid ciphers, see:
                     configuration
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#advanced_configuration" onclick="event.stopPropagation(); navigateToSection('advanced_configuration')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -10078,6 +10344,7 @@ This entry is an array and can be used to specify multiple tuning parameters.</p
                     value
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#advanced_configuration_value" onclick="event.stopPropagation(); navigateToSection('advanced_configuration_value')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -10380,6 +10647,32 @@ This entry is an array and can be used to specify multiple tuning parameters.</p
                 document.getElementById('searchInput').focus();
             }
         });
+        
+        // Navigate to a section: expand it and update the URL without toggling
+        function navigateToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            
+            // Expand all ancestor sections
+            let current = section;
+            while (current) {
+                const header = current.querySelector(':scope > .section-header');
+                const content = current.querySelector(':scope > .section-content');
+                if (header && content) {
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                }
+                current = current.parentElement ? current.parentElement.closest('.section') : null;
+            }
+            
+            // Update the URL
+            history.pushState(null, '', '#' + sectionId);
+            
+            // Scroll into view
+            setTimeout(() => {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
         
         // Handle URL fragments for deep linking
         function handleUrlFragment() {

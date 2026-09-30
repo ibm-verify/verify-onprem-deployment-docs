@@ -404,6 +404,41 @@
         .expand-collapse-btn:hover {
             background-color: #525252;
         }
+        
+        .anchor-link {
+            opacity: 0;
+            margin-left: 0.5rem;
+            color: #8d8d8d;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            transition: opacity 0.15s;
+            vertical-align: middle;
+        }
+        
+        .section-header:hover .anchor-link {
+            opacity: 1;
+        }
+        
+        .property-description h3:hover .anchor-link,
+        .property-description h4:hover .anchor-link,
+        .property-description h5:hover .anchor-link {
+            opacity: 1;
+        }
+        
+        .property-description h3,
+        .property-description h4,
+        .property-description h5 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--cds-text-01);
+        }
+        
+        .anchor-link:hover {
+            color: #0f62fe;
+        }
     </style>
 </head>
 <body>
@@ -441,6 +476,7 @@
                 <h3>
                     debug
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#debug" onclick="event.stopPropagation(); navigateToSection('debug')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -469,6 +505,7 @@
                 <h3>
                     general
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#general" onclick="event.stopPropagation(); navigateToSection('general')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -483,6 +520,7 @@
                     license
                     <span class="property-type">object</span>
                     <span class="property-required">required</span>
+                    <a class="anchor-link" href="#general_license" onclick="event.stopPropagation(); navigateToSection('general_license')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -526,6 +564,7 @@
                     ports
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#general_ports" onclick="event.stopPropagation(); navigateToSection('general_ports')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -564,6 +603,7 @@
                     ssl
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#general_ssl" onclick="event.stopPropagation(); navigateToSection('general_ssl')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -587,6 +627,7 @@
                     protocols
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#general_ssl_protocols" onclick="event.stopPropagation(); navigateToSection('general_ssl_protocols')" title="Link to this section">#</a>
                 </h6>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -653,6 +694,7 @@
                 <h3>
                     keyfile
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#keyfile" onclick="event.stopPropagation(); navigateToSection('keyfile')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -667,6 +709,7 @@
                     keys
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#keyfile_keys" onclick="event.stopPropagation(); navigateToSection('keyfile_keys')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -710,6 +753,7 @@
                     trusted-certificates
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#keyfile_trusted_certificates" onclick="event.stopPropagation(); navigateToSection('keyfile_trusted_certificates')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -751,6 +795,7 @@
                 <h3>
                     webadmin
                     <span class="property-type">object</span>
+                    <a class="anchor-link" href="#webadmin" onclick="event.stopPropagation(); navigateToSection('webadmin')" title="Link to this section">#</a>
                 </h3>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -764,6 +809,7 @@
                 <h4>
                     servers
                     <span class="property-type">array</span>
+                    <a class="anchor-link" href="#webadmin_servers" onclick="event.stopPropagation(); navigateToSection('webadmin_servers')" title="Link to this section">#</a>
                 </h4>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -847,6 +893,7 @@
                     searches
                     <span class="property-type">object</span>
                     
+                    <a class="anchor-link" href="#webadmin_searches" onclick="event.stopPropagation(); navigateToSection('webadmin_searches')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -925,6 +972,7 @@
                     components
                     <span class="property-type">array</span>
                     
+                    <a class="anchor-link" href="#webadmin_components" onclick="event.stopPropagation(); navigateToSection('webadmin_components')" title="Link to this section">#</a>
                 </h5>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1279,6 +1327,32 @@ webadmin:
                 document.getElementById('searchInput').focus();
             }
         });
+        
+        // Navigate to a section: expand it and update the URL without toggling
+        function navigateToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            
+            // Expand all ancestor sections
+            let current = section;
+            while (current) {
+                const header = current.querySelector(':scope > .section-header');
+                const content = current.querySelector(':scope > .section-content');
+                if (header && content) {
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                }
+                current = current.parentElement ? current.parentElement.closest('.section') : null;
+            }
+            
+            // Update the URL
+            history.pushState(null, '', '#' + sectionId);
+            
+            // Scroll into view
+            setTimeout(() => {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
         
         // Handle URL fragments for deep linking
         function handleUrlFragment() {
