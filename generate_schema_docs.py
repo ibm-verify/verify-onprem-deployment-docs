@@ -640,6 +640,41 @@ class SchemaDocGenerator:
         .expand-collapse-btn:hover {{
             background-color: #525252;
         }}
+        
+        .anchor-link {{
+            opacity: 0;
+            margin-left: 0.5rem;
+            color: #8d8d8d;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            transition: opacity 0.15s;
+            vertical-align: middle;
+        }}
+        
+        .section-header:hover .anchor-link {{
+            opacity: 1;
+        }}
+        
+        .property-description h3:hover .anchor-link,
+        .property-description h4:hover .anchor-link,
+        .property-description h5:hover .anchor-link {{
+            opacity: 1;
+        }}
+        
+        .property-description h3,
+        .property-description h4,
+        .property-description h5 {{
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--cds-text-01);
+        }}
+        
+        .anchor-link:hover {{
+            color: #0f62fe;
+        }}
     </style>
 </head>
 '''
@@ -695,6 +730,7 @@ class SchemaDocGenerator:
                 <h{2 + level}>
                     {self._escape_html(name)}
                     {f'<span class="property-type">{prop_type}</span>' if prop_type else ''}
+                    <a class="anchor-link" href="#{section_id}" onclick="event.stopPropagation(); navigateToSection('{section_id}')" title="Link to this section">#</a>
                 </h{2 + level}>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -883,6 +919,7 @@ class SchemaDocGenerator:
                     {self._escape_html(name)}
                     <span class="property-type">{prop_type}</span>
                     {f'<span class="property-required">required</span>' if is_required else ''}
+                    <a class="anchor-link" href="#{section_id}" onclick="event.stopPropagation(); navigateToSection('{section_id}')" title="Link to this section">#</a>
                 </h{min(3 + level, 6)}>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1043,6 +1080,8 @@ class SchemaDocGenerator:
                 finally:
                     self.ref_stack.pop()
         elif 'properties' in items_schema:
+            if 'description' in items_schema:
+                html += f'<div class="property-description">{self._format_description(items_schema["description"])}</div>\n'
             html += self._generate_properties(items_schema, level, depth + 1)
         elif items_schema.get('type'):
             html += f'<div class="property-description"><strong>Type:</strong> <code>{items_schema["type"]}</code></div>\n'
@@ -1618,6 +1657,32 @@ class SchemaDocGenerator:
             }}
         }});
         
+        // Navigate to a section: expand it and update the URL without toggling
+        function navigateToSection(sectionId) {{
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            
+            // Expand all ancestor sections
+            let current = section;
+            while (current) {{
+                const header = current.querySelector(':scope > .section-header');
+                const content = current.querySelector(':scope > .section-content');
+                if (header && content) {{
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                }}
+                current = current.parentElement ? current.parentElement.closest('.section') : null;
+            }}
+            
+            // Update the URL
+            history.pushState(null, '', '#' + sectionId);
+            
+            // Scroll into view
+            setTimeout(() => {{
+                section.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+            }}, 50);
+        }}
+        
         // Handle URL fragments for deep linking
         function handleUrlFragment() {{
             const hash = window.location.hash;
@@ -1720,31 +1785,44 @@ class SchemaDocGenerator:
             
             description = re.sub(table_pattern, fix_table, description, flags=re.DOTALL)
             
-            # Configure markdown with extensions (no nl2br to avoid breaking tables)
-            md = markdown_module.Markdown(extensions=['fenced_code', 'tables'])
+            # Build a path-based prefix to namespace heading IDs within this description,
+            # avoiding collisions when the same heading text appears in multiple descriptions.
+            id_prefix = '_'.join(
+                re.sub(r'[^a-zA-Z0-9]+', '_', p.lower()).strip('_')
+                for p in self.path_stack
+                if p
+            )
+            
+            # Configure markdown with extensions (no nl2br to avoid breaking tables).
+            # The 'toc' extension adds id attributes to headings so they can be linked.
+            toc_cfg = {
+                'toc_depth': '2-6',
+                'slugify': lambda value, separator, unicode_=False: (
+                    (id_prefix + separator if id_prefix else '') +
+                    re.sub(r'[^\w\s-]', '', value.lower()).strip().replace(' ', separator)
+                ),
+            }
+            md = markdown_module.Markdown(extensions=['fenced_code', 'tables', 'toc'],
+                                          extension_configs={'toc': toc_cfg})
             html = md.convert(description)
             
-            # Escape HTML entities in code blocks to prevent browser interpretation
-            def escape_code_in_pre(match):
-                code = match.group(1)
-                code = code.replace('&', '\x26amp;')
-                code = code.replace('<', '\x26lt;')
-                code = code.replace('>', '\x26gt;')
-                code = code.replace('"', '\x26quot;')
-                return f'<pre><code>{code}</code></pre>'
+            # Inject a hoverable '#' anchor link next to every heading that has an id.
+            def add_heading_anchor(m):
+                tag = m.group(1)   # e.g. h3
+                attrs = m.group(2) # e.g.  id="foo"
+                text = m.group(3)  # inner HTML
+                id_match = re.search(r'id="([^"]+)"', attrs)
+                if not id_match:
+                    return m.group(0)
+                hid = id_match.group(1)
+                anchor = (f'<a class="anchor-link" href="#{hid}" '
+                          f'title="Link to this section">#</a>')
+                return f'<{tag}{attrs}>{text}{anchor}</{tag}>'
             
-            html = re.sub(r'<pre><code>(.*?)</code></pre>', escape_code_in_pre, html, flags=re.DOTALL)
+            html = re.sub(r'<(h[1-6])( [^>]+)>(.*?)</h[1-6]>', add_heading_anchor, html)
             
-            # Escape HTML entities in inline code
-            def escape_code_inline(match):
-                code = match.group(1)
-                code = code.replace('&', '\x26amp;')
-                code = code.replace('<', '\x26lt;')
-                code = code.replace('>', '\x26gt;')
-                code = code.replace('"', '\x26quot;')
-                return f'<code>{code}</code>'
-            
-            html = re.sub(r'<code>(.*?)</code>', escape_code_inline, html)
+            # The markdown library already HTML-escapes content inside <code> and <pre><code>
+            # blocks, so no additional escaping is needed here.
             
             return html
         
@@ -1773,8 +1851,22 @@ class SchemaDocGenerator:
         # Then handle inline code (single backticks) - convert to <code>
         description = re.sub(r'`([^`]+)`', escape_code_content, description)
         
-        # Convert markdown headings to bold
-        description = re.sub(r'^###\s+(.+)$', r'<strong>\1</strong>', description, flags=re.MULTILINE)
+        # Convert markdown headings to anchored <h3> elements
+        id_prefix = '_'.join(
+            re.sub(r'[^a-zA-Z0-9]+', '_', p.lower()).strip('_')
+            for p in self.path_stack
+            if p
+        )
+        
+        def make_heading(m):
+            text = m.group(1)
+            slug = re.sub(r'[^\w\s-]', '', text.lower()).strip().replace(' ', '-')
+            hid = (f'{id_prefix}_{slug}' if id_prefix else slug)
+            anchor = (f'<a class="anchor-link" href="#{hid}" '
+                      f'title="Link to this section">#</a>')
+            return f'<h3 id="{hid}">{text}{anchor}</h3>'
+        
+        description = re.sub(r'^###\s+(.+)$', make_heading, description, flags=re.MULTILINE)
         
         # Protect code blocks from newline processing by replacing them with placeholders
         code_blocks = []
